@@ -104,7 +104,7 @@ require_once 'authentication.php';
 		<div class="span4">
           <div class="widget widget-table action-table">
             <div class="widget-header"> <i class="icon-group"></i>
-              <h3>Employees</h3><button class="btn btn-primary btn-xs pull-right" type="button" style="margin-top: 6px; margin-right: 10px;">Add</button>
+              <h3>Employees</h3><button class="btn btn-primary btn-xs pull-right" type="button" style="margin-top: 6px; margin-right: 10px;" ng-click="appService.add(this)" ng-disabled="controls.personalInfo.addBtn">Add</button>
             </div>
             <!-- /widget-header -->
             <div class="widget-content">
@@ -145,14 +145,17 @@ require_once 'authentication.php';
                 <div class="widget-content">
 				
 						<div><img src="{{views.profilePicture}}" class="img-responsive img-thumbnail profile-picture" alt="Profile Picture"></div>				
-						<input type="file" name="proPic" id="proPic" file-model="views.proPic">						
+						<input type="file" name="proPic" id="proPic" file-model="views.proPic" ng-disabled="controls.personalInfo.picture">						
 						<div class="progress progress-striped" ng-show="views.showProPicUploadProgress">
-							<div class="bar" style="width: 100%;"></div>
+							<div class="bar" style="width: {{views.progress}}%;"></div>
+						</div>
+						<div class="control-group">
+						<button class="btn btn-primary" ng-disabled="controls.personalInfo.uploadBtn" ng-click="uploadProfilePicture()">Upload</button>
 						</div>
 
 						<hr>
 
-						<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-success"><i class="btn-icon-only icon-edit"> </i></a>&nbsp;&nbsp;<a href="javascript:;" class="btn btn-danger btn-small"><i class="btn-icon-only icon-remove"> </i></a></div>						
+						<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-success" ng-disabled="controls.personalInfo.editBtn"><i class="btn-icon-only icon-edit"> </i></a>&nbsp;&nbsp;<a href="javascript:;" class="btn btn-danger btn-small" ng-disabled="controls.personalInfo.delBtn"><i class="btn-icon-only icon-remove"> </i></a></div>						
 						<div class="tabbable" style="margin-top: 50px;">
 						<ul class="nav nav-tabs">
 						  <li class="active">
@@ -166,14 +169,14 @@ require_once 'authentication.php';
 						<div class="tab-content">
 							<div class="tab-pane active" id="personal-info">
 								
-								<form>
+								<form name="frmHolder.personalInfo" autocomplete="off">
 									<fieldset>
 										<div class="row">
 											<div class="span2">
 												<div class="control-group">
 													<label><strong>Employee ID</strong></label>
 													<div class="controls">
-														<input type="text" class="span2">
+														<input type="text" class="span2" ng-model="personalInfo.empid" ng-disabled="controls.personalInfo.empid">
 													</div>
 												</div>
 											</div>
@@ -184,7 +187,7 @@ require_once 'authentication.php';
 												<div class="control-group">
 													<label><strong>First Name</strong></label>
 													<div class="controls">
-														<input type="text" class="span2">
+														<input type="text" class="span2" ng-disabled="controls.personalInfo.first_name">
 													</div>
 												</div>
 											</div>
@@ -192,7 +195,7 @@ require_once 'authentication.php';
 												<div class="control-group">
 													<label><strong>Middle Name</strong></label>
 													<div class="controls">
-														<input type="text" class="span2">
+														<input type="text" class="span2" ng-disabled="controls.personalInfo.middle_name">
 													</div>
 												</div>
 											</div>
@@ -200,7 +203,7 @@ require_once 'authentication.php';
 												<div class="control-group">
 													<label><strong>Last Name</strong></label>
 													<div class="controls">
-														<input type="text" class="span2">
+														<input type="text" class="span2" ng-disabled="controls.personalInfo.last_name">
 													</div>
 												</div>
 											</div>								
@@ -211,11 +214,11 @@ require_once 'authentication.php';
 													<label class="control-label"><strong>Gender</strong></label>                                            
 													<div class="controls">
 													<label class="radio inline">
-													  <input type="radio" name="radiobtns"> Male
+													  <input type="radio" name="radiobtns" ng-disabled="controls.personalInfo.gender"> Male
 													</label>
 													
 													<label class="radio inline">
-													  <input type="radio" name="radiobtns"> Female
+													  <input type="radio" name="radiobtns" ng-disabled="controls.personalInfo.gender"> Female
 													</label>
 													</div>	<!-- /controls -->			
 												</div>
@@ -224,7 +227,7 @@ require_once 'authentication.php';
 												<div class="control-group">
 													<label><strong>Birthday</strong></label>
 													<div class="controls">
-														<input type="date" class="span2">
+														<input type="date" class="span2" ng-disabled="controls.personalInfo.birthday">
 													</div>
 												</div>											
 											</div>
@@ -232,7 +235,7 @@ require_once 'authentication.php';
 												<div class="control-group">
 													<label><strong>Birthplace</strong></label>
 													<div class="controls">
-														<input type="text" class="span2">
+														<input type="text" class="span2" ng-disabled="controls.personalInfo.birthplace">
 													</div>
 												</div>											
 											</div>											
@@ -242,7 +245,7 @@ require_once 'authentication.php';
 												<div class="control-group">
 													<label><strong>Address</strong></label>
 													<div class="controls">
-														<input type="text" class="span6">
+														<input type="text" class="span6" ng-disabled="controls.personalInfo.address">
 													</div>
 												</div>											
 											</div>
@@ -252,7 +255,7 @@ require_once 'authentication.php';
 												<div class="control-group">
 													<label><strong>Contact No</strong></label>
 													<div class="controls">
-														<input type="text" class="span3">
+														<input type="text" class="span3" ng-disabled="controls.personalInfo.contact_no">
 													</div>
 												</div>
 											</div>
@@ -260,7 +263,7 @@ require_once 'authentication.php';
 												<div class="control-group">
 													<label><strong>Email</strong></label>
 													<div class="controls">
-														<input type="text" class="span3">
+														<input type="text" class="span3" ng-disabled="controls.personalInfo.email">
 													</div>
 												</div>
 											</div>
@@ -270,7 +273,7 @@ require_once 'authentication.php';
 												<div class="control-group">
 													<label><strong>Appointment Status</strong></label>
 													<div class="controls">
-														<select class="span3" ng-model="personalInfo.appointment_status" ng-options="x for (x,y) in views.appointmentStatus track by y">
+														<select class="span3" ng-model="personalInfo.appointment_status" ng-options="x for (x,y) in views.appointmentStatus track by y" ng-disabled="controls.personalInfo.appointment_status">
 															<option value="">-</option>
 														</select>
 													</div>
@@ -280,7 +283,7 @@ require_once 'authentication.php';
 												<div class="control-group">
 													<label><strong>Position</strong></label>
 													<div class="controls">
-														<input type="text" class="span3">
+														<input type="text" class="span3" ng-disabled="controls.personalInfo.position">
 													</div>
 												</div>
 											</div>
@@ -290,7 +293,7 @@ require_once 'authentication.php';
 												<div class="control-group">
 													<label><strong>GSIS</strong></label>
 													<div class="controls">
-														<input type="text" class="span3">
+														<input type="text" class="span3" ng-disabled="controls.personalInfo.gsis">
 													</div>
 												</div>
 											</div>
@@ -298,7 +301,7 @@ require_once 'authentication.php';
 												<div class="control-group">
 													<label><strong>SSS</strong></label>
 													<div class="controls">
-														<input type="text" class="span3">
+														<input type="text" class="span3" ng-disabled="controls.personalInfo.sss">
 													</div>
 												</div>
 											</div>
@@ -308,7 +311,7 @@ require_once 'authentication.php';
 												<div class="control-group">
 													<label><strong>HDMF (Pagibig)</strong></label>
 													<div class="controls">
-														<input type="text" class="span3">
+														<input type="text" class="span3" ng-disabled="controls.personalInfo.hdmf">
 													</div>
 												</div>
 											</div>
@@ -316,7 +319,7 @@ require_once 'authentication.php';
 												<div class="control-group">
 													<label><strong>Philhealth</strong></label>
 													<div class="controls">
-														<input type="text" class="span3">
+														<input type="text" class="span3" ng-disabled="controls.personalInfo.philhealth">
 													</div>
 												</div>
 											</div>
@@ -324,8 +327,8 @@ require_once 'authentication.php';
 										<div class="row">
 											<div class="span6">
 												<div class="form-actions">
-													<button type="button" class="btn btn-primary">Save</button> 
-													<button class="btn">Cancel</button>
+													<button type="button" class="btn btn-primary" ng-disabled="controls.personalInfo.saveBtn">Save</button> 
+													<button class="btn" ng-disabled="controls.personalInfo.cancelBtn" ng-click="appService.cancel(this)">Cancel</button>
 												</div>
 											</div>
 										</div>
