@@ -10,7 +10,7 @@ switch ($_GET['r']) {
 	
 		$con = new pdo_db();
 		
-		$sql = "SELECT * FROM employees WHERE is_built_in != 1";
+		$sql = "SELECT id, empid, CONCAT(first_name, ' ', last_name) full_name FROM employees WHERE is_built_in != 1";
 		$employees = $con->getData($sql);
 		
 		echo json_encode($employees);
@@ -28,8 +28,10 @@ switch ($_GET['r']) {
 	break;
 	
 	case "cancel":
-		
+
 		$con = new pdo_db("employees");
+		$picture = "../pictures/".$_POST['empid'].".jpg";
+		if (file_exists($picture)) unlink($picture);
 		
 		$delete = $con->deleteData(array("id"=>implode(",",$_POST['id'])));
 	
@@ -37,12 +39,34 @@ switch ($_GET['r']) {
 	
 	case "upload_profile_picture":
 		
-		$dir = "pictures/";
+		$dir = "../pictures/";
 		
 		move_uploaded_file($_FILES['file']['tmp_name'],$dir."$_GET[empid]$_GET[en]");
 
 	break;
 	
+	case "update":
+		
+		$_POST['birthday'] = date("Y-m-d",strtotime($_POST['birthday']));
+		
+		$con = new pdo_db("employees");
+		
+		$update = $con->updateData($_POST,'id');
+		
+	break;
+	
+	case "view":
+	
+		$con = new pdo_db();
+		
+		$employee = $con->getData("SELECT * FROM employees WHERE id = $_POST[id]");
+		$employee[0]['birthday'] = date("m/d/Y",strtotime($employee[0]['birthday']));
+		
+		unset($employee[0]['birthday']);
+		
+		echo json_encode($employee[0]);
+	
+	break;
 }
 
 ?>
