@@ -160,6 +160,10 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 			
 			self.onAdd(scope);
 
+			scope.personalInfo = {};
+			scope.personalInfo.id = 0;
+			scope.views.profilePicture = "img/avatar.png";
+			
 			scope.views.addUpdateTxt = 'Save';
 			scope.views.cancelCloseTxt = 'Cancel';
 			
