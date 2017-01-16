@@ -266,6 +266,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 			}).then(function mySucces(response) {
 			
 				angular.copy(response.data, scope.personalInfo);
+				scope.personalInfo.birthday = new Date(response.data.birthday);
 				scope.views.profilePicture = 'pictures/'+response.data['empid']+'.jpg';
 				
 			}, function myError(response) {

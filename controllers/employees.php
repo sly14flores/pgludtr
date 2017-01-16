@@ -47,7 +47,7 @@ switch ($_GET['r']) {
 	
 	case "update":
 		
-		$_POST['birthday'] = date("Y-m-d",strtotime($_POST['birthday']));
+		$_POST['birthday'] = (isset($_POST['birthday'])) ? date("Y-m-d",strtotime($_POST['birthday'])) : "0000-00-00";
 		
 		$con = new pdo_db("employees");
 		
@@ -60,9 +60,7 @@ switch ($_GET['r']) {
 		$con = new pdo_db();
 		
 		$employee = $con->getData("SELECT * FROM employees WHERE id = $_POST[id]");
-		$employee[0]['birthday'] = date("m/d/Y",strtotime($employee[0]['birthday']));
-		
-		unset($employee[0]['birthday']);
+		// $employee[0]['birthday'] = date("Y-m-d",strtotime($employee[0]['birthday']));
 		
 		echo json_encode($employee[0]);
 	
