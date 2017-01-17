@@ -51,6 +51,7 @@ switch ($_GET['r']) {
 		
 		$con = new pdo_db("employees");
 		
+		if (isset($_POST['has_profile_pic'])) unset($_POST['has_profile_pic']);
 		$update = $con->updateData($_POST,'id');
 		
 	break;
@@ -60,7 +61,9 @@ switch ($_GET['r']) {
 		$con = new pdo_db();
 		
 		$employee = $con->getData("SELECT * FROM employees WHERE id = $_POST[id]");
-		// $employee[0]['birthday'] = date("Y-m-d",strtotime($employee[0]['birthday']));
+		$picture = "../pictures/".$employee[0]['empid'].".jpg";
+		
+		$employee[0]['has_profile_pic'] = file_exists($picture);
 		
 		echo json_encode($employee[0]);
 	

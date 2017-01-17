@@ -7,7 +7,7 @@ app.directive('fileModel', ['$parse', function ($parse) {
 		  var model = $parse(attrs.fileModel);
 		  var modelSetter = model.assign;
 		  
-		  element.bind('change', function(){
+		  element.bind('change', function() {
 			 scope.$apply(function(){
 				modelSetter(scope, element[0].files[0]);
 			 });
@@ -21,7 +21,7 @@ app.directive('fileModel', ['$parse', function ($parse) {
 }]);
 
 app.service('fileUpload', ['$http', function ($http) {
-	this.uploadFileToUrl = function(file, uploadUrl, scope){
+	this.uploadFileToUrl = function(file, uploadUrl, scope) {
 		
 	   var fd = new FormData();
 	   fd.append('file', file);
@@ -267,7 +267,8 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 			
 				angular.copy(response.data, scope.personalInfo);
 				scope.personalInfo.birthday = new Date(response.data.birthday);
-				scope.views.profilePicture = 'pictures/'+response.data['empid']+'.jpg';
+				if (response.data['has_profile_pic']) scope.views.profilePicture = 'pictures/'+response.data['empid']+'.jpg';
+				else scope.views.profilePicture = "img/avatar.png";
 				
 			}, function myError(response) {
 				 
