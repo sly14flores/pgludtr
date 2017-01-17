@@ -145,7 +145,7 @@ require_once 'authentication.php';
                 <div class="widget-content">
 				
 						<div><img src="{{views.profilePicture}}" class="img-responsive img-thumbnail profile-picture" alt="Profile Picture"></div>				
-						<input type="file" name="proPic" id="proPic" file-model="views.proPic" ng-disabled="controls.personalInfo.picture">						
+						<input type="file" name="proPic" id="proPic" file-model="views.proPic" ng-disabled="controls.personalInfo.picture">
 						<div class="progress progress-striped" ng-show="views.showProPicUploadProgress">
 							<div class="bar" style="width: {{views.progress}}%;"></div>
 						</div>

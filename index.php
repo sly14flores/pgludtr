@@ -31,6 +31,55 @@ require_once 'authentication.php';
 		
 	}
 	
+	.upload {
+		
+		padding: 15px;
+		
+	}
+	
+	.console {
+		
+		font-family: 'Lucida Console';
+		font-size: 14px;		
+		background-color: #282828;
+		height: 285px;
+		padding-left: 5px;
+		overflow: auto;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		
+	}
+	
+	.console .success-response {
+		
+		display: block;
+		margin: 0!important;
+		padding: 0!important;
+		line-height: 18px!important;
+		color: #17b53c;
+		
+	}
+	
+	.console .info-response {
+		
+		display: block;
+		margin: 0!important;
+		padding: 0!important;
+		line-height: 18px!important;		
+		color: #1ec9c3;
+		
+	}		
+	
+	.console .error-response {
+		
+		display: block;
+		margin: 0!important;
+		padding: 0!important;
+		line-height: 18px!important;		
+		color: #ef2f2f;
+		
+	}
+	
 	.login-footer {
 		
 		width: 100%;
@@ -58,8 +107,7 @@ require_once 'authentication.php';
       <div class="nav-collapse">
 	  
         <ul class="nav pull-right">
-          <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
-                            class="icon-user"></i><b class="caret"></b></a>
+          <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i><b class="caret"></b></a>
             <ul class="dropdown-menu">
               <li><a href="javascript:;">Settings</a></li>
               <li><a href="javascript:;" logout>Logout</a></li>
@@ -94,8 +142,59 @@ require_once 'authentication.php';
   <div class="main-inner">
     <div class="container">
       <div class="row">
-	  
-		
+		<div class="span5">
+			<div cl ass="widget widget-nopad">
+				<div class="widget-header"> <i class="icon-upload"></i>
+				  <h3>Upload Logs</h3>
+				</div>
+				<div class="widget-content upload">
+					<div class="control-group">				
+						<h3 style="margin-bottom: 5px;">Date</h3>
+						<strong>From:&nbsp;</strong><input type="date" class="span2">
+						<strong>To:&nbsp;</strong><input type="date" class="span2">
+					</div>
+					<div class="control-group">					
+						<h3 style="margin-bottom: 5px;">ID</h3>
+						<strong>From:&nbsp;</strong><input type="text" class="span2">
+						<strong>To:&nbsp;</strong><input type="text" class="span2">
+					</div>
+					<div class="control-group">					
+						<h3 style="margin-bottom: 5px;">File</h3>
+						<input type="file" name="logFile" id="logFile" file-model="views.logFile">
+						<div class="checkbox">
+							<label>
+							  <input type="checkbox" name="usePreviousFile" ng-model="views.usePreviousFile"> Use previously uploaded file {{views.pf}}
+							</label>
+						</div>						
+					</div>
+					<div class="progress progress-striped" ng-show="views.showLogUploadProgress">
+						<div class="bar" style="width: {{views.progress}}%;"></div>
+					</div>					
+					<div class="alert alert-danger" role="alert" ng-show="views.errorBox">
+					  <span class="sr-only">Error:</span>
+					  {{views.errorMsg}}
+					</div>					
+					<div class="control-group">
+						<div class="span4">
+							<button class="btn btn-primary pull-right" type="button">Upload</button>
+						</div>
+					</div>
+				</div>
+			  </div>	
+		</div>
+		<div class="span7">
+          <div class="widget widget-table action-table">
+            <div class="widget-header"> <i class="icon-ellipsis-horizontal"></i>
+              <h3>Console</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+				<div class="console">
+				</div>
+            </div>
+            <!-- /widget-content --> 
+          </div>		
+		</div>		
       </div>
       <!-- /row --> 
     </div>
