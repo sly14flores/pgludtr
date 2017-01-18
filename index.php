@@ -158,25 +158,32 @@ require_once 'authentication.php';
 						<strong>From:&nbsp;</strong><input type="text" class="span2">
 						<strong>To:&nbsp;</strong><input type="text" class="span2">
 					</div>
-					<div class="control-group">					
-						<h3 style="margin-bottom: 5px;">File</h3>
-						<input type="file" name="logFile" id="logFile" file-model="views.logFile">
+					<div class="control-group">
+						<h3 style="margin-bottom: 5px;">Select how to import</h3>					
+						<select class="span4" ng-model="views.howToImport" ng-change="appService.howToImport(this)">
+							<option value="preuploaded">Import logs from pre-uploaded file</option>
+							<option value="upload">Upload log file</option>
+						</select>
+					</div>					
+					<div class="control-group" ng-show="views.showPreUploadedOpt">
+						<h3 style="margin-bottom: 5px;">Import logs from pre-uploaded file</h3>					
+						<select ng-model="views.prefile" class="span2" ng-disabled="views.usePreviousFile">
+							<option value="dat">Text Files</option>
+							<option value="mdb">Network File</option>
+						</select>
+					</div>
+					<div class="control-group" ng-show="views.showUploadOpt">					
+						<h3 style="margin-bottom: 5px;">Upload log file</h3>
+						<input type="file" name="logFile" id="logFile" file-model="views.logFile" ng-disabled="views.usePreviousFile">
 						<div class="checkbox">
 							<label>
-							  <input type="checkbox" name="usePreviousFile" ng-model="views.usePreviousFile"> Use previously uploaded file {{views.pf}}
+							  <input type="checkbox" name="usePreviousFile" ng-model="views.usePreviousFile" ng-change="appService.chkPf(views.usePreviousFile)"> Use previously uploaded file {{views.pf}}
 							</label>
 						</div>						
-					</div>
-					<div class="progress progress-striped" ng-show="views.showLogUploadProgress">
-						<div class="bar" style="width: {{views.progress}}%;"></div>
-					</div>					
-					<div class="alert alert-danger" role="alert" ng-show="views.errorBox">
-					  <span class="sr-only">Error:</span>
-					  {{views.errorMsg}}
 					</div>					
 					<div class="control-group">
 						<div class="span4">
-							<button class="btn btn-primary pull-right" type="button">Upload</button>
+							<button class="btn btn-primary pull-right" type="button" ng-click="appService.start(this)">Upload</button>
 						</div>
 					</div>
 				</div>
@@ -204,7 +211,7 @@ require_once 'authentication.php';
 </div>
 <!-- /main -->
 
-<div class="footer login-footer">
+<div class="footer" ng-class="{'login-footer': views.howToImport == 'preuploaded' || views.howToImport == undefined}">
   <div class="footer-inner">
     <div class="container">
       <div class="row">

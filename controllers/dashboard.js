@@ -1,5 +1,141 @@
 var app = angular.module('dashboard', ['block-ui','bootstrap-modal','bootstrap-notify','account']);
 
+app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload) {
+	
+	function appService() {
+		
+		var self = this;
+		
+		self.howToImport = function(scope) {
+
+			scope.views.showPreUploadedOpt = false;
+			scope.views.showUploadOpt = false;
+		
+			if (scope.views.howToImport == 'preuploaded') {
+			
+				scope.views.showPreUploadedOpt = true;
+				consoleMsg.show(300,'Import logs from pre-uploaded file selected','r');
+				consoleMsg.show(300,'Please make sure that the latest log file(s) has been pre-uploaded','a');
+				
+			} else {
+
+				scope.views.showUploadOpt = true;
+				consoleMsg.show(300,'Upload log file selected','r');			
+				
+			}
+			
+		}
+		
+		self.start = function(scope) {
+			
+			switch (scope.views.howToImport) {
+				
+				case "preuploaded":
+				
+					if (scope.views.prefile == undefined) {
+						consoleMsg.show(400,'No file selected','a');
+						return;
+					}
+					
+					// check if file exists
+					$http({
+					  method: 'POST',
+					  url: 'controllers/dashboard.php?r=check_log_files_existence',
+					  data: {prefile: scope.views.prefile}
+					}).then(function mySucces(response) {
+						
+						consoleMsg.show(response.data[0],response.data[1],response.data[2]);
+						if (response.data[0] == 300) {
+							self.collectLogs(scope);
+						}
+						
+					}, function myError(response) {
+						 
+					  // error
+						
+					});			
+					
+				break;
+				
+				case "upload":
+
+					if (scope.views.usePreviousFile) { // use latest uploaded file						
+						
+						consoleMsg.show(300,'Using previously added file ({{views.pf}})','a');						
+						$compile($('.console')[0])(scope);
+
+						// check file existence
+						$http({
+						  method: 'POST',
+						  url: 'controllers/dashboard.php?r=check_log_file_existence',
+						  data: {pf: scope.views.pf}
+						}).then(function mySucces(response) {
+							
+							consoleMsg.show(response.data[0],response.data[1],response.data[2]);
+							if (response.data[0] == 300) {
+								self.collectLogs(scope);
+							}
+							
+						}, function myError(response) {
+							 
+						  // error
+							
+						});
+					
+						
+					} else {
+
+						var file = scope.views.logFile;				
+						if (file == undefined) {
+							consoleMsg.show(400,'No file selected','a');
+							return;
+						}
+						
+						if (scope.views.recursiveUpload) {
+							consoleMsg.show(300,'Upload log file selected','r');
+						}
+						
+						consoleMsg.show(300,'Uploading {{views.logFilename}} ({{views.progress}}%)','a');
+						$compile($('.console')[0])(scope);
+
+						var fn = file['name'];
+						var en = fn.substring(fn.indexOf("."),fn.length);
+						
+						scope.views.logFilename = fn;
+						var uploadUrl = "controllers/dashboard.php?r=upload_log&fn="+fn;
+						fileUpload.uploadFileToUrl(file, uploadUrl, scope);
+
+					}
+				
+				break;
+				
+			}
+			
+		}
+		
+		self.chkPf = function(chk) {
+			
+			if (chk) consoleMsg.show(300,'Toggled use previously uploaded file on','r');
+			else consoleMsg.show(300,'Toggled use previously uploaded file off','r');
+			
+		}
+		
+		self.collectLogs = function(scope) {
+			
+			$timeout(function() {
+				
+				consoleMsg.show(300,'Collecting employees logs...','a');
+				
+			},500);
+			
+		}
+
+	};
+	
+	return new appService();	
+	
+});
+
 app.directive('fileModel', ['$parse', function ($parse) {
 	return {
 	   restrict: 'A',
@@ -22,6 +158,7 @@ app.directive('fileModel', ['$parse', function ($parse) {
 app.service('fileUpload', function (consoleMsg) {
 	
 	this.uploadFileToUrl = function(file, uploadUrl, scope) {
+		
 	   var fd = new FormData();
 	   fd.append('file', file);
 	
@@ -33,7 +170,6 @@ app.service('fileUpload', function (consoleMsg) {
 	   
 		// upload progress
 		function uploadProgress(evt) {
-			scope.views.showLogUploadProgress = true;
 			scope.$apply(function(){
 				scope.views.progress = 0;				
 				if (evt.lengthComputable) {
@@ -47,17 +183,21 @@ app.service('fileUpload', function (consoleMsg) {
 		function uploadComplete(evt) {
 			/* This event is raised when the server send back a response */
 			scope.$apply(function(){
-				scope.views.showLogUploadProgress = false;
-				consoleMsg.show(200,'Log file uploaded','a');
+				consoleMsg.show(200,scope.views.logFilename+' successfully uploaded','a');
+				scope.views.pf = '('+scope.views.logFilename+')';				
 			});			
-
+			$('#logFile').val(null);
+			scope.views.logFile = null;
+			scope.views.recursiveUpload = true;
+			localStorage.pf = scope.views.logFilename;
+			scope.appService.collectLogs(scope);
 		}
 
 	}
 	
 });
 
-app.service('consoleMsg', function() {
+app.service('consoleMsg', function($timeout) {
 	
 	this.show = function(code,msg,opt = 'a') {
 		
@@ -74,7 +214,7 @@ app.service('consoleMsg', function() {
 	
 });
 
-app.controller('dashboardCtrl', function($scope,blockUI,bootstrapModal,bootstrapNotify,fileUpload,consoleMsg) {
+app.controller('dashboardCtrl', function($scope,blockUI,bootstrapModal,bootstrapNotify,fileUpload,consoleMsg,appService) {
 
 $scope.views = {};
 $scope.frmHolder = {};
@@ -82,8 +222,16 @@ $scope.frmHolder = {};
 $scope.views.errorBox = false;
 $scope.views.errorMsg = "";
 
-$scope.views.showLogUploadProgress = false;
 $scope.views.progress = 0;
+
+$scope.views.showPreUploadedOpt = false;
+$scope.views.showUploadOpt = false;
+$scope.views.usePreviousFile = false;
+$scope.views.recursiveUpload = false;
+
+$scope.appService = appService;
+
+if (localStorage.pf !== undefined) $scope.views.pf = localStorage.pf;
 
 // r = new line, a = append
 // consoleMsg.show(200,'Lorem Ipsum...','a'); // success
