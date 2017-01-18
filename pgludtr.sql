@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 13, 2017 at 02:09 PM
+-- Generation Time: Jan 18, 2017 at 04:42 PM
 -- Server version: 5.6.20
 -- PHP Version: 5.4.31
 
@@ -35,6 +35,8 @@ CREATE TABLE IF NOT EXISTS `employees` (
   `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
   `gender` varchar(6) NOT NULL,
+  `birthday` date NOT NULL,
+  `birthplace` varchar(50) NOT NULL,
   `address` varchar(100) NOT NULL,
   `contact_no` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
@@ -46,14 +48,15 @@ CREATE TABLE IF NOT EXISTS `employees` (
   `philhealth` varchar(50) NOT NULL,
   `is_built_in` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `employees`
 --
 
-INSERT INTO `employees` (`id`, `empid`, `first_name`, `middle_name`, `last_name`, `username`, `password`, `gender`, `address`, `contact_no`, `email`, `appointment_status`, `position`, `gsis`, `sss`, `hdmf`, `philhealth`, `is_built_in`) VALUES
-(1, '82156', 'Sly', 'Bulilan', 'Flores', 'admin', 'admin', '', '', '', '', '', '', '', '', '', '', 1);
+INSERT INTO `employees` (`id`, `empid`, `first_name`, `middle_name`, `last_name`, `username`, `password`, `gender`, `birthday`, `birthplace`, `address`, `contact_no`, `email`, `appointment_status`, `position`, `gsis`, `sss`, `hdmf`, `philhealth`, `is_built_in`) VALUES
+(1, '82156', 'Sly', 'Bulilan', 'Flores', 'admin', 'admin', '', '0000-00-00', '', '', '', '', '', '', '', '', '', '', 1),
+(2, '82156', 'Sylvester', 'Bulilan', 'Flores', '', '', 'Male', '1982-11-14', '', 'Tanqui, SFC', '', '', '', '', '', '', '', '', 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
