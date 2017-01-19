@@ -61,7 +61,12 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 
 					if (scope.views.usePreviousFile) { // use latest uploaded file						
 						
-						consoleMsg.show(300,'Using previously added file ({{views.pf}})','a');						
+						if ((scope.views.pf == undefined) || (scope.views.pf == undefined == '')) {
+							consoleMsg.show(400,'No previously added file exists','a');
+							return;
+						}
+						
+						consoleMsg.show(300,'Using previously added file ({{views.pf}})','a');					
 						$compile($('.console')[0])(scope);
 
 						// check file existence
@@ -123,11 +128,28 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 		self.collectLogs = function(scope) {
 			
 			$timeout(function() {
-				
+
 				consoleMsg.show(300,'Collecting employees logs...','a');
 				
 			},500);
 			
+			$http({
+			  method: 'POST',
+			  url: 'controllers/dashboard.php?r=collect_logs',
+			  data: scope.filter
+			}).then(function mySucces(response) {
+				
+/* 				consoleMsg.show(response.data[0],response.data[1],response.data[2]);
+				if (response.data[0] == 300) {
+					self.collectLogs(scope);
+				} */
+				
+			}, function myError(response) {
+				 
+			  // error
+				
+			});
+
 		}
 
 	};
@@ -218,6 +240,7 @@ app.controller('dashboardCtrl', function($scope,blockUI,bootstrapModal,bootstrap
 
 $scope.views = {};
 $scope.frmHolder = {};
+$scope.filter = {};
 
 $scope.views.errorBox = false;
 $scope.views.errorMsg = "";

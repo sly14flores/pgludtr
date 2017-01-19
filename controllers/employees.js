@@ -353,7 +353,8 @@ $scope.views.cancelCloseTxt = 'Cancel';
 $scope.views.appointmentStatus = {
 	"Permanent": "Permanent",
 	"Casual": "Casual",
-	"Job Order": "JO"
+	"Job Order": "JO",
+	"Volunteer": "Volunteer"
 };
 
 var appServiceL = appService;

@@ -150,13 +150,13 @@ require_once 'authentication.php';
 				<div class="widget-content upload">
 					<div class="control-group">				
 						<h3 style="margin-bottom: 5px;">Date</h3>
-						<strong>From:&nbsp;</strong><input type="date" class="span2">
-						<strong>To:&nbsp;</strong><input type="date" class="span2">
+						<strong>From:&nbsp;</strong><input type="date" class="span2" ng-model="filter.dateFrom">
+						<strong>To:&nbsp;</strong><input type="date" class="span2" ng-model="filter.dateTo">
 					</div>
 					<div class="control-group">					
 						<h3 style="margin-bottom: 5px;">ID</h3>
-						<strong>From:&nbsp;</strong><input type="text" class="span2">
-						<strong>To:&nbsp;</strong><input type="text" class="span2">
+						<strong>From:&nbsp;</strong><input type="text" class="span2" ng-model="filter.idFrom">
+						<strong>To:&nbsp;</strong><input type="text" class="span2" ng-model="filter.idTo">
 					</div>
 					<div class="control-group">
 						<h3 style="margin-bottom: 5px;">Select how to import</h3>					
