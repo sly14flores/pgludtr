@@ -87,6 +87,66 @@ switch ($_GET['r']) {
 	
 	break;
 	
+	case "collect_logs":
+	
+	$logs = [];	
+	
+ 	$dateFrom = array("year"=>date("Y",strtotime($_POST['filter']['dateFrom'])),"month"=>date("m",strtotime($_POST['filter']['dateFrom'])),"day"=>date("d",strtotime($_POST['filter']['dateFrom'])));
+	$dateTo = array("year"=>date("Y",strtotime($_POST['filter']['dateTo'])),"month"=>date("m",strtotime($_POST['filter']['dateTo'])),"day"=>date("d",strtotime($_POST['filter']['dateTo'])));
+
+	$idFrom = (isset($_POST['filter']['idFrom'])) ? $_POST['filter']['idFrom'] : 0;
+	$idTo = (isset($_POST['filter']['idTo'])) ? $_POST['filter']['idTo'] : 0;	
+	
+	switch ($_POST['how']) {
+		
+		case "preuploaded":
+			
+			switch ($_POST['opt']) {
+				
+				case "dat":
+					
+					// import all logs from found dat files
+					
+				break;
+				
+				case "mdb":
+					
+					require_once '../dtrImportMSeed.php';
+					$mseed = new dtrImportMSeed("DTR");
+					$logs = $mseed->logsFiltered($from,$to,$idFrom,$idTo);
+					
+				break;
+				
+			}
+			
+		break;
+		
+		case "upload":
+			
+			switch (explode(".",$_POST['opt'])[1]) {
+				
+				case "dat":
+
+				break;
+				
+				case "mdb":
+
+					require_once '../dtrImportMSeed.php';
+					$mseed = new dtrImportMSeed("DTR");
+					$logs = $mseed->logsFiltered($dateFrom,$dateTo,$idFrom,$idTo);				
+				
+				break;
+				
+			}
+			
+		break;
+		
+	}
+
+	echo json_encode($logs);
+	
+	break;
+	
 }
 
 ?>

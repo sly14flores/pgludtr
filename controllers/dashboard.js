@@ -16,17 +16,35 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 				scope.views.showPreUploadedOpt = true;
 				consoleMsg.show(300,'Import logs from pre-uploaded file selected','r');
 				consoleMsg.show(300,'Please make sure that the latest log file(s) has been pre-uploaded','a');
-				
+
 			} else {
 
 				scope.views.showUploadOpt = true;
 				consoleMsg.show(300,'Upload log file selected','r');			
 				
 			}
-			
+
 		}
-		
+
 		self.start = function(scope) {
+			
+			/*
+			** validate dates filter
+			*/
+			
+			if ( (scope.filter.dateFrom == undefined) || (scope.filter.dateTo == undefined) ) {
+				
+				consoleMsg.show(400,'No Dates selected to be imported','r');
+				return;
+			
+			}
+			
+			if (scope.filter.dateFrom.getTime() > scope.filter.dateTo.getTime()) {
+
+				consoleMsg.show(400,"Invalid dates, 'To' must be greater than date 'From'",'r');			
+				return;
+				
+			}
 			
 			switch (scope.views.howToImport) {
 				
@@ -36,6 +54,8 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 						consoleMsg.show(400,'No file selected','a');
 						return;
 					}
+					
+					scope.views.opt = scope.views.prefile;
 					
 					// check if file exists
 					$http({
@@ -61,10 +81,12 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 
 					if (scope.views.usePreviousFile) { // use latest uploaded file						
 						
-						if ((scope.views.pf == undefined) || (scope.views.pf == undefined == '')) {
+						if ((scope.views.pf == undefined) || (scope.views.pf == '')) {
 							consoleMsg.show(400,'No previously added file exists','a');
 							return;
 						}
+						
+						scope.views.opt = scope.views.pf;
 						
 						consoleMsg.show(300,'Using previously added file ({{views.pf}})','a');					
 						$compile($('.console')[0])(scope);
@@ -94,7 +116,7 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 						if (file == undefined) {
 							consoleMsg.show(400,'No file selected','a');
 							return;
-						}
+						}						
 						
 						if (scope.views.recursiveUpload) {
 							consoleMsg.show(300,'Upload log file selected','r');
@@ -107,10 +129,19 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 						var en = fn.substring(fn.indexOf("."),fn.length);
 						
 						scope.views.logFilename = fn;
+						
+						scope.views.opt = fn;
+						
 						var uploadUrl = "controllers/dashboard.php?r=upload_log&fn="+fn;
 						fileUpload.uploadFileToUrl(file, uploadUrl, scope);
 
 					}
+				
+				break;
+				
+				default:
+				
+					consoleMsg.show(300,"Please select in 'Select how to import'",'r');
 				
 				break;
 				
@@ -136,7 +167,7 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 			$http({
 			  method: 'POST',
 			  url: 'controllers/dashboard.php?r=collect_logs',
-			  data: scope.filter
+			  data: {how: scope.views.howToImport, opt: scope.views.opt, filter: scope.filter}
 			}).then(function mySucces(response) {
 				
 /* 				consoleMsg.show(response.data[0],response.data[1],response.data[2]);
