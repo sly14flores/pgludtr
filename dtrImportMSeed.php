@@ -51,7 +51,7 @@ class dtrImportMSeed {
 
 	function logsFiltered($from,$to,$idFrom,$idTo) {
 		
-		global $devices;
+		global $dat_files;
 		
 		$from = date("Y-m-d",strtotime(implode("-",$from)));
 		$to = date("Y-m-d",strtotime(implode("-",$to)));
@@ -68,7 +68,7 @@ class dtrImportMSeed {
 
 				$pid = $row['EmployeeID'];
 				$log =  substr($row['Date'],0,10).substr($row['Time'],10,strlen($row['Time']));
-				$machine = $devices[$row['Dev']]['No'];
+				$machine = getDeviceNo($row['Dev']);
 
 				$logs[] = array("date"=>substr($row['Date'],0,10),"pers_id"=>$pid,"log"=>$log,"machine"=>$machine);
 

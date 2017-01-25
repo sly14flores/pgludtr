@@ -102,18 +102,36 @@ switch ($_GET['r']) {
 		case "preuploaded":
 			
 			switch ($_POST['opt']) {
-				
+
 				case "dat":
+
+				require_once '../dtrImportDat.php';				
+				$files = scandir($dir);
+
+				$logs = [];
+				foreach ($files as $i => $file) {
 					
-					// import all logs from found dat files
+					if (explode(".",$file)[1] == "dat") {
+						
+						$dat_logs = logsFiltered($file,$dateFrom,$dateTo,$idFrom,$idTo);
+						
+						foreach ($dat_logs as $log) {
+							
+							$logs[] = $log;
+							
+						}
+						
+					}					
+					
+				}
 					
 				break;
 				
 				case "mdb":
-					
+
 					require_once '../dtrImportMSeed.php';
 					$mseed = new dtrImportMSeed("DTR");
-					$logs = $mseed->logsFiltered($from,$to,$idFrom,$idTo);
+					$logs = $mseed->logsFiltered($dateFrom,$dateTo,$idFrom,$idTo);
 					
 				break;
 				
@@ -126,7 +144,11 @@ switch ($_GET['r']) {
 			switch (explode(".",$_POST['opt'])[1]) {
 				
 				case "dat":
-
+					
+				require_once '../dtrImportDat.php';
+				
+				$logs = logsFiltered($_POST['opt'],$dateFrom,$dateTo,$idFrom,$idTo);
+					
 				break;
 				
 				case "mdb":
@@ -143,7 +165,21 @@ switch ($_GET['r']) {
 		
 	}
 
-	echo json_encode($logs);
+	echo json_encode(array(array(300,"Initiating import...","a"),array("logs"=>$logs)));
+	
+	break;
+	
+	case "put_log":
+		
+		/*
+		** backlog
+		*/
+		$con = new pdo_db("backlogs");
+		$_POST['system_log'] = "CURRENT_TIMESTAMP";
+		$exists = $con->getData("SELECT * FROM backlogs WHERE pers_id = '$_POST[pers_id]' AND log = '$_POST[log]'");
+		if ($con->rows == 0) $backlog = $con->insertData($_POST);
+		
+		echo json_encode(array(200,"Imported ".date("h:i:s A m/d/Y",strtotime($_POST['log']))." for ".$_POST['pers_id'],'a'));
 	
 	break;
 	

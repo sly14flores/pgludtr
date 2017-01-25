@@ -177,7 +177,7 @@ require_once 'authentication.php';
 						<input type="file" name="logFile" id="logFile" file-model="views.logFile" ng-disabled="views.usePreviousFile">
 						<div class="checkbox">
 							<label>
-							  <input type="checkbox" name="usePreviousFile" ng-model="views.usePreviousFile" ng-change="appService.chkPf(views.usePreviousFile)"> Use previously uploaded file {{views.pf}}
+							  <input type="checkbox" name="usePreviousFile" ng-model="views.usePreviousFile" ng-change="appService.chkPf(views.usePreviousFile)"> Use previously uploaded file {{(views.pf != '')?'(':''}}{{views.pf}}{{(views.pf != '')?')':''}}
 							</label>
 						</div>						
 					</div>					
@@ -192,7 +192,7 @@ require_once 'authentication.php';
 		<div class="span7">
           <div class="widget widget-table action-table">
             <div class="widget-header"> <i class="icon-ellipsis-horizontal"></i>
-              <h3>Console</h3>
+              <h3>Console {{views.importProgressDetail}}</h3>
             </div>
             <!-- /widget-header -->
             <div class="widget-content">

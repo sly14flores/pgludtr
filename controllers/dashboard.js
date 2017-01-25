@@ -11,6 +11,8 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 			scope.views.showPreUploadedOpt = false;
 			scope.views.showUploadOpt = false;
 		
+			scope.views.importProgressDetail = '';
+		
 			if (scope.views.howToImport == 'preuploaded') {
 			
 				scope.views.showPreUploadedOpt = true;
@@ -168,12 +170,15 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 			  method: 'POST',
 			  url: 'controllers/dashboard.php?r=collect_logs',
 			  data: {how: scope.views.howToImport, opt: scope.views.opt, filter: scope.filter}
-			}).then(function mySucces(response) {
-				
-/* 				consoleMsg.show(response.data[0],response.data[1],response.data[2]);
-				if (response.data[0] == 300) {
-					self.collectLogs(scope);
-				} */
+			}).then(function mySucces(response) { 
+
+				if (response.data[0][0] == 400) {
+					consoleMsg.show(response.data[0][0],response.data[0][1],response.data[0][2]);
+				} else {
+					consoleMsg.show(response.data[0][0],response.data[0][1],response.data[0][2]);					
+					scope.views.importProgressDetail = '';
+					self.putLogs(scope,response.data[1]['logs']);
+				}
 				
 			}, function myError(response) {
 				 
@@ -181,6 +186,60 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 				
 			});
 
+		}
+		
+		self.putLogs = function(scope,logs) {
+			
+			var i = 0;
+			var logsCount = logs.length - 1;
+			if (logsCount < 0) {
+				consoleMsg.show(300,'No logs found','a');
+				return;
+			}
+			putLog(logs[i]);
+			
+			function putLog(log) {
+				
+				$http({
+				  method: 'POST',
+				  url: 'controllers/dashboard.php?r=put_log',
+				  data: log
+				}).then(function mySucces(response) {
+					
+					if ((response.data[0] == 200) || (response.data[0] == 300)) {
+						consoleMsg.show(response.data[0],response.data[1],response.data[2]);
+						
+						var logsLeft = logsCount - i;
+						var progress = Math.round((i*100)/logsCount);						
+						var eta = formatSeconds(logsLeft);
+		
+						scope.views.importProgressDetail = ' - Processed '+ i + ' of ' + logsCount + ' ('+progress+'%), estimated time remaining: '+eta;
+						
+						if (i == logsCount) consoleMsg.show(300,'All logs were successfully imported','a');						
+						if (i < logsCount) {
+							i++;
+							putLog(logs[i]);
+						}
+					} else {
+						consoleMsg.show(400,'Something went wrong, importing halted','a');
+					}
+				
+				}, function myError(response) {
+					 
+				  // error
+					
+				});
+				
+			}
+			
+			function formatSeconds(seconds) {
+				
+				var date = new Date(1970,0,1);
+				date.setSeconds(seconds);
+				return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+				
+			}			
+			
 		}
 
 	};
@@ -237,7 +296,7 @@ app.service('fileUpload', function (consoleMsg) {
 			/* This event is raised when the server send back a response */
 			scope.$apply(function(){
 				consoleMsg.show(200,scope.views.logFilename+' successfully uploaded','a');
-				scope.views.pf = '('+scope.views.logFilename+')';				
+				scope.views.pf = scope.views.logFilename;			
 			});			
 			$('#logFile').val(null);
 			scope.views.logFile = null;
@@ -274,7 +333,7 @@ $scope.frmHolder = {};
 $scope.filter = {};
 
 $scope.views.errorBox = false;
-$scope.views.errorMsg = "";
+$scope.views.errorMsg = '';
 
 $scope.views.progress = 0;
 
@@ -283,8 +342,11 @@ $scope.views.showUploadOpt = false;
 $scope.views.usePreviousFile = false;
 $scope.views.recursiveUpload = false;
 
+$scope.views.importProgressDetail = '';
+
 $scope.appService = appService;
 
+$scope.views.pf = '';
 if (localStorage.pf !== undefined) $scope.views.pf = localStorage.pf;
 
 // r = new line, a = append
