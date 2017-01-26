@@ -325,6 +325,55 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 			
 		};
 		
+		this.printDTR = function() {
+			
+			var doc = new jsPDF({
+			  orientation: 'portrait',
+			  unit: 'pt',
+			  format: [612, 792]
+			});			
+
+			var totalPagesExp = "{total_pages_count_string}";
+
+			var pageContent = function (data) { console.log(data);
+			
+				var title = "Provincial Government of La Union";
+				
+				// HEADER
+				doc.setFontSize(12);
+				doc.setTextColor(50);
+				doc.setFontStyle('bold');
+				doc.text(title, (data.table.width/2)-(title.length+(title.length/2)), data.settings.margin.top);
+				// doc.setFontSize(10);
+				// doc.setTextColor(10);
+				// doc.text(Object.keys($scope.views.months)[parseInt(filter.month)-1]+" "+filter.year, data.settings.margin.left, 45);
+				
+				// FOOTER
+				var str = "Page " + data.pageCount;
+				// Total page number plugin only available in jspdf v1.0+
+				if (typeof doc.putTotalPages === 'function') {
+					str = str + " of " + totalPagesExp;
+				}
+				doc.setFontSize(10);
+				doc.text(str, data.settings.margin.left, doc.internal.pageSize.height - 10);
+				
+			};
+
+			doc.autoTable([], [], {
+				theme: 'grid',
+				addPageContent: pageContent,
+				margin: {top: 60}
+			});			
+			
+			// Total page number plugin only available in jspdf v1.0+
+			if (typeof doc.putTotalPages === 'function') {
+				doc.putTotalPages(totalPagesExp);
+			}
+		
+			doc.output('dataurlnewwindow');
+		
+		}
+		
 	};
 	
 	return new appService();

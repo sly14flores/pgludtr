@@ -155,7 +155,7 @@ require_once 'authentication.php';
 
 						<hr>
 
-						<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-success" ng-disabled="controls.personalInfo.editBtn" ng-click="appService.edit(this)"><i class="btn-icon-only icon-edit"> </i></a>&nbsp;&nbsp;<a href="javascript:;" class="btn btn-danger btn-small" ng-disabled="controls.personalInfo.delBtn" ng-click="appService.confirmDel(this)"><i class="btn-icon-only icon-remove"> </i></a></div>						
+						<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-success" ng-disabled="controls.personalInfo.editBtn" ng-click="appService.edit(this)"><i class="btn-icon-only icon-edit"> </i></a>&nbsp;&nbsp;<a href="javascript:;" class="btn btn-danger btn-small" ng-disabled="controls.personalInfo.delBtn" ng-click="appService.confirmDel(this)"><i class="btn-icon-only icon-remove"> </i></a></div>
 						<div class="tabbable" style="margin-top: 50px;">
 						<ul class="nav nav-tabs">
 						  <li class="active">
@@ -337,7 +337,7 @@ require_once 'authentication.php';
 								
 							</div>
 							<div class="tab-pane" id="dtr">
-							
+								<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-primary" ng-click="appService.printDTR()"><i class="btn-icon-only icon-print"></i></a></div>							
 							</div>
 						</div>
 							
@@ -435,6 +435,10 @@ require_once 'authentication.php';
 <script src="modules/block-ui.js"></script>
 <script src="modules/bootstrap-notify.js"></script>
 <script src="modules/account.js"></script>
+
+<script src="jspdf/jspdf.min.js"></script>
+<script src="jspdf/faker.min.js"></script>
+<script src="jspdf/jspdf.plugin.autotable.src.js"></script>
 
 <script src="controllers/employees.js"></script>
 
