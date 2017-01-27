@@ -25,7 +25,7 @@ app.service('fileUpload', ['$http', function ($http) {
 		
 	   var fd = new FormData();
 	   fd.append('file', file);
-	
+
         var xhr = new XMLHttpRequest();
         xhr.upload.addEventListener("progress", uploadProgress, false);
         xhr.addEventListener("load", uploadComplete, false);
@@ -326,51 +326,84 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 		};
 		
 		this.printDTR = function() {
+		
+			$http({
+			  method: 'POST',
+			  url: 'controllers/employees.php?r=dtr',
+			  data: {},
+			  headers : {'Content-Type': 'application/x-www-form-urlencoded'}
+			}).then(function mySucces(response) {		
 			
-			var doc = new jsPDF({
-			  orientation: 'portrait',
-			  unit: 'pt',
-			  format: [612, 792]
-			});			
+				var doc = new jsPDF({
+				  orientation: 'portrait',
+				  unit: 'pt',
+				  format: [612, 936]
+				});			
 
-			var totalPagesExp = "{total_pages_count_string}";
+				var totalPagesExp = "{total_pages_count_string}";
 
-			var pageContent = function (data) { console.log(data);
-			
-				var title = "Provincial Government of La Union";
+				var pageContent = function (data) {
+
+					// HEADER
+					doc.setFontSize(12);
+					doc.setTextColor(50);
+					doc.setFontStyle('bold');
+					doc.textWithAlignment("Provincial Government of La Union", {align: "center"}, 0, 40);
+					doc.setFontSize(10);
+					doc.setTextColor(80);
+					doc.setFontStyle('normal');				
+					doc.textWithAlignment("San Fernando City, La Union", {align: "center"}, 0, 55);
+					doc.setFontSize(16);
+					doc.setTextColor(50);
+					doc.textWithAlignment("Daily Time Record", {align: "center"}, 0, 90);
+					doc.setFontSize(12);
+					doc.setTextColor(70);
+					doc.setFontStyle('bold');
+					doc.text("QUINIVISTA, VANESSA L.", data.settings.margin.left, 120);
+					doc.line(data.settings.margin.left, 125, data.table.width+data.settings.margin.left, 125);
+					doc.setFontSize(10);
+					doc.setFontStyle('normal');
+					doc.text("December 2016", data.settings.margin.left, 138);
+					doc.textWithAlignment("BDH Casuals", {align: "right", margin: data.settings.margin.right}, 0, 138);				
+					doc.setTextColor(30);
+					doc.text("Total: ", 355, doc.internal.pageSize.height - 130);
+					doc.text("Days Absent: ", 320, doc.internal.pageSize.height - 115);
+					doc.setFontSize(9);
+					doc.setTextColor(80);
+					doc.setFontStyle('italic');
+					doc.text("I hereby CERTIFY on my honor that the above is true and correct report of the hours of work performed, record of which was", data.settings.margin.left, doc.internal.pageSize.height - 95);
+					doc.text("made daily at the time of arrival and departure from Office.", data.settings.margin.left, doc.internal.pageSize.height - 85);
+					
+					// FOOTER
+					var str = "Page " + data.pageCount;
+					// Total page number plugin only available in jspdf v1.0+
+					if (typeof doc.putTotalPages === 'function') {
+						str = str + " of " + totalPagesExp;
+					}
+					doc.setFontSize(10);
+					doc.setTextColor(95);
+					doc.text(str, data.settings.margin.left, doc.internal.pageSize.height - 10);
+					
+				};
+
+				doc.autoTable(response.data.columns, response.data.rows, {
+					theme: 'grid',
+					addPageContent: pageContent,
+					margin: {top: 147}
+				});			
 				
-				// HEADER
-				doc.setFontSize(12);
-				doc.setTextColor(50);
-				doc.setFontStyle('bold');
-				doc.text(title, (data.table.width/2)-(title.length+(title.length/2)), data.settings.margin.top);
-				// doc.setFontSize(10);
-				// doc.setTextColor(10);
-				// doc.text(Object.keys($scope.views.months)[parseInt(filter.month)-1]+" "+filter.year, data.settings.margin.left, 45);
 				
-				// FOOTER
-				var str = "Page " + data.pageCount;
 				// Total page number plugin only available in jspdf v1.0+
 				if (typeof doc.putTotalPages === 'function') {
-					str = str + " of " + totalPagesExp;
+					doc.putTotalPages(totalPagesExp);
 				}
-				doc.setFontSize(10);
-				doc.text(str, data.settings.margin.left, doc.internal.pageSize.height - 10);
-				
-			};
-
-			doc.autoTable([], [], {
-				theme: 'grid',
-				addPageContent: pageContent,
-				margin: {top: 60}
-			});			
 			
-			// Total page number plugin only available in jspdf v1.0+
-			if (typeof doc.putTotalPages === 'function') {
-				doc.putTotalPages(totalPagesExp);
-			}
-		
-			doc.output('dataurlnewwindow');
+				doc.output('dataurlnewwindow');
+				
+			},
+			function myError(response) {
+
+			});					
 		
 		}
 		

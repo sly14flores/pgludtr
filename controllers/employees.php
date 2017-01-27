@@ -68,6 +68,42 @@ switch ($_GET['r']) {
 		echo json_encode($employee[0]);
 	
 	break;
+	
+	case "dtr":
+	
+		$table = [];
+		$table["columns"][] = array("title"=>"Date","dataKey"=>"date");
+		$table["columns"][] = array("title"=>"Day","dataKey"=>"day");
+		$table["columns"][] = array("title"=>"Time In","dataKey"=>"morning_in");
+		$table["columns"][] = array("title"=>"Time Out","dataKey"=>"morning_out");
+		$table["columns"][] = array("title"=>"Time In","dataKey"=>"afternoon_in");
+		$table["columns"][] = array("title"=>"Time Out","dataKey"=>"afternoon_out");
+		$table["columns"][] = array("title"=>"Tardiness","dataKey"=>"tardiness");
+	
+		$date = "2017-01-01";
+		$start = date("Y-m-d",strtotime($date));
+		$end = date("Y-m-t",strtotime($date));		
+	
+		$key = 0;
+		while (strtotime($start) <= strtotime($end)) {
+			
+			$table["rows"][$key]["date"] = date("j",strtotime($start));
+			$table["rows"][$key]["day"] = date("D",strtotime($start));
+			$table["rows"][$key]["morning_in"] = "";
+			$table["rows"][$key]["morning_out"] = "";
+			$table["rows"][$key]["afternoon_in"] = "";
+			$table["rows"][$key]["afternoon_out"] = "";
+			$table["rows"][$key]["tardiness"] = "";
+			
+			$start = date("Y-m-d", strtotime("+1 day", strtotime($start)));	
+			$key++;			
+			
+		}
+	
+		echo json_encode($table);
+	
+	break;
+	
 }
 
 ?>

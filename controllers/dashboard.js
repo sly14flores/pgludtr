@@ -279,7 +279,7 @@ app.service('fileUpload', function (consoleMsg) {
         xhr.addEventListener("load", uploadComplete, false);
         xhr.open("POST", uploadUrl)
         xhr.send(fd);
-	   
+
 		// upload progress
 		function uploadProgress(evt) {
 			scope.$apply(function(){

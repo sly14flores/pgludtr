@@ -439,6 +439,7 @@ require_once 'authentication.php';
 <script src="jspdf/jspdf.min.js"></script>
 <script src="jspdf/faker.min.js"></script>
 <script src="jspdf/jspdf.plugin.autotable.src.js"></script>
+<script src="jspdf/jspdf-api.js"></script>
 
 <script src="controllers/employees.js"></script>
 
