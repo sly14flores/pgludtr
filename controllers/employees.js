@@ -355,25 +355,34 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 					doc.textWithAlignment("San Fernando City, La Union", {align: "center"}, 0, 55);
 					doc.setFontSize(16);
 					doc.setTextColor(50);
-					doc.textWithAlignment("Daily Time Record", {align: "center"}, 0, 90);
+					doc.textWithAlignment("Daily Time Record", {align: "center"}, 0, 85);
 					doc.setFontSize(12);
 					doc.setTextColor(70);
 					doc.setFontStyle('bold');
-					doc.text("QUINIVISTA, VANESSA L.", data.settings.margin.left, 120);
-					doc.line(data.settings.margin.left, 125, data.table.width+data.settings.margin.left, 125);
+					doc.text("QUINIVISTA, VANESSA L.", data.settings.margin.left, 110);
+					doc.line(data.settings.margin.left, 114, data.table.width+data.settings.margin.left, 114);
 					doc.setFontSize(10);
 					doc.setFontStyle('normal');
-					doc.text("December 2016", data.settings.margin.left, 138);
-					doc.textWithAlignment("BDH Casuals", {align: "right", margin: data.settings.margin.right}, 0, 138);				
-					doc.setTextColor(30);
-					doc.text("Total: ", 355, doc.internal.pageSize.height - 130);
-					doc.text("Days Absent: ", 320, doc.internal.pageSize.height - 115);
+					doc.text("December 2016", data.settings.margin.left, 125);
+					doc.textWithAlignment("BDH Casuals", {align: "right", margin: data.settings.margin.right}, 0, 125);
+					doc.setTextColor(60);
+					doc.text("Total: ", 355, doc.internal.pageSize.height - 150);
+					doc.text("Days Absent: ", 320, doc.internal.pageSize.height - 135);
 					doc.setFontSize(9);
 					doc.setTextColor(80);
 					doc.setFontStyle('italic');
-					doc.text("I hereby CERTIFY on my honor that the above is true and correct report of the hours of work performed, record of which was", data.settings.margin.left, doc.internal.pageSize.height - 95);
-					doc.text("made daily at the time of arrival and departure from Office.", data.settings.margin.left, doc.internal.pageSize.height - 85);
-					
+					doc.text("I hereby CERTIFY on my honor that the above is true and correct report of the hours of work performed, record of which was made", data.settings.margin.left, doc.internal.pageSize.height - 115);
+					doc.text("daily at the time of arrival and departure from Office.", data.settings.margin.left, doc.internal.pageSize.height - 103);
+					doc.setFontStyle('bold');					
+					doc.textWithAlignment("Verified as to the prescribed office hours:", {align: "right", margin: data.settings.margin.right+10}, 0, doc.internal.pageSize.height - 90);
+					doc.setLineWidth(1);
+					doc.line(data.settings.margin.left+30, doc.internal.pageSize.height - 60, 280, doc.internal.pageSize.height - 60);					
+					doc.line(332, doc.internal.pageSize.height - 60, 542, doc.internal.pageSize.height - 60);
+					var employee = "QUINIVISTA, VANESSA L.";
+					var signatory = "Head/Supervisor";
+					doc.text(employee, (((doc.internal.pageSize.width/2)-((doc.getStringUnitWidth(employee)*doc.internal.getFontSize())/doc.internal.scaleFactor))/2)+20, doc.internal.pageSize.height - 45);
+					doc.text(signatory, (((doc.internal.pageSize.width/2)-((doc.getStringUnitWidth(signatory)*doc.internal.getFontSize())/doc.internal.scaleFactor))/2)+306-20, doc.internal.pageSize.height - 45);
+
 					// FOOTER
 					var str = "Page " + data.pageCount;
 					// Total page number plugin only available in jspdf v1.0+
@@ -389,9 +398,14 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 				doc.autoTable(response.data.columns, response.data.rows, {
 					theme: 'grid',
 					addPageContent: pageContent,
-					margin: {top: 147}
-				});			
-				
+					margin: {top: 132},
+					headerStyles: {
+						fontSize: 10
+					},					
+					styles: {
+						fontSize: 10					
+					}					
+				});				
 				
 				// Total page number plugin only available in jspdf v1.0+
 				if (typeof doc.putTotalPages === 'function') {
