@@ -1,6 +1,6 @@
 var app = angular.module('dashboard', ['block-ui','bootstrap-modal','bootstrap-notify','account']);
 
-app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload) {
+app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload,blockUI) {
 	
 	function appService() {
 		
@@ -47,6 +47,9 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 				return;
 				
 			}
+			
+			scope.views.started = true;
+			blockUI.show("Please wait...");
 			
 			switch (scope.views.howToImport) {
 				
@@ -160,6 +163,8 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 		
 		self.collectLogs = function(scope) {
 			
+			blockUI.hide();
+			
 			$timeout(function() {
 
 				consoleMsg.show(300,'Collecting employees logs...','a');
@@ -215,7 +220,11 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 		
 						scope.views.importProgressDetail = ' - Processed '+ i + ' of ' + logsCount + ' ('+progress+'%), estimated time remaining: '+eta;
 						
-						if (i == logsCount) consoleMsg.show(300,'All logs were successfully imported','a');						
+						if (i == logsCount) {
+							consoleMsg.show(300,'All logs were successfully imported','a');
+							scope.views.started = false;
+						}
+						
 						if (i < logsCount) {
 							i++;
 							putLog(logs[i]);
@@ -345,6 +354,7 @@ $scope.views.recursiveUpload = false;
 $scope.views.importProgressDetail = '';
 
 $scope.appService = appService;
+$scope.views.started = false;
 
 $scope.views.pf = '';
 if (localStorage.pf !== undefined) $scope.views.pf = localStorage.pf;

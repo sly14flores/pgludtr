@@ -7,7 +7,7 @@ require_once 'authentication.php';
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Dashboard - PGLU DTR System</title>
+<title>Schedules - PGLU DTR System</title>
 <link rel="icon" href="favicon.ico">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -31,55 +31,6 @@ require_once 'authentication.php';
 		
 	}
 	
-	.upload {
-		
-		padding: 15px;
-		
-	}
-	
-	.console {
-		
-		font-family: 'Lucida Console';
-		font-size: 14px;		
-		background-color: #282828;
-		height: 285px;
-		padding-left: 5px;
-		overflow: auto;
-		padding-top: 5px;
-		padding-bottom: 5px;
-		
-	}
-	
-	.console .success-response {
-		
-		display: block;
-		margin: 0!important;
-		padding: 0!important;
-		line-height: 18px!important;
-		color: #17b53c;
-		
-	}
-	
-	.console .info-response {
-		
-		display: block;
-		margin: 0!important;
-		padding: 0!important;
-		line-height: 18px!important;		
-		color: #1ec9c3;
-		
-	}		
-	
-	.console .error-response {
-		
-		display: block;
-		margin: 0!important;
-		padding: 0!important;
-		line-height: 18px!important;		
-		color: #ef2f2f;
-		
-	}
-	
 	.login-footer {
 		
 		width: 100%;
@@ -99,7 +50,7 @@ require_once 'authentication.php';
 
 </style>	
 </head>
-<body ng-app="dashboard" ng-controller="dashboardCtrl">
+<body ng-app="schedules" ng-controller="schedulesCtrl">
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
@@ -128,9 +79,9 @@ require_once 'authentication.php';
   <div class="subnavbar-inner">
     <div class="container">
       <ul class="mainnav">
-        <li class="active"><a href="index.php"><i class="icon-dashboard"></i><span>Dashboard</span> </a> </li>
+        <li><a href="index.php"><i class="icon-dashboard"></i><span>Dashboard</span> </a> </li>
         <li><a href="employees.php"><i class="icon-group"></i><span>Employees</span> </a> </li>
-        <li><a href="schedules.php"><i class="icon-calendar"></i><span>Schedules</span> </a> </li>		
+        <li class="active"><a href="schedules.php"><i class="icon-calendar"></i><span>Schedules</span> </a> </li>
       </ul>
     </div>
     <!-- /container --> 
@@ -143,64 +94,85 @@ require_once 'authentication.php';
   <div class="main-inner">
     <div class="container">
       <div class="row">
-		<div class="span5">
-			<div cl ass="widget widget-nopad">
-				<div class="widget-header"> <i class="icon-upload"></i>
-				  <h3>Upload Logs</h3>
-				</div>
-				<div class="widget-content upload">
-					<div class="control-group">				
-						<h3 style="margin-bottom: 5px;">Date</h3>
-						<strong>From:&nbsp;</strong><input type="date" class="span2" ng-model="filter.dateFrom">
-						<strong>To:&nbsp;</strong><input type="date" class="span2" ng-model="filter.dateTo">
-					</div>
-					<div class="control-group">					
-						<h3 style="margin-bottom: 5px;">ID</h3>
-						<strong>From:&nbsp;</strong><input type="text" class="span2" ng-model="filter.idFrom">
-						<strong>To:&nbsp;</strong><input type="text" class="span2" ng-model="filter.idTo">
-					</div>
-					<div class="control-group">
-						<h3 style="margin-bottom: 5px;">Select how to import</h3>					
-						<select class="span4" ng-model="views.howToImport" ng-change="appService.howToImport(this)">
-							<option value="preuploaded">Import logs from pre-uploaded file</option>
-							<option value="upload">Upload log file</option>
-						</select>
-					</div>					
-					<div class="control-group" ng-show="views.showPreUploadedOpt">
-						<h3 style="margin-bottom: 5px;">Import logs from pre-uploaded file</h3>					
-						<select ng-model="views.prefile" class="span2" ng-disabled="views.usePreviousFile && views.howToImport == 'upload'">
-							<option value="dat">Text Files</option>
-							<option value="mdb">Network File</option>
-						</select>
-					</div>
-					<div class="control-group" ng-show="views.showUploadOpt">					
-						<h3 style="margin-bottom: 5px;">Upload log file</h3>
-						<input type="file" name="logFile" id="logFile" file-model="views.logFile" ng-disabled="views.usePreviousFile">
-						<div class="checkbox">
-							<label>
-							  <input type="checkbox" name="usePreviousFile" ng-model="views.usePreviousFile" ng-change="appService.chkPf(views.usePreviousFile)"> Use previously uploaded file {{(views.pf != '')?'(':''}}{{views.pf}}{{(views.pf != '')?')':''}}
-							</label>
-						</div>						
-					</div>					
-					<div class="control-group">
-						<div class="span4">
-							<button class="btn btn-primary pull-right" type="button" ng-click="appService.start(this)" ng-disabled="views.started">Upload</button>
-						</div>
-					</div>
-				</div>
-			  </div>	
-		</div>
-		<div class="span7">
+		<div class="span4">
           <div class="widget widget-table action-table">
-            <div class="widget-header"> <i class="icon-ellipsis-horizontal"></i>
-              <h3>Console {{views.importProgressDetail}}</h3>
+            <div class="widget-header"> <i class="icon-calendar"></i>
+              <h3>Schedules</h3><button class="btn btn-primary btn-xs pull-right" type="button" style="margin-top: 6px; margin-right: 10px;" ng-click="appService.add(this)" ng-disabled="false">Add</button>
             </div>
             <!-- /widget-header -->
             <div class="widget-content">
-				<div class="console">
+				
+				<div class="controls" style="margin: 10px 0 10px 10px;">
+					<strong>Search:&nbsp;</strong><input type="text" class="span3" ng-model="q">
 				</div>
+			
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+				
+                  <tr dir-paginate="schedule in schedules | filter: q | itemsPerPage: pageSize" current-page="currentPage" style="cursor: pointer;" ng-click="appService.view(this)">
+                    <td> {{schedule.id}} </td>
+                    <td> {{schedule.description}} </td>
+                  </tr>
+                
+                </tbody>
+              </table>
+			  <dir-pagination-controls template-url="angularjs/utils/pagination/dirPagination.tpl.html"></dir-pagination-controls>
             </div>
             <!-- /widget-content --> 
+          </div>	
+		</div>
+		<div class="span8">
+          <div class="widget">
+            <div class="widget-header"> <i class="icon-calendar"></i>
+              <h3></h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+              <div class="widget big-stats-container">
+                <div class="widget-content">
+				
+					<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-success" ng-disabled="controls.personalInfo.editBtn" ng-click="appService.edit(this)"><i class="btn-icon-only icon-edit"> </i></a>&nbsp;&nbsp;<a href="javascript:;" class="btn btn-danger btn-small" ng-disabled="controls.personalInfo.delBtn" ng-click="appService.confirmDel(this)"><i class="btn-icon-only icon-remove"> </i></a></div>
+					<form name="frmHolder.schedule" autocomplete="off">
+						<fieldset>
+							<div class="row">
+								<div class="span2">
+									<div class="control-group">
+										<label><strong>First Name</strong></label>
+										<div class="controls">
+											<input type="text" class="span2" name="first_name" ng-model="personalInfo.first_name" ng-disabled="controls.personalInfo.first_name" required>
+										</div>
+									</div>
+								</div>
+								<div class="span2">
+									<div class="control-group" ng-class="{'error': frmHolder.personalInfo.middle_name.$invalid && frmHolder.personalInfo.middle_name.$touched}">
+										<label><strong>Middle Name</strong></label>
+										<div class="controls">
+											<input type="text" class="span2" name="middle_name" ng-model="personalInfo.middle_name" ng-disabled="controls.personalInfo.middle_name" required>
+										</div>
+									</div>
+								</div>
+								<div class="span2">
+									<div class="control-group" ng-class="{'error': frmHolder.personalInfo.last_name.$invalid && frmHolder.personalInfo.last_name.$touched}">
+										<label><strong>Last Name</strong></label>
+										<div class="controls">
+											<input type="text" class="span2" name="last_name" ng-model="personalInfo.last_name" ng-disabled="controls.personalInfo.last_name" required>
+										</div>
+									</div>
+								</div>								
+							</div>						
+						</fieldset>
+					</form>
+				
+                </div>
+                <!-- /widget-content -->                 
+              </div>
+            </div>
           </div>		
 		</div>		
       </div>
@@ -289,7 +261,7 @@ require_once 'authentication.php';
 <script src="modules/bootstrap-notify.js"></script>
 <script src="modules/account.js"></script>
 
-<script src="controllers/dashboard.js"></script>
+<script src="controllers/schedules.js"></script>
 
 </body>
 </html>

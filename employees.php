@@ -89,6 +89,7 @@ require_once 'authentication.php';
       <ul class="mainnav">
         <li><a href="index.php"><i class="icon-dashboard"></i><span>Dashboard</span> </a> </li>
         <li class="active"><a href="employees.php"><i class="icon-group"></i><span>Employees</span> </a> </li>
+        <li><a href="schedules.php"><i class="icon-calendar"></i><span>Schedules</span> </a> </li>		
       </ul>
     </div>
     <!-- /container --> 
