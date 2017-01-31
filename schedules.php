@@ -97,7 +97,7 @@ require_once 'authentication.php';
 		<div class="span4">
           <div class="widget widget-table action-table">
             <div class="widget-header"> <i class="icon-calendar"></i>
-              <h3>Schedules</h3><button class="btn btn-primary btn-xs pull-right" type="button" style="margin-top: 6px; margin-right: 10px;" ng-click="appService.add(this)" ng-disabled="false">Add</button>
+              <h3>Schedules</h3><button class="btn btn-primary btn-xs pull-right" type="button" style="margin-top: 6px; margin-right: 10px;" ng-click="appService.add(this)" ng-disabled="controls.schedule.addBtn">Add</button>
             </div>
             <!-- /widget-header -->
             <div class="widget-content">
@@ -113,13 +113,11 @@ require_once 'authentication.php';
                     <th>Description</th>
                   </tr>
                 </thead>
-                <tbody>
-				
+                <tbody>				
                   <tr dir-paginate="schedule in schedules | filter: q | itemsPerPage: pageSize" current-page="currentPage" style="cursor: pointer;" ng-click="appService.view(this)">
                     <td> {{schedule.id}} </td>
                     <td> {{schedule.description}} </td>
-                  </tr>
-                
+                  </tr>                
                 </tbody>
               </table>
 			  <dir-pagination-controls template-url="angularjs/utils/pagination/dirPagination.tpl.html"></dir-pagination-controls>
@@ -137,36 +135,109 @@ require_once 'authentication.php';
               <div class="widget big-stats-container">
                 <div class="widget-content">
 				
-					<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-success" ng-disabled="controls.personalInfo.editBtn" ng-click="appService.edit(this)"><i class="btn-icon-only icon-edit"> </i></a>&nbsp;&nbsp;<a href="javascript:;" class="btn btn-danger btn-small" ng-disabled="controls.personalInfo.delBtn" ng-click="appService.confirmDel(this)"><i class="btn-icon-only icon-remove"> </i></a></div>
-					<form name="frmHolder.schedule" autocomplete="off">
-						<fieldset>
+					<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-success" ng-disabled="controls.schedule.editBtn" ng-click="appService.edit(this)"><i class="btn-icon-only icon-edit"> </i></a>&nbsp;&nbsp;<a href="javascript:;" class="btn btn-danger btn-small" ng-disabled="controls.schedule.delBtn" ng-click="appService.confirmDel(this)"><i class="btn-icon-only icon-remove"> </i></a></div>
+					<div style="clear: both; padding-top: 15px;"></div>
+					<hr>
+					<form name="frmHolder.schedule" autocomplete="off" novalidate>
+						<fieldset>						
+							<div class="row">
+								<div class="span2">
+									<div class="control-group" ng-class="{'error': frmHolder.schedule.description.$invalid && frmHolder.schedule.description.$touched}">
+										<label><h2>Description</h2></label>
+										<div class="controls">
+											<input type="text" class="span4" name="description" ng-model="schedule.description" ng-disabled="controls.schedule.description" required>
+										</div>
+									</div>
+								</div>							
+							</div>
+							<div ng-repeat="detail in schedule.details">
+							<h3 style="margin-bottom: 5px;">{{detail.day}}</h3>
 							<div class="row">
 								<div class="span2">
 									<div class="control-group">
-										<label><strong>First Name</strong></label>
+										<label><strong>Day Off</strong></label>
 										<div class="controls">
-											<input type="text" class="span2" name="first_name" ng-model="personalInfo.first_name" ng-disabled="controls.personalInfo.first_name" required>
+											<label class="radio inline">
+											  <input type="radio" name="{{detail.day+'_dayoff'}}" value="0" ng-model="detail.dayoff" ng-disabled="controls.schedule.dayoff"> No
+											</label>
+											
+											<label class="radio inline">
+											  <input type="radio" name="{{detail.day+'_dayoff'}}" value="1" ng-model="detail.dayoff" ng-disabled="controls.schedule.dayoff"> Yes
+											</label>
+										</div>
+									</div>								
+								</div>							
+							</div>
+							<div class="row">
+								<div class="span2">
+									<div class="control-group">
+										<label><strong>Morning In</strong></label>
+										<div class="controls">
+											<input type="time" class="span2" name="morning_in" ng-model="detail.morning_in" ng-disabled="controls.schedule.morning_in" required>
 										</div>
 									</div>
 								</div>
 								<div class="span2">
-									<div class="control-group" ng-class="{'error': frmHolder.personalInfo.middle_name.$invalid && frmHolder.personalInfo.middle_name.$touched}">
-										<label><strong>Middle Name</strong></label>
+									<div class="control-group">
+										<label><strong>Morning Out</strong></label>
 										<div class="controls">
-											<input type="text" class="span2" name="middle_name" ng-model="personalInfo.middle_name" ng-disabled="controls.personalInfo.middle_name" required>
-										</div>
-									</div>
-								</div>
-								<div class="span2">
-									<div class="control-group" ng-class="{'error': frmHolder.personalInfo.last_name.$invalid && frmHolder.personalInfo.last_name.$touched}">
-										<label><strong>Last Name</strong></label>
-										<div class="controls">
-											<input type="text" class="span2" name="last_name" ng-model="personalInfo.last_name" ng-disabled="controls.personalInfo.last_name" required>
+											<input type="time" class="span2" name="morning_out" ng-model="detail.morning_out" ng-disabled="controls.schedule.morning_out" required>
 										</div>
 									</div>
 								</div>								
+							</div>
+							<div class="row">							
+								<div class="span2">
+									<div class="control-group">
+										<label><strong>Afternoon In</strong></label>
+										<div class="controls">
+											<input type="time" class="span2" name="afternoon_in" ng-model="detail.afternoon_in" ng-disabled="controls.schedule.afternoon_in" required>
+										</div>
+									</div>
+								</div>
+								<div class="span2">
+									<div class="control-group">
+										<label><strong>Afternoon Out</strong></label>
+										<div class="controls">
+											<input type="time" class="span2" name="afternoon_out" ng-model="detail.afternoon_out" ng-disabled="controls.schedule.afternoon_out" required>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="span2">
+									<div class="control-group">
+										<label><strong>Transcending</strong></label>
+										<div class="controls">
+											<label class="radio inline">
+											  <input type="radio" name="{{detail.day+'_transcending'}}" value="0" ng-model="detail.transcending" ng-disabled="controls.schedule.transcending"> No
+											</label>
+											
+											<label class="radio inline">
+											  <input type="radio" name="{{detail.day+'_transcending'}}" value="1" ng-model="detail.transcending" ng-disabled="controls.schedule.transcending"> Yes
+											</label>
+										</div>
+									</div>
+								</div>
+								<div class="span2">					
+									<div class="control-group">
+										<label><strong>No of day(s)</strong></label>
+										<div class="controls">
+											<input type="number" class="span2" name="transcending_days_no" ng-model="detail.transcending_days_no" ng-disabled="controls.schedule.transcending_days_no">
+										</div>
+									</div>
+								</div>
 							</div>						
 						</fieldset>
+						</div>
+						<div class="row">
+							<div class="span6">
+								<div class="form-actions">
+									<button type="button" class="btn btn-primary" ng-disabled="controls.schedule.saveBtn" ng-click="appService.update(this)">{{views.addUpdateTxt}}</button> 
+									<button class="btn" ng-disabled="controls.schedule.cancelBtn" ng-click="appService.cancel(this)">{{views.cancelCloseTxt}}</button>
+								</div>
+							</div>
+						</div>						
 					</form>
 				
                 </div>
@@ -184,7 +255,7 @@ require_once 'authentication.php';
 </div>
 <!-- /main -->
 
-<div class="footer" ng-class="{'login-footer': views.howToImport == 'preuploaded' || views.howToImport == undefined}">
+<div class="footer">
   <div class="footer-inner">
     <div class="container">
       <div class="row">
@@ -255,6 +326,8 @@ require_once 'authentication.php';
 <script src="js/bootstrap.js"></script>
 <script src="js/jquery.blockUI.js"></script>
 <script src="js/bootstrap-notify-3.1.3/bootstrap-notify.min.js"></script>
+
+<script src="angularjs/utils/pagination/dirPagination.js"></script>
 
 <script src="modules/bootstrap-modal.js"></script>
 <script src="modules/block-ui.js"></script>
