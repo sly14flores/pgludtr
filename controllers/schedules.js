@@ -1,6 +1,6 @@
 var app = angular.module('schedules', ['angularUtils.directives.dirPagination','block-ui','bootstrap-modal','bootstrap-notify','account']);
 
-app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal) {
+app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,blockUI) {
 	
 	function appService() {
 		
@@ -10,13 +10,8 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 			
 			scope.controls.schedule = {
 				description: opt,
-				morning_in: opt,
-				morning_out: opt,
-				afternoon_in: opt,
-				afternoon_out: opt,
 				dayoff: opt,
 				transcending: opt,
-				transcending_days_no: opt,
 				saveBtn: opt,
 				cancelBtn: opt,
 				editBtn: opt,
@@ -48,7 +43,9 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 			self.controls(scope,false);
 			scope.controls.schedule.addBtn = true;
 			scope.controls.schedule.editBtn = true;
-			scope.controls.schedule.delBtn = true;	
+			scope.controls.schedule.delBtn = true;
+			scope.views.addUpdateTxt = 'Save';
+			scope.views.cancelCloseTxt = 'Cancel';			
 		};
 		
 		this.onUpdate = function(scope) {
@@ -62,15 +59,35 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 			self.controls(scope,true);
 			scope.controls.schedule.addBtn = false;
 			scope.controls.schedule.editBtn = true;
-			scope.controls.schedule.delBtn = true;				
+			scope.controls.schedule.delBtn = true;	
+		};
+		
+		this.onView = function(scope) {
+			self.controls(scope,true);
+			scope.controls.schedule.addBtn = false;
+			scope.controls.schedule.editBtn = false;
+			scope.controls.schedule.delBtn = false;
+			scope.views.addUpdateTxt = 'Update';
+			scope.views.cancelCloseTxt = 'Close';			
+		};
+		
+		this.onEdit = function(scope) {
+			self.controls(scope,false);
+			scope.controls.schedule.addBtn = true;
+			scope.controls.schedule.editBtn = true;
+			scope.controls.schedule.delBtn = false;
+		};
+		
+		this.onClose = function(scope) {
+			self.controls(scope,true);
+			scope.controls.schedule.addBtn = false;
+			scope.controls.schedule.editBtn = false;
+			scope.controls.schedule.delBtn = false;		
 		};
 		
 		this.add = function(scope) {
 			
-			self.onAdd(scope);			
-			
-			scope.views.addUpdateTxt = 'Save';
-			scope.views.cancelCloseTxt = 'Cancel';
+			self.onAdd(scope);
 			
 			// insert new schedule
 			
@@ -105,8 +122,12 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 			  url: 'controllers/schedules.php?r=update',
 			  data: scope.schedule
 			}).then(function mySucces(response) {
-			
+
 				self.start(scope);
+				if (scope.views.addUpdateTxt == 'Save') {
+					angular.copy(scope.schedule_struct,scope.schedule);
+					scope.frmHolder.schedule.description.$touched = false;							
+				}
 				
 			}, function myError(response) {
 				 
@@ -118,28 +139,22 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 		
 		this.cancel = function(scope) {
 			
+			if (scope.views.cancelCloseTxt == 'Close') {
+				self.onClose(scope);
+				return;
+			}
+			
 			$http({
 			  method: 'POST',
 			  url: 'controllers/schedules.php?r=cancel',
 			  data: {id: [scope.schedule.id]}
 			}).then(function mySucces(response) {
 				
-				scope.schedule = {
-					id: 0,
-					description: "",
-					details: [
-						{day: "Monday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-						{day: "Tuesday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-						{day: "Wednesday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-						{day: "Thursday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-						{day: "Friday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-						{day: "Saturday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-						{day: "Sunday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0}
-					]
-				};
+				angular.copy(scope.schedule_struct,scope.schedule);
 				
 				self.onCancel(scope);
 				self.start(scope);
+				scope.frmHolder.schedule.description.$touched = false;
 				
 			}, function myError(response) {
 				 
@@ -150,8 +165,71 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 		};
 		
 		this.view = function(scope) {
-
+			
+			blockUI.show();
+			
+			self.onView(scope);
+			
+			$http({
+			  method: 'POST',
+			  url: 'controllers/schedules.php?r=view',
+			  data: {id: scope.schedule_row.id}
+			}).then(function mySucces(response) {
+				
+				angular.forEach(response.data.details,function(item,i) {
+					response.data.details[i]['morning_in'] = new Date("2000-01-01 "+item['morning_in']);
+					response.data.details[i]['morning_out'] = new Date("2000-01-01 "+item['morning_out']);
+					response.data.details[i]['afternoon_in'] = new Date("2000-01-01 "+item['afternoon_in']);
+					response.data.details[i]['afternoon_out'] = new Date("2000-01-01 "+item['afternoon_out']);
+				});
+						
+				$timeout(function() {
+					angular.copy(response.data, scope.schedule);
+					blockUI.hide();					
+				},500);				
+				
+			}, function myError(response) {
+				 
+			  // error
+				
+			});			
+			
 		};
+		
+		this.edit = function(scope) {
+			
+			self.onEdit(scope);
+			
+		};
+		
+		this.confirmDel = function(scope) {
+
+			bootstrapModal.confirm(scope,'Are you sure want to delete this schedule?','appService.del(this)');
+			
+		};
+		
+		this.del = function(scope) {
+			
+			bootstrapModal.closeConfirm();
+			
+			$http({
+			  method: 'POST',
+			  url: 'controllers/schedules.php?r=cancel',
+			  data: {id: [scope.schedule.id]}
+			}).then(function mySucces(response) {
+				
+				self.onCancel(scope);
+				self.start(scope);
+				angular.copy(scope.schedule_struct,scope.schedule);				
+				scope.frmHolder.schedule.description.$touched = false;			
+
+			}, function myError(response) {
+				 
+			  // error
+				
+			});
+			
+		};		
 		
 	};
 	
@@ -170,19 +248,22 @@ $scope.frmHolder = {};
 $scope.controls = {};
 $scope.controls.schedule = {};
 
-$scope.schedule = {
+$scope.schedule_struct = {
 	id: 0,
 	description: "",
 	details: [
-		{day: "Monday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-		{day: "Tuesday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-		{day: "Wednesday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-		{day: "Thursday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-		{day: "Friday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-		{day: "Saturday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-		{day: "Sunday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0}
+		{id: 0, day: "Monday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
+		{id: 0, day: "Tuesday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
+		{id: 0, day: "Wednesday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
+		{id: 0, day: "Thursday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
+		{id: 0, day: "Friday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
+		{id: 0, day: "Saturday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
+		{id: 0, day: "Sunday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0}
 	]
 };
+
+$scope.schedule = {};
+angular.copy($scope.schedule_struct,$scope.schedule);
 
 $scope.views.addUpdateTxt = "Save";
 $scope.views.cancelCloseTxt = "Cancel";
