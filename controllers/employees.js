@@ -262,7 +262,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 			$http({
 			  method: 'POST',
 			  url: 'controllers/employees.php?r=view',
-			  data: {id: scope.employee.id}
+			  data: {id: scope.employee_row.id}
 			}).then(function mySucces(response) {
 			
 				angular.copy(response.data, scope.personalInfo);

@@ -11,7 +11,12 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			scope.controls.schedule = {
 				description: opt,
 				dayoff: opt,
-				transcending: opt,
+				morning_in: opt,
+				morning_out: opt,
+				afternoon_in: opt,
+				afternoon_out: opt,
+				transcending: opt,			
+				transcending_days_no: opt,			
 				saveBtn: opt,
 				cancelBtn: opt,
 				editBtn: opt,
@@ -97,7 +102,8 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			  data: scope.schedule
 			}).then(function mySucces(response) {
 			
-				scope.schedule.id = response.data;
+				angular.copy(scope.schedule_struct,scope.schedule);
+				scope.schedule.id = response.data;			
 				
 			}, function myError(response) {
 				 
@@ -127,6 +133,8 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 				if (scope.views.addUpdateTxt == 'Save') {
 					angular.copy(scope.schedule_struct,scope.schedule);
 					scope.frmHolder.schedule.description.$touched = false;							
+				} else {
+					scope.views.onEdit = false;
 				}
 				
 			}, function myError(response) {
@@ -141,6 +149,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			
 			if (scope.views.cancelCloseTxt == 'Close') {
 				self.onClose(scope);
+				scope.views.onEdit = false;
 				return;
 			}
 			
@@ -165,6 +174,11 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 		};
 		
 		this.view = function(scope) {
+			
+			if (scope.views.onEdit) {
+				bootstrapNotify.show('danger','Please close the schedule currently being edited to view another schedule');
+				return;
+			}
 			
 			blockUI.show();
 			
@@ -199,6 +213,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 		this.edit = function(scope) {
 			
 			self.onEdit(scope);
+			scope.views.onEdit = true;
 			
 		};
 		
@@ -248,17 +263,19 @@ $scope.frmHolder = {};
 $scope.controls = {};
 $scope.controls.schedule = {};
 
+$scope.views.onEdit = false;
+
 $scope.schedule_struct = {
 	id: 0,
 	description: "",
 	details: [
-		{id: 0, day: "Monday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-		{id: 0, day: "Tuesday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-		{id: 0, day: "Wednesday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-		{id: 0, day: "Thursday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-		{id: 0, day: "Friday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-		{id: 0, day: "Saturday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0},
-		{id: 0, day: "Sunday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 0}
+		{id: 0, day: "Monday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 1},
+		{id: 0, day: "Tuesday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 1},
+		{id: 0, day: "Wednesday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 1},
+		{id: 0, day: "Thursday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 1},
+		{id: 0, day: "Friday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 1},
+		{id: 0, day: "Saturday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 1},
+		{id: 0, day: "Sunday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 1}
 	]
 };
 

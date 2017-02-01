@@ -138,6 +138,10 @@ require_once 'authentication.php';
 					<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-success" ng-disabled="controls.schedule.editBtn" ng-click="appService.edit(this)"><i class="btn-icon-only icon-edit"> </i></a>&nbsp;&nbsp;<a href="javascript:;" class="btn btn-danger btn-small" ng-disabled="controls.schedule.delBtn" ng-click="appService.confirmDel(this)"><i class="btn-icon-only icon-remove"> </i></a></div>
 					<div style="clear: both; padding-top: 15px;"></div>
 					<hr>
+					<!--<div class="alert alert-info">
+					  <button type="button" class="close" data-dismiss="alert">×</button>
+					  <strong>Note!</strong> If transcending is set to Yes you only need to provide Morning In and Morning Out
+					</div>					-->
 					<form name="frmHolder.schedule" autocomplete="off" novalidate>
 						<fieldset>						
 							<div class="row">
@@ -173,7 +177,7 @@ require_once 'authentication.php';
 									<div class="control-group">
 										<label><strong>Morning In</strong></label>
 										<div class="controls">
-											<input type="time" class="span2" name="morning_in" ng-model="detail.morning_in" ng-disabled="detail.dayoff == 1" required>
+											<input type="time" class="span2" name="morning_in" ng-model="detail.morning_in" ng-disabled="detail.dayoff == 1 || controls.schedule.morning_in" required>
 										</div>
 									</div>
 								</div>
@@ -181,7 +185,7 @@ require_once 'authentication.php';
 									<div class="control-group">
 										<label><strong>Morning Out</strong></label>
 										<div class="controls">
-											<input type="time" class="span2" name="morning_out" ng-model="detail.morning_out" ng-disabled="detail.dayoff == 1" required>
+											<input type="time" class="span2" name="morning_out" ng-model="detail.morning_out" ng-disabled="detail.dayoff == 1 || controls.schedule.morning_out" required>
 										</div>
 									</div>
 								</div>								
@@ -191,7 +195,7 @@ require_once 'authentication.php';
 									<div class="control-group">
 										<label><strong>Afternoon In</strong></label>
 										<div class="controls">
-											<input type="time" class="span2" name="afternoon_in" ng-model="detail.afternoon_in" ng-disabled="detail.dayoff == 1" required>
+											<input type="time" class="span2" name="afternoon_in" ng-model="detail.afternoon_in" ng-disabled="detail.dayoff == 1 || controls.schedule.afternoon_in" required>
 										</div>
 									</div>
 								</div>
@@ -199,7 +203,7 @@ require_once 'authentication.php';
 									<div class="control-group">
 										<label><strong>Afternoon Out</strong></label>
 										<div class="controls">
-											<input type="time" class="span2" name="afternoon_out" ng-model="detail.afternoon_out" ng-disabled="detail.dayoff == 1" required>
+											<input type="time" class="span2" name="afternoon_out" ng-model="detail.afternoon_out" ng-disabled="detail.dayoff == 1 || controls.schedule.afternoon_out" required>
 										</div>
 									</div>
 								</div>
@@ -210,11 +214,11 @@ require_once 'authentication.php';
 										<label><strong>Transcending</strong></label>
 										<div class="controls">
 											<label class="radio inline">
-											  <input type="radio" name="{{detail.day+'_transcending'}}" value="0" ng-model="detail.transcending" ng-disabled="detail.dayoff == 1"> No
+											  <input type="radio" name="{{detail.day+'_transcending'}}" value="0" ng-model="detail.transcending" ng-disabled="detail.dayoff == 1 || controls.schedule.transcending"> No
 											</label>
 											
 											<label class="radio inline">
-											  <input type="radio" name="{{detail.day+'_transcending'}}" value="1" ng-model="detail.transcending" ng-disabled="detail.dayoff == 1"> Yes
+											  <input type="radio" name="{{detail.day+'_transcending'}}" value="1" ng-model="detail.transcending" ng-disabled="detail.dayoff == 1 || controls.schedule.transcending"> Yes
 											</label>
 										</div>
 									</div>
@@ -223,7 +227,7 @@ require_once 'authentication.php';
 									<div class="control-group">
 										<label><strong>No of day(s)</strong></label>
 										<div class="controls">
-											<input type="number" class="span2" name="transcending_days_no" ng-model="detail.transcending_days_no" ng-disabled="detail.transcending == 0">
+											<input type="number" class="span2" name="transcending_days_no" ng-model="detail.transcending_days_no" ng-disabled="detail.transcending == 0 || controls.schedule.transcending_days_no">
 										</div>
 									</div>
 								</div>

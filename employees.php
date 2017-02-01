@@ -123,9 +123,9 @@ require_once 'authentication.php';
                 </thead>
                 <tbody>
 				
-                  <tr dir-paginate="employee in employees | filter: q | itemsPerPage: pageSize" current-page="currentPage" style="cursor: pointer;" ng-click="appService.view(this)">
-                    <td> {{employee.empid}} </td>
-                    <td> {{employee.full_name}} </td>
+                  <tr dir-paginate="employee_row in employees | filter: q | itemsPerPage: pageSize" current-page="currentPage" style="cursor: pointer;" ng-click="appService.view(this)">
+                    <td> {{employee_row.empid}} </td>
+                    <td> {{employee_row.full_name}} </td>
                   </tr>
                 
                 </tbody>
