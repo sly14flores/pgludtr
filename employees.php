@@ -38,6 +38,14 @@ require_once 'authentication.php';
 		
 	}
 	
+	#tab-dtr {
+		margin-top: 25px;
+	}
+	
+	#tab-dtr thead th {
+		text-align: center;
+	}
+	
 /* 	.login-footer {
 		
 		width: 100%;
@@ -145,7 +153,14 @@ require_once 'authentication.php';
               <div class="widget big-stats-container">
                 <div class="widget-content">
 				
-						<div><img src="{{views.profilePicture}}" class="img-responsive img-thumbnail profile-picture" alt="Profile Picture"></div>				
+						<div>
+						<img src="{{views.profilePicture}}" class="img-responsive img-thumbnail profile-picture" alt="Profile Picture">
+						<div class="pull-right" style="text-align: right; margin-top: 120px; margin-right: 25px;">
+							<div style="font-size: 22px; border-bottom: 1px solid #d6d6d6; margin-bottom: 10px; padding-bottom: 3px;">{{views.employee}}</div>
+							<div style="font-size: 20px; margin-bottom: 5px;">{{views.empid}}</div>
+							<div style="font-size: 16px;">{{views.position}}</div>
+						</div>
+						</div>
 						<input type="file" name="proPic" id="proPic" file-model="views.proPic" ng-disabled="controls.personalInfo.picture">
 						<div class="progress progress-striped" ng-show="views.showProPicUploadProgress">
 							<div class="bar" style="width: {{views.progress}}%;"></div>
@@ -156,7 +171,6 @@ require_once 'authentication.php';
 
 						<hr>
 
-						<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-success" ng-disabled="controls.personalInfo.editBtn" ng-click="appService.edit(this)"><i class="btn-icon-only icon-edit"> </i></a>&nbsp;&nbsp;<a href="javascript:;" class="btn btn-danger btn-small" ng-disabled="controls.personalInfo.delBtn" ng-click="appService.confirmDel(this)"><i class="btn-icon-only icon-remove"> </i></a></div>
 						<div class="tabbable" style="margin-top: 50px;">
 						<ul class="nav nav-tabs">
 						  <li class="active">
@@ -169,8 +183,9 @@ require_once 'authentication.php';
 						
 						<div class="tab-content">
 							<div class="tab-pane active" id="personal-info">
-								
-								<form name="frmHolder.personalInfo" autocomplete="off">
+								<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-success" ng-disabled="controls.personalInfo.editBtn" ng-click="appService.edit(this)"><i class="btn-icon-only icon-edit"> </i></a>&nbsp;&nbsp;<a href="javascript:;" class="btn btn-danger btn-small" ng-disabled="controls.personalInfo.delBtn" ng-click="appService.confirmDel(this)"><i class="btn-icon-only icon-remove"> </i></a></div>								
+								<div style="clear: both;"></div>
+								<form style="margin-top: 20px;"name="frmHolder.personalInfo" autocomplete="off">
 									<fieldset>
 										<div class="row">
 											<div class="span2">
@@ -181,7 +196,17 @@ require_once 'authentication.php';
 													</div>
 												</div>
 											</div>
-											<div class="span4"></div>
+											<div class="span2">&nbsp;</div>
+											<div class="span2">
+												<div class="control-group" ng-class="{'error': frmHolder.personalInfo.schedule_id.$invalid && frmHolder.personalInfo.schedule_id.$touched}">
+													<label><strong>Schedule</strong></label>
+													<div class="controls">
+														<select class="span2" name="schedule_id" ng-model="personalInfo.schedule_id" ng-disabled="controls.personalInfo.schedule_id" ng-options="s as s.description for s in views.schedules track by s.id" required>
+															<option value="">-</option>
+														</select>
+													</div>													
+												</div>
+											</div>
 										</div>
 										<div class="row">
 											<div class="span2">
@@ -339,6 +364,19 @@ require_once 'authentication.php';
 							</div>
 							<div class="tab-pane" id="dtr">
 								<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-primary" ng-click="appService.printDTR()"><i class="btn-icon-only icon-print"></i></a></div>							
+								<div style="clear: both;"></div>
+								<table id="tab-dtr" class="table table-bordered">
+									<thead>
+										<tr><th>Date</th><th>Day</th><th>Time In</th><th>Time Out</th><th>Time In</th><th>Time Out</th><th>Tardiness</th></tr>
+									</thead>
+									<tbody>
+										<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+										<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+										<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+										<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+										<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+									<tbody>
+								</table>
 							</div>
 						</div>
 							

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 31, 2017 at 11:11 AM
+-- Generation Time: Feb 02, 2017 at 09:25 AM
 -- Server version: 5.6.20
 -- PHP Version: 5.4.31
 
@@ -291,6 +291,7 @@ INSERT INTO `backlogs` (`id`, `pers_id`, `date`, `log`, `machine`, `system_log`)
 CREATE TABLE IF NOT EXISTS `employees` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `empid` varchar(50) NOT NULL,
+  `schedule_id` int(10) NOT NULL,
   `first_name` varchar(50) NOT NULL,
   `middle_name` varchar(50) NOT NULL,
   `last_name` varchar(50) NOT NULL,
@@ -310,15 +311,15 @@ CREATE TABLE IF NOT EXISTS `employees` (
   `philhealth` varchar(50) NOT NULL,
   `is_built_in` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `employees`
 --
 
-INSERT INTO `employees` (`id`, `empid`, `first_name`, `middle_name`, `last_name`, `username`, `password`, `gender`, `birthday`, `birthplace`, `address`, `contact_no`, `email`, `appointment_status`, `position`, `gsis`, `sss`, `hdmf`, `philhealth`, `is_built_in`) VALUES
-(1, '82156', 'Sly', 'Bulilan', 'Flores', 'admin', 'admin', '', '0000-00-00', '', '', '', '', '', '', '', '', '', '', 1),
-(2, '87129', 'Mark Edwin', 'Tolentino', 'Rivera', '', '', 'Male', '1987-10-21', 'sfclu', '351 ilocanos norte sfclu', '09152480262', 'marketrivera@gmail.com', 'JO', 'jo', '', '', '', '', 0);
+INSERT INTO `employees` (`id`, `empid`, `schedule_id`, `first_name`, `middle_name`, `last_name`, `username`, `password`, `gender`, `birthday`, `birthplace`, `address`, `contact_no`, `email`, `appointment_status`, `position`, `gsis`, `sss`, `hdmf`, `philhealth`, `is_built_in`) VALUES
+(1, '82156', 0, 'Sly', 'Bulilan', 'Flores', 'admin', 'admin', '', '0000-00-00', '', '', '', '', '', '', '', '', '', '', 1),
+(2, '82156', 0, 'Sylvester', 'Bulilan', 'Flores', '', '', 'Male', '1982-11-14', '', 'SFC', '', '', 'Casual', '', '', '', '', '', 0);
 
 -- --------------------------------------------------------
 
@@ -330,7 +331,17 @@ CREATE TABLE IF NOT EXISTS `schedules` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `description` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `schedules`
+--
+
+INSERT INTO `schedules` (`id`, `description`) VALUES
+(1, 'Standard (8AM - 5PM)'),
+(2, 'Nurse (7AM - 3PM)'),
+(3, 'Nurse (3PM - 11PM)'),
+(4, 'Nurse (11PM - 7AM)');
 
 -- --------------------------------------------------------
 
@@ -351,7 +362,41 @@ CREATE TABLE IF NOT EXISTS `schedule_details` (
   `transcending_days_no` int(10) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `schedule_id` (`schedule_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=29 ;
+
+--
+-- Dumping data for table `schedule_details`
+--
+
+INSERT INTO `schedule_details` (`id`, `schedule_id`, `day`, `morning_in`, `morning_out`, `afternoon_in`, `afternoon_out`, `dayoff`, `transcending`, `transcending_days_no`) VALUES
+(1, 1, 'Monday', '08:00:00', '12:00:00', '13:00:00', '17:00:00', 0, 0, 0),
+(2, 1, 'Tuesday', '08:00:00', '12:00:00', '13:00:00', '17:00:00', 0, 0, 0),
+(3, 1, 'Wednesday', '08:00:00', '12:00:00', '13:00:00', '17:00:00', 0, 0, 0),
+(4, 1, 'Thursday', '08:00:00', '12:00:00', '13:00:00', '17:00:00', 0, 0, 0),
+(5, 1, 'Friday', '08:00:00', '12:00:00', '13:00:00', '17:00:00', 0, 0, 0),
+(6, 1, 'Saturday', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 1, 0, 0),
+(7, 1, 'Sunday', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 1, 0, 0),
+(8, 2, 'Monday', '07:00:00', '00:00:00', '00:00:00', '15:00:00', 0, 0, 1),
+(9, 2, 'Tuesday', '07:00:00', '00:00:00', '00:00:00', '15:00:00', 0, 0, 1),
+(10, 2, 'Wednesday', '07:00:00', '00:00:00', '00:00:00', '15:00:00', 0, 0, 1),
+(11, 2, 'Thursday', '07:00:00', '00:00:00', '00:00:00', '15:00:00', 0, 0, 1),
+(12, 2, 'Friday', '07:00:00', '00:00:00', '00:00:00', '15:00:00', 0, 0, 1),
+(13, 2, 'Saturday', '07:00:00', '00:00:00', '00:00:00', '15:00:00', 0, 0, 1),
+(14, 2, 'Sunday', '07:00:00', '00:00:00', '00:00:00', '15:00:00', 0, 0, 1),
+(15, 3, 'Monday', '00:00:00', '00:00:00', '15:00:00', '23:00:00', 0, 0, 1),
+(16, 3, 'Tuesday', '00:00:00', '00:00:00', '15:00:00', '23:00:00', 0, 0, 1),
+(17, 3, 'Wednesday', '00:00:00', '00:00:00', '15:00:00', '23:00:00', 0, 0, 1),
+(18, 3, 'Thursday', '00:00:00', '00:00:00', '15:00:00', '23:00:00', 0, 0, 1),
+(19, 3, 'Friday', '00:00:00', '00:00:00', '15:00:00', '23:00:00', 0, 0, 1),
+(20, 3, 'Saturday', '00:00:00', '00:00:00', '15:00:00', '23:00:00', 0, 0, 1),
+(21, 3, 'Sunday', '00:00:00', '00:00:00', '15:00:00', '23:00:00', 0, 0, 1),
+(22, 4, 'Monday', '00:00:00', '07:00:00', '23:00:00', '00:00:00', 0, 0, 1),
+(23, 4, 'Tuesday', '00:00:00', '07:00:00', '23:00:00', '00:00:00', 0, 0, 1),
+(24, 4, 'Wednesday', '00:00:00', '07:58:00', '23:00:00', '00:00:00', 0, 0, 1),
+(25, 4, 'Thursday', '00:00:00', '07:00:00', '23:00:00', '00:00:00', 0, 0, 1),
+(26, 4, 'Friday', '00:00:00', '07:00:00', '23:00:00', '00:00:00', 0, 0, 1),
+(27, 4, 'Saturday', '00:00:00', '07:00:00', '23:00:00', '00:00:00', 0, 0, 1),
+(28, 4, 'Sunday', '00:00:00', '07:00:00', '23:00:00', '00:00:00', 0, 0, 1);
 
 --
 -- Constraints for dumped tables

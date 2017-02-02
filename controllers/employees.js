@@ -73,6 +73,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 			scope.controls.personalInfo = {
 				picture: opt,
 				empid: opt,
+				schedule_id: opt,
 				first_name: opt,
 				middle_name: opt,
 				last_name: opt,
@@ -137,7 +138,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 			scope.controls.personalInfo.delBtn = false;			
 		};
 		
-		this.required = ['empid', 'first_name', 'middle_name', 'last_name'];
+		this.required = ['empid', 'first_name', 'middle_name', 'last_name', 'schedule_id'];
 		
 		this.start = function(scope) {
 
@@ -162,7 +163,12 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 
 			scope.personalInfo = {};
 			scope.personalInfo.id = 0;
+			scope.personalInfo.schedule_id = {id: 0, description: "Default"};
 			scope.views.profilePicture = "img/avatar.png";
+			
+			scope.views.employee = "";
+			scope.views.empid = "";
+			scope.views.position = "";			
 			
 			scope.views.addUpdateTxt = 'Save';
 			scope.views.cancelCloseTxt = 'Cancel';
@@ -266,6 +272,9 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 			}).then(function mySucces(response) {
 			
 				angular.copy(response.data, scope.personalInfo);
+				scope.views.employee = response.data.first_name + ' ' + response.data.middle_name + ' ' + response.data.last_name;
+				scope.views.empid = response.data.empid;
+				scope.views.position = response.data.appointment_status;
 				scope.personalInfo.birthday = new Date(response.data.birthday);
 				if (response.data['has_profile_pic']) scope.views.profilePicture = 'pictures/'+response.data['empid']+'.jpg';
 				else scope.views.profilePicture = "img/avatar.png";
@@ -427,7 +436,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 	
 });
 
-app.controller('employeesCtrl', function($scope,blockUI,bootstrapModal,bootstrapNotify,fileUpload,appService) {
+app.controller('employeesCtrl', function($scope,$http,blockUI,bootstrapModal,bootstrapNotify,fileUpload,appService) {
 
 $scope.currentPage = 1;
 $scope.pageSize = 15;
@@ -452,6 +461,23 @@ $scope.views.appointmentStatus = {
 	"Job Order": "JO",
 	"Volunteer": "Volunteer"
 };
+
+$scope.views.employee = "";
+$scope.views.empid = "";
+$scope.views.position = "";
+
+$http({
+  method: 'POST',
+  url: 'controllers/employees.php?r=schedules',
+}).then(function mySucces(response) {
+	
+	$scope.views.schedules = response.data;
+	
+}, function myError(response) {
+	 
+  // error
+	
+});
 
 var appServiceL = appService;
 $scope.appService = appService;

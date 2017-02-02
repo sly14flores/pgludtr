@@ -48,6 +48,7 @@ switch ($_GET['r']) {
 	case "update":
 		
 		$_POST['birthday'] = (isset($_POST['birthday'])) ? date("Y-m-d",strtotime($_POST['birthday'])) : "0000-00-00";
+		$_POST['schedule_id'] = $_POST['schedule_id']['id'];
 		
 		$con = new pdo_db("employees");
 		
@@ -60,9 +61,10 @@ switch ($_GET['r']) {
 	
 		$con = new pdo_db();
 		
-		$employee = $con->getData("SELECT * FROM employees WHERE id = $_POST[id]");
+		$employee = $con->getData("SELECT *, (SELECT description FROM schedules WHERE id = schedule_id) description FROM employees WHERE id = $_POST[id]");
 		$picture = "../pictures/".$employee[0]['empid'].".jpg";
-		
+		$employee[0]['schedule_id'] = array("id"=>$employee[0]['schedule_id'],"description"=>$employee[0]['description']);
+		unset($employee[0]['description']);
 		$employee[0]['has_profile_pic'] = file_exists($picture);
 		
 		echo json_encode($employee[0]);
@@ -101,6 +103,21 @@ switch ($_GET['r']) {
 		}
 	
 		echo json_encode($table);
+	
+	break;
+	
+	case "schedules":
+	
+		$con = new pdo_db();
+		
+		$results = $con->getData("SELECT * FROM schedules");
+		
+		$schedules[0] = array("id"=>0,"description"=>"Default");
+		foreach ($results as $result) {
+			$schedules[] = $result;
+		}
+
+		echo json_encode($schedules);
 	
 	break;
 	
