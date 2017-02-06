@@ -334,7 +334,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 			
 		};
 		
-		this.printDTR = function() {
+		this.printDTRJspsf = function() {
 		
 			$http({
 			  method: 'POST',
@@ -428,7 +428,15 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 
 			});					
 		
-		}
+		};
+		
+		this.printDTR = function() {
+			
+			var dtr = '<input type="hidden" name="id" value="0">';
+			$('#print-dtr').html(dtr);
+			$('#print-dtr').submit();
+			
+		};
 		
 	};
 	

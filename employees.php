@@ -391,6 +391,7 @@ require_once 'authentication.php';
       <!-- /row --> 
     </div>
     <!-- /container --> 
+  <form id="print-dtr" method="post" action="reports/dtr.php" target="_blank"></form>
   </div>
   <!-- /main-inner --> 
 </div>
