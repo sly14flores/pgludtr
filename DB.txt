@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS `cutoffs` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `morning` time NOT NULL,
+  `lunch_break` year(4) NOT NULL,
+  `afternoon` time NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+INSERT INTO `cutoffs` (`id`, `morning`, `lunch_break`, `afternoon`) VALUES
+(1, '10:30:59', 2012, '14:59:59');
