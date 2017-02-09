@@ -8,3 +8,33 @@ CREATE TABLE IF NOT EXISTS `cutoffs` (
 
 INSERT INTO `cutoffs` (`id`, `morning`, `lunch_break`, `afternoon`) VALUES
 (1, '10:30:59', 2012, '14:59:59');
+
+ALTER TABLE `schedules`  ADD `cutoff` INT(10) NOT NULL AFTER `description`,  ADD INDEX (`cutoff`) 
+
+UPDATE `schedules` SET  `cutoff`='1' WHERE `schedules`.`id` = 1 LIMIT 1
+
+ALTER TABLE `cutoffs`
+ENGINE = InnoDB
+
+CREATE TABLE IF NOT EXISTS `dtr` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `eid` int(10) NOT NULL,
+  `ddate` date NOT NULL,
+  `morning_in` time NOT NULL,
+  `morning_out` time NOT NULL,
+  `afternoon_in` time NOT NULL,
+  `afternoon_out` time NOT NULL,
+  `tardiness` float(10,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `eid` (`eid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `dtr`
+--
+ALTER TABLE `dtr`
+  ADD CONSTRAINT `dtr_ibfk_1` FOREIGN KEY (`eid`) REFERENCES `employees` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;

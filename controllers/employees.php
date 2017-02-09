@@ -72,37 +72,58 @@ switch ($_GET['r']) {
 	break;
 	
 	case "dtr":
-	
-		$table = [];
-		$table["columns"][] = array("title"=>"Date","dataKey"=>"date");
-		$table["columns"][] = array("title"=>"Day","dataKey"=>"day");
-		$table["columns"][] = array("title"=>"Time In","dataKey"=>"morning_in");
-		$table["columns"][] = array("title"=>"Time Out","dataKey"=>"morning_out");
-		$table["columns"][] = array("title"=>"Time In","dataKey"=>"afternoon_in");
-		$table["columns"][] = array("title"=>"Time Out","dataKey"=>"afternoon_out");
-		$table["columns"][] = array("title"=>"Tardiness","dataKey"=>"tardiness");
-	
-		$date = "2017-01-01";
-		$start = date("Y-m-d",strtotime($date));
-		$end = date("Y-m-t",strtotime($date));		
-	
-		$key = 0;
-		while (strtotime($start) <= strtotime($end)) {
-			
-			$table["rows"][$key]["date"] = date("j",strtotime($start));
-			$table["rows"][$key]["day"] = date("D",strtotime($start));
-			$table["rows"][$key]["morning_in"] = "";
-			$table["rows"][$key]["morning_out"] = "";
-			$table["rows"][$key]["afternoon_in"] = "";
-			$table["rows"][$key]["afternoon_out"] = "";
-			$table["rows"][$key]["tardiness"] = "";
-			
-			$start = date("Y-m-d", strtotime("+1 day", strtotime($start)));	
-			$key++;			
-			
+
+		/*
+		**	check for dtr
+		*/
+		$con = new pdo_db("dtr");
+		$datef = $_POST['year']."-".$_POST['month'];
+		$dtr = $con->getData("SELECT * FROM dtr WHERE eid = $_POST[id] AND ddate LIKE '$datef%'");
+		
+		if ($_POST['regen']) {
+			$del_dtr = $con->query("DELETE FROM dtr WHERE eid = $_POST[id] AND ddate LIKE '$datef%'");
+			$dtr = $con->getData("SELECT * FROM dtr WHERE eid = $_POST[id] AND ddate LIKE '$datef%'");			
 		}
-	
-		echo json_encode($table);
+		
+		$date = $_POST['year']."-".$_POST['month']."-01";
+		$start = date("Y-m-d",strtotime($date));
+		$end = date("Y-m-t",strtotime($date));			
+		
+		if ($con->rows == 0) {
+			
+			$dtr = [];
+			
+			while (strtotime($start) <= strtotime($end)) {
+				
+				$dtr[] = array("ddate"=>date("Y-m-d",strtotime($start)),
+						"eid"=>$_POST['id'],
+						"morning_in"=>"00:00:00",
+						"morning_out"=>"00:00:00",
+						"afternoon_in"=>"00:00:00",
+						"afternoon_out"=>"00:00:00",
+						"tardiness"=>0
+						);
+				
+				$start = date("Y-m-d", strtotime("+1 day", strtotime($start)));	
+				
+			};
+
+			$build_dtr = $con->insertDataMulti($dtr);
+			
+		};
+		
+		foreach ($dtr as $key => $value) {
+			
+			$dtr[$key]['sdate'] = date("j",strtotime($value['ddate']));
+			$dtr[$key]['day'] = date("l",strtotime($value['ddate']));
+			$dtr[$key]['morning_in'] = date("h:i A",strtotime($value['morning_in']));
+			$dtr[$key]['morning_out'] = date("h:i A",strtotime($value['morning_out']));
+			$dtr[$key]['afternoon_in'] = date("h:i A",strtotime($value['afternoon_in']));
+			$dtr[$key]['afternoon_out'] = date("h:i A",strtotime($value['afternoon_out']));
+			unset($dtr[$key]['eid']);
+		}
+		
+		echo json_encode($dtr);
 	
 	break;
 	
@@ -118,6 +139,15 @@ switch ($_GET['r']) {
 		}
 
 		echo json_encode($schedules);
+	
+	break;
+	
+	case "list":
+		
+		$con = new pdo_db();
+		$employees_list = $con->getData("SELECT id, CONCAT(first_name, ' ', middle_name, ' ', last_name) employee_fullname FROM employees WHERE is_built_in = 0");
+		
+		echo json_encode($employees_list);
 	
 	break;
 	

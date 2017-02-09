@@ -1,4 +1,4 @@
-var app = angular.module('employees', ['angularUtils.directives.dirPagination','block-ui','bootstrap-modal','bootstrap-notify','account']);
+var app = angular.module('employees', ['angularUtils.directives.dirPagination','ui.bootstrap','block-ui','bootstrap-modal','bootstrap-notify','account']);
 
 app.directive('fileModel', ['$parse', function ($parse) {
 	return {
@@ -62,7 +62,7 @@ app.service('fileUpload', ['$http', function ($http) {
 	}
 }]);
 
-app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal) {
+app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,blockUI) {
 	
 	function appService() {
 		
@@ -249,6 +249,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 				scope.views.profilePicture = 'pictures/'+scope.personalInfo.empid+'.jpg';
 				self.start(scope);
 				self.onSave(scope);
+				// scope.pop_employees_list();
 				
 			}, function myError(response) {
 				 
@@ -265,12 +266,14 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 			scope.views.addUpdateTxt = 'Update';
 			scope.views.cancelCloseTxt = 'Close';		
 			
+			scope.generate.id = scope.employee_row.id;
+			
 			$http({
 			  method: 'POST',
 			  url: 'controllers/employees.php?r=view',
 			  data: {id: scope.employee_row.id}
-			}).then(function mySucces(response) {
-			
+			}).then(function mySucces(response) {				
+					
 				angular.copy(response.data, scope.personalInfo);
 				scope.views.employee = response.data.first_name + ' ' + response.data.middle_name + ' ' + response.data.last_name;
 				scope.views.empid = response.data.empid;
@@ -334,106 +337,49 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal)
 			
 		};
 		
-		this.printDTRJspsf = function() {
-		
+		this.dtr = function(scope,regen) {
+			
+			if (scope.generate.month == null) {
+				scope.dtr = [];
+				return;
+			};
+			
+			if (regen) bootstrapModal.closeConfirm();
+			
+			blockUI.show();
+			
+			scope.generate.regen = regen;
+			
 			$http({
 			  method: 'POST',
 			  url: 'controllers/employees.php?r=dtr',
-			  data: {},
-			  headers : {'Content-Type': 'application/x-www-form-urlencoded'}
-			}).then(function mySucces(response) {		
-			
-				var doc = new jsPDF({
-				  orientation: 'portrait',
-				  unit: 'pt',
-				  format: [612, 936]
-				});			
-
-				var totalPagesExp = "{total_pages_count_string}";
-
-				var pageContent = function (data) {
-
-					// HEADER
-					doc.setFontSize(12);
-					doc.setTextColor(50);
-					doc.setFontStyle('bold');
-					doc.textWithAlignment("Provincial Government of La Union", {align: "center"}, 0, 40);
-					doc.setFontSize(10);
-					doc.setTextColor(80);
-					doc.setFontStyle('normal');				
-					doc.textWithAlignment("San Fernando City, La Union", {align: "center"}, 0, 55);
-					doc.setFontSize(16);
-					doc.setTextColor(50);
-					doc.textWithAlignment("Daily Time Record", {align: "center"}, 0, 85);
-					doc.setFontSize(12);
-					doc.setTextColor(70);
-					doc.setFontStyle('bold');
-					doc.text("QUINIVISTA, VANESSA L.", data.settings.margin.left, 110);
-					doc.line(data.settings.margin.left, 114, data.table.width+data.settings.margin.left, 114);
-					doc.setFontSize(10);
-					doc.setFontStyle('normal');
-					doc.text("December 2016", data.settings.margin.left, 125);
-					doc.textWithAlignment("BDH Casuals", {align: "right", margin: data.settings.margin.right}, 0, 125);
-					doc.setTextColor(60);
-					doc.text("Total: ", 355, doc.internal.pageSize.height - 150);
-					doc.text("Days Absent: ", 320, doc.internal.pageSize.height - 135);
-					doc.setFontSize(9);
-					doc.setTextColor(80);
-					doc.setFontStyle('italic');
-					doc.text("I hereby CERTIFY on my honor that the above is true and correct report of the hours of work performed, record of which was made", data.settings.margin.left, doc.internal.pageSize.height - 115);
-					doc.text("daily at the time of arrival and departure from Office.", data.settings.margin.left, doc.internal.pageSize.height - 103);
-					doc.setFontStyle('bold');					
-					doc.textWithAlignment("Verified as to the prescribed office hours:", {align: "right", margin: data.settings.margin.right+10}, 0, doc.internal.pageSize.height - 90);
-					doc.setLineWidth(1);
-					doc.line(data.settings.margin.left+30, doc.internal.pageSize.height - 60, 280, doc.internal.pageSize.height - 60);					
-					doc.line(332, doc.internal.pageSize.height - 60, 542, doc.internal.pageSize.height - 60);
-					var employee = "QUINIVISTA, VANESSA L.";
-					var signatory = "Head/Supervisor";
-					doc.text(employee, (((doc.internal.pageSize.width/2)-((doc.getStringUnitWidth(employee)*doc.internal.getFontSize())/doc.internal.scaleFactor))/2)+20, doc.internal.pageSize.height - 45);
-					doc.text(signatory, (((doc.internal.pageSize.width/2)-((doc.getStringUnitWidth(signatory)*doc.internal.getFontSize())/doc.internal.scaleFactor))/2)+306-20, doc.internal.pageSize.height - 45);
-
-					// FOOTER
-					var str = "Page " + data.pageCount;
-					// Total page number plugin only available in jspdf v1.0+
-					if (typeof doc.putTotalPages === 'function') {
-						str = str + " of " + totalPagesExp;
-					}
-					doc.setFontSize(10);
-					doc.setTextColor(95);
-					doc.text(str, data.settings.margin.left, doc.internal.pageSize.height - 10);
-					
-				};
-
-				doc.autoTable(response.data.columns, response.data.rows, {
-					theme: 'grid',
-					addPageContent: pageContent,
-					margin: {top: 132},
-					headerStyles: {
-						fontSize: 10
-					},					
-					styles: {
-						fontSize: 10					
-					}					
-				});				
+			  data: scope.generate
+			}).then(function mySucces(response) {
 				
-				// Total page number plugin only available in jspdf v1.0+
-				if (typeof doc.putTotalPages === 'function') {
-					doc.putTotalPages(totalPagesExp);
-				}
-			
-				doc.output('dataurlnewwindow');
+				scope.dtr = response.data;
+				scope.generate.regen = false;
+				blockUI.hide();
 				
-			},
-			function myError(response) {
-
-			});					
+			}, function myError(response) {
+				 
+			  // error
+				
+			});			
+			
+		};
 		
+		this.dtrRegen = function(scope) {
+			
+			if (scope.generate.month == null) {
+				bootstrapNotify.show('danger','Please select month');
+				return;
+			};
+			bootstrapModal.confirm(scope,'Are you sure want to regenerate DTR?','appService.dtr(this,true)');
+
 		};
 		
 		this.printDTR = function() {
-			
-			var dtr = '<input type="hidden" name="id" value="0">';
-			$('#print-dtr').html(dtr);
+
 			$('#print-dtr').submit();
 			
 		};
@@ -469,6 +415,41 @@ $scope.views.appointmentStatus = {
 	"Job Order": "JO",
 	"Volunteer": "Volunteer"
 };
+
+$scope.views.months = {
+	"January": "01",
+	"February": "02",
+	"March": "03",
+	"April": "04",
+	"May": "05",
+	"June": "06",
+	"July": "07",
+	"August": "08",
+	"September": "09",
+	"October": "10",
+	"November": "11",
+	"December": "12"	
+}
+
+$scope.pop_employees_list = function() {
+
+	$http.get('controllers/employees.php?r=list').then(function(response) {
+		$scope.employees_list = response.data;
+	});
+
+};
+
+// $scope.pop_employees_list();
+
+$scope.generate = {};
+$scope.generate.id = 0;
+$scope.generate.year = (new Date()).getFullYear();
+$scope.generate.regen = false;
+
+/* $scope.employeeSelected = function(item, model, label, event) {
+	$scope.generate.id = item.id;
+	$scope.generate.employee_fullname = item.employee_fullname;
+}; */
 
 $scope.views.employee = "";
 $scope.views.empid = "";

@@ -363,19 +363,62 @@ require_once 'authentication.php';
 								
 							</div>
 							<div class="tab-pane" id="dtr">
-								<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-primary" ng-click="appService.printDTR()"><i class="btn-icon-only icon-print"></i></a></div>							
+								<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-primary" ng-click="appService.printDTR()" ng-disabled="generate.month == null"><i class="btn-icon-only icon-print"></i></a></div>
 								<div style="clear: both;"></div>
+								<form style="margin-top: 20px;"name="frmHolder.personalInfo" autocomplete="off">
+									<fieldset>
+										<div class="row">
+											<!--<div class="span2">
+												<div class="control-group">
+													<label><strong>Employee:</strong></label>
+													<div class="controls">
+														<input type="text" class="span2" ng-model="generate.employee_fullname" uib-typeahead="employee_fullname as employee_rec.employee_fullname for employee_rec in employees_list | filter:{employee_fullname:$viewValue}" typeahead-on-select="employeeSelected($item, $model, $label, $event)">
+													</div>
+												</div>
+											</div>-->
+											<div class="span1">
+												<div class="control-group">
+													<label><strong>Year:</strong></label>
+													<div class="controls">
+														<input type="text" class="span1" ng-model="generate.year" ng-disabled="generate.id == 0">
+													</div>
+												</div>
+											</div>
+											<div class="span2">
+												<div class="control-group">
+													<label><strong>Month:</strong></label>
+													<div class="controls">
+														<select class="span2" ng-model="generate.month" ng-options="x for (x,y) in views.months track by y" ng-change="appService.dtr(this,false)" ng-disabled="generate.id == 0">
+															<option value="">-</option>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="span1">
+												<div class="control-group">											
+													<button class="btn btn-primary btn-xs" type="button" style="margin-top: 23px;" ng-click="appService.dtr(this,false)" ng-disabled="generate.month == null">Refresh</button>
+												</div>
+											</div>											
+											<div class="span1">
+												<div class="control-group">											
+													<button class="btn btn-primary btn-xs" type="button" style="margin-top: 23px;" ng-click="appService.dtrRegen(this)" ng-disabled="generate.month == null">ReGenerate</button>
+												</div>
+											</div>
+										</div>
+									</fieldset>
+								</form>
 								<table id="tab-dtr" class="table table-bordered">
 									<thead>
-										<tr><th>Date</th><th>Day</th><th>Time In</th><th>Time Out</th><th>Time In</th><th>Time Out</th><th>Tardiness</th></tr>
+										<tr><th>Date</th><th>Day</th><th>Time In</th><th>Time Out</th><th>Time In</th><th>Time Out</th><th>Tardiness</th><th></th></tr>
 									</thead>
 									<tbody>
-										<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-										<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-										<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-										<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-										<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-									<tbody>
+										<tr ng-repeat="dtr_row in dtr">
+											<td style="text-align: center;">{{dtr_row.sdate}}</td><td>{{dtr_row.day}}</td><td>{{dtr_row.morning_in}}</td><td>{{dtr_row.morning_out}}</td><td>{{dtr_row.afternoon_in}}</td><td>{{dtr_row.afternoon_out}}</td><td>{{dtr_row.tardiness}}</td>
+											<td style="text-align: center;">
+												<a href="javascript:;" class="btn btn-small btn-default" ng-click="appService.manageDTR()"><i class="btn-icon-only icon-list-alt"></i></a>											
+											</td>
+										</tr>
+									</tbody>
 								</table>
 							</div>
 						</div>
@@ -391,7 +434,11 @@ require_once 'authentication.php';
       <!-- /row --> 
     </div>
     <!-- /container --> 
-  <form id="print-dtr" method="post" action="reports/dtr.php" target="_blank"></form>
+  <form id="print-dtr" method="post" action="reports/dtr.php" target="_blank">
+	<input type="hidden" name="id" value="{{generate.id}}">
+	<input type="hidden" name="month" value="{{generate.month}}">
+	<input type="hidden" name="year" value="{{generate.year}}">	
+  </form>
   </div>
   <!-- /main-inner --> 
 </div>
@@ -470,6 +517,7 @@ require_once 'authentication.php';
 <script src="js/bootstrap-notify-3.1.3/bootstrap-notify.min.js"></script>
 
 <script src="angularjs/utils/pagination/dirPagination.js"></script>
+<script src="angularjs/utils/ui-bootstrap-tpls-1.3.3.min.js"></script>
 
 <script src="modules/bootstrap-modal.js"></script>
 <script src="modules/block-ui.js"></script>

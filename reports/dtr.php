@@ -5,6 +5,10 @@ require('../db.php');
 
 $con = new pdo_db();
 
+$datef = "$_POST[year]-$_POST[month]";
+$date = "$_POST[year]-$_POST[month]-01";
+$department = "BDH";
+$employee = $con->getData("SELECT empid, UPPER(CONCAT(last_name, ', ', first_name, ' ', SUBSTRING(middle_name,1,1), '.')) employee, appointment_status FROM employees WHERE id = $_POST[id]");
 
 class PDF extends FPDF
 {
@@ -42,15 +46,17 @@ function Footer()
 function table($header, $data)
 {
 	
+	global $date, $department, $employee;
+	
 	$this->SetMargins(20,0);
     $this->Ln(2);
     $this->SetTextColor(66,66,66);
 	$this->SetFont('Arial','B',10);
-    $this->Cell(0,5,"QUINIVISTA, VANESSA L.",0,1,'L');
+    $this->Cell(0,5,$employee[0]['employee'],0,1,'L');
     $this->Ln(1);	
 	$this->SetFont('Arial','',9);
-    $this->Cell(87.5,4,"December 2016",0,0,'L');
-    $this->Cell(87.5,4,"BDH Casuals",0,0,'R');
+    $this->Cell(87.5,4,date("F Y",strtotime($date)),0,0,'L');
+    $this->Cell(87.5,4,"$department ".$employee[0]['appointment_status'],0,0,'R');
     
 	$this->Ln(7);
 	
@@ -101,7 +107,7 @@ function table($header, $data)
 	$this->SetFont('Arial','B',8);	
     $this->Cell(0,4,"Verified as to the prescribed office hours",0,1,'R');
 	$this->Ln(10);	
-    $this->Cell(87.5,5,"QUINIVISTA, VANESSA L.",0,0,'C');
+    $this->Cell(87.5,5,$employee[0]['employee'],0,0,'C');
     $this->Cell(87.5,5,"Head/Supervisor",0,0,'C');
 	$this->SetDrawColor(92,92,92);	
 	$this->Line(30,246,97,246);
@@ -126,28 +132,22 @@ $header = array(
 	array(30=>"Tardiness")
 );
 
-// $sql = "";
-// $data = $con->getData($sql);
+$sql = "SELECT * FROM dtr WHERE eid = $_POST[id] AND ddate LIKE '$datef%'";
+$dtr = $con->getData($sql);
 
-$date = "2017-01-01";
-$start = date("Y-m-d",strtotime($date));
-$end = date("Y-m-t",strtotime($date));		
 $data = [];
-
-while (strtotime($start) <= strtotime($end)) {
+foreach ($dtr as $row) {
 	
-	$data[] = array(date("j",strtotime($start)),
-			date("D",strtotime($start)),
-			"Time In",
-			"Time Out",
-			"Time In",			
-			"Time Out",
-			"Tardiness"
+	$data[] = array(date("j",strtotime($row['ddate'])),
+			date("D",strtotime($row['ddate'])),
+			date("h:i:s",strtotime($row['morning_in'])),
+			date("h:i:s",strtotime($row['morning_out'])),
+			date("h:i:s",strtotime($row['afternoon_in'])),
+			date("h:i:s",strtotime($row['afternoon_out'])),
+			""
 	);
 	
-	$start = date("Y-m-d", strtotime("+1 day", strtotime($start)));	
-	
-}
+};
 
 $pdf->table($header,$data);
 $pdf->Output();
