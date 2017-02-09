@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 02, 2017 at 09:25 AM
+-- Generation Time: Feb 09, 2017 at 04:33 PM
 -- Server version: 5.6.20
 -- PHP Version: 5.4.31
 
@@ -285,6 +285,80 @@ INSERT INTO `backlogs` (`id`, `pers_id`, `date`, `log`, `machine`, `system_log`)
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `cutoffs`
+--
+
+CREATE TABLE IF NOT EXISTS `cutoffs` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `morning` time NOT NULL,
+  `lunch_break` year(4) NOT NULL,
+  `afternoon` time NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `cutoffs`
+--
+
+INSERT INTO `cutoffs` (`id`, `morning`, `lunch_break`, `afternoon`) VALUES
+(1, '10:30:59', 2012, '14:59:59');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `dtr`
+--
+
+CREATE TABLE IF NOT EXISTS `dtr` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `eid` int(10) NOT NULL,
+  `ddate` date NOT NULL,
+  `morning_in` time NOT NULL,
+  `morning_out` time NOT NULL,
+  `afternoon_in` time NOT NULL,
+  `afternoon_out` time NOT NULL,
+  `tardiness` float(10,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `eid` (`eid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=29 ;
+
+--
+-- Dumping data for table `dtr`
+--
+
+INSERT INTO `dtr` (`id`, `eid`, `ddate`, `morning_in`, `morning_out`, `afternoon_in`, `afternoon_out`, `tardiness`) VALUES
+(1, 2, '2017-02-01', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(2, 2, '2017-02-02', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(3, 2, '2017-02-03', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(4, 2, '2017-02-04', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(5, 2, '2017-02-05', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(6, 2, '2017-02-06', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(7, 2, '2017-02-07', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(8, 2, '2017-02-08', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(9, 2, '2017-02-09', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(10, 2, '2017-02-10', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(11, 2, '2017-02-11', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(12, 2, '2017-02-12', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(13, 2, '2017-02-13', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(14, 2, '2017-02-14', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(15, 2, '2017-02-15', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(16, 2, '2017-02-16', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(17, 2, '2017-02-17', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(18, 2, '2017-02-18', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(19, 2, '2017-02-19', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(20, 2, '2017-02-20', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(21, 2, '2017-02-21', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(22, 2, '2017-02-22', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(23, 2, '2017-02-23', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(24, 2, '2017-02-24', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(25, 2, '2017-02-25', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(26, 2, '2017-02-26', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(27, 2, '2017-02-27', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00),
+(28, 2, '2017-02-28', '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0.00);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `employees`
 --
 
@@ -311,7 +385,7 @@ CREATE TABLE IF NOT EXISTS `employees` (
   `philhealth` varchar(50) NOT NULL,
   `is_built_in` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `employees`
@@ -319,7 +393,7 @@ CREATE TABLE IF NOT EXISTS `employees` (
 
 INSERT INTO `employees` (`id`, `empid`, `schedule_id`, `first_name`, `middle_name`, `last_name`, `username`, `password`, `gender`, `birthday`, `birthplace`, `address`, `contact_no`, `email`, `appointment_status`, `position`, `gsis`, `sss`, `hdmf`, `philhealth`, `is_built_in`) VALUES
 (1, '82156', 0, 'Sly', 'Bulilan', 'Flores', 'admin', 'admin', '', '0000-00-00', '', '', '', '', '', '', '', '', '', '', 1),
-(2, '82156', 0, 'Sylvester', 'Bulilan', 'Flores', '', '', 'Male', '1982-11-14', '', 'SFC', '', '', 'Casual', '', '', '', '', '', 0);
+(2, '82156', 1, 'Sylvester', 'Bulilan', 'Flores', '', '', 'Male', '1982-11-14', '', 'SFC', '', '', 'Casual', '', '', '', '', '', 0);
 
 -- --------------------------------------------------------
 
@@ -330,18 +404,20 @@ INSERT INTO `employees` (`id`, `empid`, `schedule_id`, `first_name`, `middle_nam
 CREATE TABLE IF NOT EXISTS `schedules` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `description` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
+  `cutoff` int(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `cutoff` (`cutoff`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `schedules`
 --
 
-INSERT INTO `schedules` (`id`, `description`) VALUES
-(1, 'Standard (8AM - 5PM)'),
-(2, 'Nurse (7AM - 3PM)'),
-(3, 'Nurse (3PM - 11PM)'),
-(4, 'Nurse (11PM - 7AM)');
+INSERT INTO `schedules` (`id`, `description`, `cutoff`) VALUES
+(1, 'Standard (8AM - 5PM)', 1),
+(2, 'Nurse (7AM - 3PM)', 0),
+(3, 'Nurse (3PM - 11PM)', 0),
+(4, 'Nurse (11PM - 7AM)', 0);
 
 -- --------------------------------------------------------
 
@@ -401,6 +477,12 @@ INSERT INTO `schedule_details` (`id`, `schedule_id`, `day`, `morning_in`, `morni
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `dtr`
+--
+ALTER TABLE `dtr`
+  ADD CONSTRAINT `dtr_ibfk_1` FOREIGN KEY (`eid`) REFERENCES `employees` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `schedule_details`

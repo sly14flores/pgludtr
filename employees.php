@@ -415,7 +415,7 @@ require_once 'authentication.php';
 										<tr ng-repeat="dtr_row in dtr">
 											<td style="text-align: center;">{{dtr_row.sdate}}</td><td>{{dtr_row.day}}</td><td>{{dtr_row.morning_in}}</td><td>{{dtr_row.morning_out}}</td><td>{{dtr_row.afternoon_in}}</td><td>{{dtr_row.afternoon_out}}</td><td>{{dtr_row.tardiness}}</td>
 											<td style="text-align: center;">
-												<a href="javascript:;" class="btn btn-small btn-default" ng-click="appService.manageDTR()"><i class="btn-icon-only icon-list-alt"></i></a>											
+												<a href="javascript:;" class="btn btn-small btn-default" ng-click="appService.manageDTR(this)"><i class="btn-icon-only icon-list-alt"></i></a>											
 											</td>
 										</tr>
 									</tbody>

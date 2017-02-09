@@ -378,6 +378,16 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 
 		};
 		
+		this.manageDTR = function(scope) {
+			
+			var d = new Date(scope.dtr_row.ddate);
+			var df = d.toUTCString();
+			
+			bootstrapModal.show(scope,'Manage DTR - '+df.substring(0,16),'views/dtr.html');
+			console.log(scope.dtr_row);
+			
+		};
+		
 		this.printDTR = function() {
 
 			$('#print-dtr').submit();
