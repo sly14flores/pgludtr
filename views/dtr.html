@@ -1,1 +1,17 @@
-Lorem, Ipsum
+<table class="table table-bordered" style="margin-top: 15px;">
+	<thead>
+		<tr><th>Morning In</th><th>Morning Out</th><th>Afternoon In</th><th>Afternoon Out</th><th>&nbsp;</th></tr>
+	</thead>
+	<tbody>
+		<tr>
+		<td><input class="span2" type="time" ng-model="dtr_specific.morning_in" ng-disabled="dtr_specific.edit"></td>
+		<td><input class="span2" type="time" ng-model="dtr_specific.morning_out" ng-disabled="dtr_specific.edit"></td>
+		<td><input class="span2" type="time" ng-model="dtr_specific.afternoon_in" ng-disabled="dtr_specific.edit"></td>
+		<td><input class="span2" type="time" ng-model="dtr_specific.afternoon_out" ng-disabled="dtr_specific.edit"></td>
+		<td style="text-align: center; cursor: pointer;">
+			<i class="btn-icon-only" ng-class="{'icon-edit': dtr_specific.edit, 'icon-ok': !dtr_specific.edit}" ng-click="manageDTR.edit(this)"></i>
+			<!--<i class="btn-icon-only icon-trash"></i>-->
+		</td>
+		</tr>
+	</tbody>
+</table>

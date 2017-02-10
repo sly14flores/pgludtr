@@ -151,6 +151,40 @@ switch ($_GET['r']) {
 	
 	break;
 	
+	case "manageDtr":
+	
+		$con = new pdo_db();
+		$dtr = $con->getData("SELECT * FROM dtr WHERE id = $_POST[id]");
+		
+		foreach ($dtr as $key => $value) {
+			$dtr[$key]['edit'] = true;
+			$dtr[$key]['morning_in'] = date("h:i:s A",strtotime($value['morning_in']));
+			$dtr[$key]['morning_out'] = date("h:i:s A",strtotime($value['morning_out']));
+			$dtr[$key]['afternoon_in'] = date("h:i:s A",strtotime($value['afternoon_in']));
+			$dtr[$key]['afternoon_out'] = date("h:i:s A",strtotime($value['afternoon_out']));
+			unset($dtr[$key]['eid']);
+			unset($dtr[$key]['ddate']);
+			unset($dtr[$key]['tardiness']);
+		}
+		
+		echo json_encode($dtr[0]);
+	
+	break;
+	
+	case "saveDtr":
+	
+		$con = new pdo_db("dtr");
+
+		$_POST['morning_in'] = date("H:i:s",strtotime($_POST['morning_in']));
+		$_POST['morning_out'] = date("H:i:s",strtotime($_POST['morning_out']));
+		$_POST['afternoon_in'] = date("H:i:s",strtotime($_POST['afternoon_in']));
+		$_POST['afternoon_out'] = date("H:i:s",strtotime($_POST['afternoon_out']));
+		unset($_POST['edit']);
+		
+		$dtr = $con->updateData($_POST,'id');
+	
+	break;
+	
 }
 
 ?>

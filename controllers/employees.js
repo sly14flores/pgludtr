@@ -378,13 +378,60 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 
 		};
 		
-		this.manageDTR = function(scope) {
+		this.manageDTR = function() {
+		
+			return new function() {
+				
+				this.show = function (scope) {
+					
+					var d = new Date(scope.dtr_row.ddate);
+					var df = d.toUTCString();
 			
-			var d = new Date(scope.dtr_row.ddate);
-			var df = d.toUTCString();
-			
-			bootstrapModal.show(scope,'Manage DTR - '+df.substring(0,16),'views/dtr.html');
-			console.log(scope.dtr_row);
+					bootstrapModal.show(scope,'Manage DTR - '+df.substring(0,16),'views/dtr.html');
+					
+					$http({
+					  method: 'POST',
+					  url: 'controllers/employees.php?r=manageDtr',
+					  data: {id: scope.dtr_row.id}
+					}).then(function mySucces(response) {
+						
+						scope.dtr_specific = response.data;
+						scope.dtr_specific['morning_in'] = new Date('2000-01-01 '+scope.dtr_specific['morning_in']);
+						scope.dtr_specific['morning_out'] = new Date('2000-01-01 '+scope.dtr_specific['morning_out']);
+						scope.dtr_specific['afternoon_in'] = new Date('2000-01-01 '+scope.dtr_specific['afternoon_in']);
+						scope.dtr_specific['afternoon_out'] = new Date('2000-01-01 '+scope.dtr_specific['afternoon_out']);
+						
+					}, function myError(response) {
+						 
+					  // error
+						
+					});					
+				
+				};
+				
+				this.edit = function(scope) {
+
+					if (!scope.dtr_specific.edit) {
+
+						$http({
+						  method: 'POST',
+						  url: 'controllers/employees.php?r=saveDtr',
+						  data: scope.dtr_specific
+						}).then(function mySucces(response) {
+							
+						}, function myError(response) {
+							 
+						  // error
+							
+						});						
+						
+					};					
+					
+					scope.dtr_specific.edit = !scope.dtr_specific.edit;
+					
+				};
+				
+			};
 			
 		};
 		
@@ -480,6 +527,7 @@ $http({
 
 var appServiceL = appService;
 $scope.appService = appService;
+$scope.manageDTR = appService.manageDTR();
 
 appServiceL.controls($scope,true);
 appServiceL.start($scope);
