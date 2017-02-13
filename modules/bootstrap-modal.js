@@ -11,6 +11,7 @@ angular.module('bootstrap-modal',[]).service('bootstrapModal', function($compile
 		});
 		$('#label-confirm').html('Confirmation');
 		$('#confirm .modal-body').html(body);
+		$compile($('#confirm .modal-body')[0])(scope);		
 
 		var buttons = '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>';
 			buttons += '<button type="button" class="btn btn-primary" ng-click="'+ok+'">Ok</button>';

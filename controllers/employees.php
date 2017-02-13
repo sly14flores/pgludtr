@@ -3,6 +3,7 @@
 $_POST = json_decode(file_get_contents('php://input'), true);
 
 require_once '../db.php';
+require_once '../dat_files.php';
 
 switch ($_GET['r']) {
 	
@@ -154,7 +155,10 @@ switch ($_GET['r']) {
 	case "manageDtr":
 	
 		$con = new pdo_db();
-		$dtr = $con->getData("SELECT * FROM dtr WHERE id = $_POST[id]");
+		$dtr = $con->getData("SELECT *, (SELECT employees.empid FROM employees WHERE employees.id = dtr.eid) pers_id FROM dtr WHERE id = $_POST[id]");
+
+		$ddate = $dtr[0]['ddate'];
+		$pers_id = $dtr[0]['pers_id'];
 		
 		foreach ($dtr as $key => $value) {
 			$dtr[$key]['edit'] = true;
@@ -165,9 +169,18 @@ switch ($_GET['r']) {
 			unset($dtr[$key]['eid']);
 			unset($dtr[$key]['ddate']);
 			unset($dtr[$key]['tardiness']);
+			unset($dtr[$key]['pers_id']);
 		}
 		
-		echo json_encode($dtr[0]);
+		$backlogs = $con->getData("SELECT log, machine FROM backlogs WHERE pers_id = '$pers_id' AND date = '$ddate'");
+		
+		foreach ($backlogs as $key => $value) {
+			$backlogs[$key]['log'] = date("h:i:s A",strtotime($backlogs[$key]['log']));
+			$backlogs[$key]['machine'] = getLocation($backlogs[$key]['machine']);
+			$backlogs[$key]['assignment'] = "";
+		}
+		
+		echo json_encode(array("dtr_specific"=>$dtr[0],"backlogs"=>$backlogs));
 	
 	break;
 	
@@ -180,8 +193,20 @@ switch ($_GET['r']) {
 		$_POST['afternoon_in'] = date("H:i:s",strtotime($_POST['afternoon_in']));
 		$_POST['afternoon_out'] = date("H:i:s",strtotime($_POST['afternoon_out']));
 		unset($_POST['edit']);
+		unset($_POST['pers_id']);
 		
 		$dtr = $con->updateData($_POST,'id');
+	
+	break;
+	
+	case "assignLog":
+	
+		$con = new pdo_db("dtr");
+		
+		$log = array("id"=>$_POST['id']);
+		$log[$_POST['log']['assignment']] = date("H:i:s",strtotime("2000-01-01 ".$_POST['log']['log']));
+		
+		$update = $con->updateData($log,"id");
 	
 	break;
 	

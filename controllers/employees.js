@@ -386,8 +386,16 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 					
 					var d = new Date(scope.dtr_row.ddate);
 					var df = d.toUTCString();
-			
+
+					scope.views.assignLog.alert = false;
+
 					bootstrapModal.show(scope,'Manage DTR - '+df.substring(0,16),'views/dtr.html');
+					
+					dtr(scope);
+				
+				};
+				
+				function dtr(scope) {
 					
 					$http({
 					  method: 'POST',
@@ -395,18 +403,21 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 					  data: {id: scope.dtr_row.id}
 					}).then(function mySucces(response) {
 						
-						scope.dtr_specific = response.data;
-						scope.dtr_specific['morning_in'] = new Date('2000-01-01 '+scope.dtr_specific['morning_in']);
-						scope.dtr_specific['morning_out'] = new Date('2000-01-01 '+scope.dtr_specific['morning_out']);
-						scope.dtr_specific['afternoon_in'] = new Date('2000-01-01 '+scope.dtr_specific['afternoon_in']);
-						scope.dtr_specific['afternoon_out'] = new Date('2000-01-01 '+scope.dtr_specific['afternoon_out']);
+						response.data['dtr_specific']['morning_in'] = new Date('2000-01-01 '+response.data['dtr_specific']['morning_in']);
+						response.data['dtr_specific']['morning_out'] = new Date('2000-01-01 '+response.data['dtr_specific']['morning_out']);
+						response.data['dtr_specific']['afternoon_in'] = new Date('2000-01-01 '+response.data['dtr_specific']['afternoon_in']);
+						response.data['dtr_specific']['afternoon_out'] = new Date('2000-01-01 '+response.data['dtr_specific']['afternoon_out']);
+						
+						scope.dtr_specific = response.data['dtr_specific'];						
+						
+						scope.backlogs = response.data['backlogs'];
 						
 					}, function myError(response) {
 						 
 					  // error
 						
-					});					
-				
+					});						
+					
 				};
 				
 				this.edit = function(scope) {
@@ -428,6 +439,42 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 					};					
 					
 					scope.dtr_specific.edit = !scope.dtr_specific.edit;
+					
+				};
+				
+				this.assignLog = function(scope,blog) {
+
+					scope.views.assignLog.alert = false;
+					scope.views.assignLog.alertDanger = false;						
+					scope.views.assignLog.alertMsg = '';				
+				
+					if (blog.assignment == "") {
+						
+						scope.views.assignLog.alert = true;
+						scope.views.assignLog.alertDanger = true;						
+						scope.views.assignLog.alertMsg = 'Please select assignment';						
+						return;
+						
+					}
+					
+					$http({
+					  method: 'POST',
+					  url: 'controllers/employees.php?r=assignLog',
+					  data: {id: scope.dtr_row.id, log: blog}
+					}).then(function mySucces(response) {
+						
+						scope.views.assignLog.alert = true;
+						scope.views.assignLog.alertInfo = true;
+						scope.views.assignLog.alertMsg = blog.log+' was assigned as '+blog.assignment.split("_")[0]+' '+blog.assignment.split("_")[1];
+						$timeout(function() {
+							dtr(scope);	
+						},1000);
+						
+					}, function myError(response) {
+						 
+					  // error
+						
+					});				
 					
 				};
 				
@@ -486,7 +533,7 @@ $scope.views.months = {
 	"October": "10",
 	"November": "11",
 	"December": "12"	
-}
+};
 
 $scope.pop_employees_list = function() {
 
@@ -511,6 +558,8 @@ $scope.generate.regen = false;
 $scope.views.employee = "";
 $scope.views.empid = "";
 $scope.views.position = "";
+
+$scope.views.assignLog = {};
 
 $http({
   method: 'POST',

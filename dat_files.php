@@ -23,4 +23,22 @@ function getDeviceNo($dev) {
 	
 }
 
+function getLocation($no) {
+
+	global $dat_files;
+	$loc = "";
+	
+	foreach ($dat_files as $i => $dat_file) {
+
+		if ($no == $dat_file['machine']) {
+			$loc = $dat_file["location"];
+			break;
+		}
+	
+	}
+	
+	return $loc;
+	
+}
+
 ?>

@@ -15,3 +15,31 @@
 		</tr>
 	</tbody>
 </table>
+<h3>Back logs</h3>
+<div class="span4" style="margin-top: 15px;">
+	<table class="table table-bordered">
+		<thead>
+			<tr><th>#</th><th>Log</th><th>Machine</th><th>Assignment</th></tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="blog in backlogs">
+				<td>{{$index+1}}</td><td>{{blog.log}}</td><td>{{blog.machine}}</td>
+				<td style="text-align: center; cursor: pointer;">
+					<select class="span2" ng-model="blog.assignment">
+						<option value="">-</option>
+						<option value="morning_in">Morning In</option>
+						<option value="morning_out">Morning Out</option>
+						<option value="afternoon_in">Afternoon In</option>
+						<option value="afternoon_out">Afternoon Out</option>
+					</select>
+					<i class="btn-icon-only icon-upload" ng-click="manageDTR.assignLog(this,blog)"></i>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="span4" style="margin-top: 15px;">
+<div class="alert" ng-show="views.assignLog.alert" ng-class="{'alert-danger': views.assignLog.alertDanger, 'alert-info': views.assignLog.alertInfo}">
+	{{views.assignLog.alertMsg}}
+</div>
+</div>
