@@ -260,13 +260,20 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 		};
 		
 		this.view = function(scope) {
-			
+
 			self.onView(scope);
 
 			scope.views.addUpdateTxt = 'Update';
 			scope.views.cancelCloseTxt = 'Close';		
 			
 			scope.generate.id = scope.employee_row.id;
+			
+			$timeout(function() {			
+				scope.$apply(function() {
+					scope.generate.month = null;
+					angular.copy([],scope.dtr);
+				});
+			},500);			
 			
 			$http({
 			  method: 'POST',
@@ -382,25 +389,25 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 		
 			return new function() {
 				
-				this.show = function (scope) {
+				this.show = function (scope,dtr_row) {
 					
-					var d = new Date(scope.dtr_row.ddate);
+					var d = new Date(dtr_row.ddate);
 					var df = d.toUTCString();
 
 					scope.views.assignLog.alert = false;
 
 					bootstrapModal.show(scope,'Manage DTR - '+df.substring(0,16),'views/dtr.html');
 					
-					dtr(scope);
+					dtr(scope,dtr_row);
 				
 				};
 				
-				function dtr(scope) {
+				function dtr(scope,dtr_row) {
 					
 					$http({
 					  method: 'POST',
 					  url: 'controllers/employees.php?r=manageDtr',
-					  data: {id: scope.dtr_row.id}
+					  data: {id: dtr_row.id}
 					}).then(function mySucces(response) {
 						
 						response.data['dtr_specific']['morning_in'] = new Date('2000-01-01 '+response.data['dtr_specific']['morning_in']);
@@ -409,7 +416,6 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 						response.data['dtr_specific']['afternoon_out'] = new Date('2000-01-01 '+response.data['dtr_specific']['afternoon_out']);
 						
 						scope.dtr_specific = response.data['dtr_specific'];						
-						
 						scope.backlogs = response.data['backlogs'];
 						
 					}, function myError(response) {
@@ -467,8 +473,10 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 						scope.views.assignLog.alertInfo = true;
 						scope.views.assignLog.alertMsg = blog.log+' was assigned as '+blog.assignment.split("_")[0]+' '+blog.assignment.split("_")[1];
 						$timeout(function() {
-							dtr(scope);	
-						},1000);
+							scope.$apply(function() {
+								dtr(scope,scope.dtr_row);
+							});
+						},500);
 						
 					}, function myError(response) {
 						 
@@ -544,6 +552,8 @@ $scope.pop_employees_list = function() {
 };
 
 // $scope.pop_employees_list();
+
+$scope.dtr = [];
 
 $scope.generate = {};
 $scope.generate.id = 0;

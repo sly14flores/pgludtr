@@ -138,12 +138,17 @@ $dtr = $con->getData($sql);
 $data = [];
 foreach ($dtr as $row) {
 	
+	$row['morning_in'] = ($row['morning_in'] == "00:00:00")?"":date("h:i:s",strtotime($row['morning_in']));
+	$row['morning_out'] = ($row['morning_out'] == "00:00:00")?"":date("h:i:s",strtotime($row['morning_out']));
+	$row['afternoon_in'] = ($row['afternoon_in'] == "00:00:00")?"":date("h:i:s",strtotime($row['afternoon_in']));
+	$row['afternoon_out'] = ($row['afternoon_out'] == "00:00:00")?"":date("h:i:s",strtotime($row['afternoon_out']));
+	
 	$data[] = array(date("j",strtotime($row['ddate'])),
 			date("D",strtotime($row['ddate'])),
-			date("h:i:s",strtotime($row['morning_in'])),
-			date("h:i:s",strtotime($row['morning_out'])),
-			date("h:i:s",strtotime($row['afternoon_in'])),
-			date("h:i:s",strtotime($row['afternoon_out'])),
+			$row['morning_in'],
+			$row['morning_out'],
+			$row['afternoon_in'],
+			$row['afternoon_out'],
 			""
 	);
 	
