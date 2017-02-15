@@ -83,7 +83,7 @@ switch ($_GET['r']) {
 		
 		if ($_POST['regen']) {
 			$del_dtr = $con->query("DELETE FROM dtr WHERE eid = $_POST[id] AND ddate LIKE '$datef%'");
-			$dtr = $con->getData("SELECT * FROM dtr WHERE eid = $_POST[id] AND ddate LIKE '$datef%'");			
+			$dtr = $con->getData("SELECT * FROM dtr WHERE eid = $_POST[id] AND ddate LIKE '$datef%'");
 		}
 		
 		$date = $_POST['year']."-".$_POST['month']."-01";
@@ -112,6 +112,8 @@ switch ($_GET['r']) {
 			$build_dtr = $con->insertDataMulti($dtr);
 			
 		};
+		
+		$dtr = $con->getData("SELECT * FROM dtr WHERE eid = $_POST[id] AND ddate LIKE '$datef%'");		
 		
 		foreach ($dtr as $key => $value) {
 			

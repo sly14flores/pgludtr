@@ -514,6 +514,7 @@ $scope.views.profilePicture = 'img/avatar.png';
 $scope.views.showProPicUploadProgress = false;
 
 $scope.personalInfo = {id: 0};
+$scope.personalInfo.schedule = {id: 0, description: "Default"};
 $scope.controls = {};
 $scope.controls.personalInfo = {};
 $scope.controls.personalInfo.addBtn = false;
@@ -543,13 +544,13 @@ $scope.views.months = {
 	"December": "12"	
 };
 
-$scope.pop_employees_list = function() {
+/* $scope.pop_employees_list = function() {
 
 	$http.get('controllers/employees.php?r=list').then(function(response) {
 		$scope.employees_list = response.data;
 	});
 
-};
+}; */
 
 // $scope.pop_employees_list();
 

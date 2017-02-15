@@ -13,8 +13,8 @@ require_once 'authentication.php';
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
-<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
-        rel="stylesheet">
+<!--<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
+        rel="stylesheet">-->
 <link href="css/font-awesome.css" rel="stylesheet">
 <link href="css/style.css" rel="stylesheet">
 <link href="css/pages/dashboard.css" rel="stylesheet">
@@ -185,7 +185,7 @@ require_once 'authentication.php';
 							<div class="tab-pane active" id="personal-info">
 								<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-success" ng-disabled="controls.personalInfo.editBtn" ng-click="appService.edit(this)"><i class="btn-icon-only icon-edit"> </i></a>&nbsp;&nbsp;<a href="javascript:;" class="btn btn-danger btn-small" ng-disabled="controls.personalInfo.delBtn" ng-click="appService.confirmDel(this)"><i class="btn-icon-only icon-remove"> </i></a></div>								
 								<div style="clear: both;"></div>
-								<form style="margin-top: 20px;"name="frmHolder.personalInfo" autocomplete="off">
+								<form style="margin-top: 20px;" name="frmHolder.personalInfo" autocomplete="off">
 									<fieldset>
 										<div class="row">
 											<div class="span2">
@@ -365,7 +365,7 @@ require_once 'authentication.php';
 							<div class="tab-pane" id="dtr">
 								<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-primary" ng-click="appService.printDTR()" ng-disabled="generate.month == null"><i class="btn-icon-only icon-print"></i></a></div>
 								<div style="clear: both;"></div>
-								<form style="margin-top: 20px;"name="frmHolder.personalInfo" autocomplete="off">
+								<form style="margin-top: 20px;"name="frmHolder.dtr" autocomplete="off">
 									<fieldset>
 										<div class="row">
 											<!--<div class="span2">
