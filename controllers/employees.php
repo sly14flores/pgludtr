@@ -96,12 +96,20 @@ switch ($_GET['r']) {
 			
 			while (strtotime($start) <= strtotime($end)) {
 				
+				/*
+				** analyze timein/timeout
+				*/
+				$morning_in = "00:00:00";
+				$morning_out = "00:00:00";
+				$afternoon_in = "00:00:00";
+				$afternoon_out = "00:00:00";
+				
 				$dtr[] = array("ddate"=>date("Y-m-d",strtotime($start)),
 						"eid"=>$_POST['id'],
-						"morning_in"=>"00:00:00",
-						"morning_out"=>"00:00:00",
-						"afternoon_in"=>"00:00:00",
-						"afternoon_out"=>"00:00:00",
+						"morning_in"=>$morning_in,
+						"morning_out"=>$morning_out,
+						"afternoon_in"=>$afternoon_in,
+						"afternoon_out"=>$afternoon_out,
 						"tardiness"=>0
 						);
 				
