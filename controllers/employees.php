@@ -4,6 +4,7 @@ $_POST = json_decode(file_get_contents('php://input'), true);
 
 require_once '../db.php';
 require_once '../dat_files.php';
+require_once '../analyze.php';
 
 switch ($_GET['r']) {
 	
@@ -94,6 +95,8 @@ switch ($_GET['r']) {
 			
 			$dtr = [];
 			
+			$analyze = new analyze();
+			
 			while (strtotime($start) <= strtotime($end)) {
 				
 				/*
@@ -119,9 +122,9 @@ switch ($_GET['r']) {
 
 			$build_dtr = $con->insertDataMulti($dtr);
 			
+			$dtr = $con->getData("SELECT * FROM dtr WHERE eid = $_POST[id] AND ddate LIKE '$datef%'");			
+			
 		};
-		
-		$dtr = $con->getData("SELECT * FROM dtr WHERE eid = $_POST[id] AND ddate LIKE '$datef%'");		
 		
 		foreach ($dtr as $key => $value) {
 			
