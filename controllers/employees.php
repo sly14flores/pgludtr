@@ -95,7 +95,7 @@ switch ($_GET['r']) {
 			
 			$dtr = [];
 			
-			$analyze = new analyze();
+			$analyze = new log_order();
 			
 			while (strtotime($start) <= strtotime($end)) {
 				
