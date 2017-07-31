@@ -68,7 +68,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 		
 		var self = this;
 		
-		this.controls = function(scope,opt) {
+		self.controls = function(scope,opt) {
 			
 			scope.controls.personalInfo = {
 				picture: opt,
@@ -98,49 +98,49 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			
 		};
 		
-		this.onAdd = function(scope) {
+		self.onAdd = function(scope) {
 			self.controls(scope,false);
 			scope.controls.personalInfo.addBtn = true;
 			scope.controls.personalInfo.editBtn = true;
 			scope.controls.personalInfo.delBtn = true;
 		};
 		
-		this.onCancel = function(scope) {
+		self.onCancel = function(scope) {
 			self.controls(scope,true);
 			scope.controls.personalInfo.addBtn = false;			
 		};
 		
-		this.onSave = function(scope) {
+		self.onSave = function(scope) {
 			self.controls(scope,true);
 			scope.controls.personalInfo.addBtn = false;
 			scope.controls.personalInfo.editBtn = false;
 			scope.controls.personalInfo.delBtn = false;
 		};
 		
-		this.onView = function(scope) {
+		self.onView = function(scope) {
 			self.controls(scope,true);
 			scope.controls.personalInfo.addBtn = false;
 			scope.controls.personalInfo.editBtn = false;
 			scope.controls.personalInfo.delBtn = false;
 		};
 		
-		this.onEdit = function(scope) {
+		self.onEdit = function(scope) {
 			self.controls(scope,false);
 			scope.controls.personalInfo.addBtn = true;
 			scope.controls.personalInfo.editBtn = true;
 			scope.controls.personalInfo.delBtn = true;			
 		};
 		
-		this.onClose = function(scope) {
+		self.onClose = function(scope) {
 			self.controls(scope,true);
 			scope.controls.personalInfo.addBtn = false;
 			scope.controls.personalInfo.editBtn = false;
 			scope.controls.personalInfo.delBtn = false;			
 		};
 		
-		this.required = ['empid', 'first_name', 'middle_name', 'last_name', 'schedule_id'];
+		self.required = ['empid', 'first_name', 'middle_name', 'last_name', 'schedule_id'];
 		
-		this.start = function(scope) {
+		self.start = function(scope) {
 
 			$http({
 			  method: 'POST',
@@ -157,7 +157,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			
 		};
 		
-		this.add = function(scope) {
+		self.add = function(scope) {
 			
 			self.onAdd(scope);
 
@@ -190,7 +190,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			
 		};
 		
-		this.cancel = function(scope) {
+		self.cancel = function(scope) {
 			
 			if (scope.views.cancelCloseTxt == 'Cancel') {
 			
@@ -229,7 +229,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 		
 		};
 		
-		this.update = function(scope) {
+		self.update = function(scope) {
 
 			if (scope.frmHolder.personalInfo.$invalid) {
 				angular.forEach(self.required, function(item, i) {
@@ -259,7 +259,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			
 		};
 		
-		this.view = function(scope) {
+		self.view = function(scope) {
 
 			self.onView(scope);
 
@@ -297,19 +297,19 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			
 		};
 		
-		this.edit = function(scope) {
+		self.edit = function(scope) {
 			
 			self.onEdit(scope);
 			
 		};
 		
-		this.confirmDel = function(scope) {
+		self.confirmDel = function(scope) {
 
 			bootstrapModal.confirm(scope,'Are you sure want to delete this record?','appService.del(this)');
 			
 		};
 		
-		this.del = function(scope) {
+		self.del = function(scope) {
 		
 			self.onCancel(scope);		
 			
@@ -344,7 +344,10 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			
 		};
 		
-		this.dtr = function(scope,regen) {
+		self.dtr = function(scope,regen) {
+			
+			console.log(scope);
+			// if (scope.$id > 2) scope = scope.$parent;
 			
 			if (scope.generate.month == null) {
 				scope.dtr = [];
@@ -362,10 +365,14 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			  url: 'controllers/employees.php?r=dtr',
 			  data: scope.generate
 			}).then(function mySucces(response) {
-				
-				scope.dtr = response.data;
-				scope.generate.regen = false;
-				blockUI.hide();
+								
+				$timeout(function() {
+					// scope.$apply(function() {
+						scope.dtr = response.data;
+						scope.generate.regen = false;
+						blockUI.hide();
+					// });
+				}, 2000);
 				
 			}, function myError(response) {
 				 
@@ -375,7 +382,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			
 		};
 		
-		this.dtrRegen = function(scope) {
+		self.dtrRegen = function(scope) {
 			
 			if (scope.generate.month == null) {
 				bootstrapNotify.show('danger','Please select month');
@@ -385,7 +392,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 
 		};
 		
-		this.manageDTR = function() {
+		self.manageDTR = function() {
 		
 			return new function() {
 				
@@ -396,7 +403,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 
 					scope.views.assignLog.alert = false;
 
-					bootstrapModal.show(scope,'Manage DTR - '+df.substring(0,16),'views/dtr.html');
+					bootstrapModal.show(scope,'Manage DTR - '+df.substring(0,16),'views/dtr.html',null,function() { self.dtr(scope,false); });
 					
 					dtr(scope,dtr_row);
 				
@@ -435,6 +442,8 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 						  url: 'controllers/employees.php?r=saveDtr',
 						  data: scope.dtr_specific
 						}).then(function mySucces(response) {
+							
+							// self.dtr(scope,false);
 							
 						}, function myError(response) {
 							 
@@ -490,7 +499,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			
 		};
 		
-		this.printDTR = function() {
+		self.printDTR = function() {
 
 			$('#print-dtr').submit();
 			

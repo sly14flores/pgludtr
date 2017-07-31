@@ -48,7 +48,7 @@ angular.module('bootstrap-modal',[]).service('bootstrapModal', function($compile
 		  // do something...
 		});
 		$('#modal-show').on('hidden.bs.modal', function (e) {
-		  // do something...
+			if (hidden != null) hidden();
 		});
 		$('#label-modal-show').html(title);
 		$('#modal-show .modal-body').load(body);
