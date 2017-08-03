@@ -10,13 +10,13 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			
 			scope.controls.schedule = {
 				description: opt,
-				dayoff: opt,
 				morning_in: opt,
+				morning_cutoff: opt,
 				morning_out: opt,
+				lunch_break_cutoff: opt,
 				afternoon_in: opt,
+				afternoon_cutoff: opt,
 				afternoon_out: opt,
-				transcending: opt,			
-				transcending_days_no: opt,			
 				saveBtn: opt,
 				cancelBtn: opt,
 				editBtn: opt,
@@ -192,8 +192,11 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 				
 				angular.forEach(response.data.details,function(item,i) {
 					response.data.details[i]['morning_in'] = new Date("2000-01-01 "+item['morning_in']);
+					response.data.details[i]['morning_cutoff'] = new Date("2000-01-01 "+item['morning_cutoff']);
 					response.data.details[i]['morning_out'] = new Date("2000-01-01 "+item['morning_out']);
+					response.data.details[i]['lunch_break_cutoff'] = new Date("2000-01-01 "+item['lunch_break_cutoff']);
 					response.data.details[i]['afternoon_in'] = new Date("2000-01-01 "+item['afternoon_in']);
+					response.data.details[i]['afternoon_cutoff'] = new Date("2000-01-01 "+item['afternoon_cutoff']);
 					response.data.details[i]['afternoon_out'] = new Date("2000-01-01 "+item['afternoon_out']);
 				});
 						
@@ -269,13 +272,13 @@ $scope.schedule_struct = {
 	id: 0,
 	description: "",
 	details: [
-		{id: 0, day: "Monday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 1},
-		{id: 0, day: "Tuesday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 1},
-		{id: 0, day: "Wednesday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 1},
-		{id: 0, day: "Thursday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 1},
-		{id: 0, day: "Friday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 1},
-		{id: 0, day: "Saturday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 1},
-		{id: 0, day: "Sunday", morning_in: new Date("0"), morning_out: new Date("0"), afternoon_in: new Date("0"), afternoon_out: new Date("0"), dayoff: "0", transcending: "0", transcending_days_no: 1}
+		{id: 0, day: "Monday", morning_in: new Date("0"), morning_cutoff: new Date("0"), morning_out: new Date("0"), lunch_break_cutoff: new Date("0"), afternoon_in: new Date("0"), afternoon_cutoff: new Date("0"), afternoon_out: new Date("0")},
+		{id: 0, day: "Tuesday", morning_in: new Date("0"), morning_cutoff: new Date("0"), morning_out: new Date("0"), lunch_break_cutoff: new Date("0"), afternoon_in: new Date("0"), afternoon_cutoff: new Date("0"), afternoon_out: new Date("0")},
+		{id: 0, day: "Wednesday", morning_in: new Date("0"), morning_cutoff: new Date("0"), morning_out: new Date("0"), lunch_break_cutoff: new Date("0"), afternoon_in: new Date("0"), afternoon_cutoff: new Date("0"), afternoon_out: new Date("0")},
+		{id: 0, day: "Thursday", morning_in: new Date("0"), morning_cutoff: new Date("0"), morning_out: new Date("0"), lunch_break_cutoff: new Date("0"), afternoon_in: new Date("0"), afternoon_cutoff: new Date("0"), afternoon_out: new Date("0")},
+		{id: 0, day: "Friday", morning_in: new Date("0"), morning_cutoff: new Date("0"), morning_out: new Date("0"), lunch_break_cutoff: new Date("0"), afternoon_in: new Date("0"), afternoon_cutoff: new Date("0"), afternoon_out: new Date("0")},
+		{id: 0, day: "Saturday", morning_in: new Date("0"), morning_cutoff: new Date("0"), morning_out: new Date("0"), lunch_break_cutoff: new Date("0"), afternoon_in: new Date("0"), afternoon_cutoff: new Date("0"), afternoon_out: new Date("0")},
+		{id: 0, day: "Sunday", morning_in: new Date("0"), morning_cutoff: new Date("0"), morning_out: new Date("0"), lunch_break_cutoff: new Date("0"), afternoon_in: new Date("0"), afternoon_cutoff: new Date("0"), afternoon_out: new Date("0")}
 	]
 };
 

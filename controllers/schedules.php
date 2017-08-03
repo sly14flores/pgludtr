@@ -44,8 +44,11 @@ switch ($_GET['r']) {
 
 				$_POST['details'][$key]['schedule_id'] = $_POST['id'];
 				$_POST['details'][$key]['morning_in'] = date("H:i:s",strtotime($_POST['details'][$key]['morning_in']));
+				$_POST['details'][$key]['morning_cutoff'] = date("H:i:s",strtotime($_POST['details'][$key]['morning_cutoff']));
 				$_POST['details'][$key]['morning_out'] = date("H:i:s",strtotime($_POST['details'][$key]['morning_out']));
+				$_POST['details'][$key]['lunch_break_cutoff'] = date("H:i:s",strtotime($_POST['details'][$key]['lunch_break_cutoff']));
 				$_POST['details'][$key]['afternoon_in'] = date("H:i:s",strtotime($_POST['details'][$key]['afternoon_in']));
+				$_POST['details'][$key]['afternoon_cutoff'] = date("H:i:s",strtotime($_POST['details'][$key]['afternoon_cutoff']));
 				$_POST['details'][$key]['afternoon_out'] = date("H:i:s",strtotime($_POST['details'][$key]['afternoon_out']));
 				
 			}		
@@ -59,8 +62,11 @@ switch ($_GET['r']) {
 				unset($_POST['details'][$key]['id']);
 				$_POST['details'][$key]['schedule_id'] = $_POST['id'];
 				$_POST['details'][$key]['morning_in'] = date("H:i:s",strtotime($_POST['details'][$key]['morning_in']));
+				$_POST['details'][$key]['morning_cutoff'] = date("H:i:s",strtotime($_POST['details'][$key]['morning_cutoff']));				
 				$_POST['details'][$key]['morning_out'] = date("H:i:s",strtotime($_POST['details'][$key]['morning_out']));
+				$_POST['details'][$key]['lunch_break_cutoff'] = date("H:i:s",strtotime($_POST['details'][$key]['lunch_break_cutoff']));				
 				$_POST['details'][$key]['afternoon_in'] = date("H:i:s",strtotime($_POST['details'][$key]['afternoon_in']));
+				$_POST['details'][$key]['afternoon_cutoff'] = date("H:i:s",strtotime($_POST['details'][$key]['afternoon_cutoff']));				
 				$_POST['details'][$key]['afternoon_out'] = date("H:i:s",strtotime($_POST['details'][$key]['afternoon_out']));
 				
 			}

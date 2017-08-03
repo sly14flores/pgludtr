@@ -156,78 +156,65 @@ require_once 'authentication.php';
 							</div>
 							<div ng-repeat="detail in schedule.details">
 							<h3 style="margin-bottom: 5px;">{{detail.day}}</h3>
-							<div class="row">
-								<div class="span2">
-									<div class="control-group">
-										<label><strong>Day Off</strong></label>
-										<div class="controls">
-											<label class="radio inline">
-											  <input type="radio" name="{{detail.day+'_dayoff'}}" value="0" ng-model="detail.dayoff" ng-disabled="controls.schedule.dayoff"> No
-											</label>
-											
-											<label class="radio inline">
-											  <input type="radio" name="{{detail.day+'_dayoff'}}" value="1" ng-model="detail.dayoff" ng-disabled="controls.schedule.dayoff"> Yes
-											</label>
-										</div>
-									</div>								
-								</div>							
-							</div>
+							<hr>
 							<div class="row">
 								<div class="span2">
 									<div class="control-group">
 										<label><strong>Morning In</strong></label>
 										<div class="controls">
-											<input type="time" class="span2" name="morning_in" ng-model="detail.morning_in" ng-disabled="detail.dayoff == 1 || controls.schedule.morning_in" required>
+											<input type="time" class="span2" name="morning_in" ng-model="detail.morning_in" ng-disabled="controls.schedule.morning_in">
 										</div>
 									</div>
 								</div>
+								<div class="span2">
+									<div class="control-group">
+										<label><strong>Morning Cutoff</strong></label>
+										<div class="controls">
+											<input type="time" class="span2" name="morning_cutoff" ng-model="detail.morning_cutoff" ng-disabled="controls.schedule.morning_cutoff">
+										</div>
+									</div>
+								</div>								
 								<div class="span2">
 									<div class="control-group">
 										<label><strong>Morning Out</strong></label>
 										<div class="controls">
-											<input type="time" class="span2" name="morning_out" ng-model="detail.morning_out" ng-disabled="detail.dayoff == 1 || controls.schedule.morning_out" required>
+											<input type="time" class="span2" name="morning_out" ng-model="detail.morning_out" ng-disabled="controls.schedule.morning_out">
 										</div>
 									</div>
 								</div>								
 							</div>
-							<div class="row">							
+							<div class="row">
+								<div class="span2">
+									<div class="control-group">
+										<label><strong>Lunch Break Cutoff</strong></label>
+										<div class="controls">
+											<input type="time" class="span2" name="lunch_break_cutoff" ng-model="detail.lunch_break_cutoff" ng-disabled="controls.schedule.lunch_break_cutoff">
+										</div>
+									</div>
+								</div>							
+							</div>
+							<div class="row">						
 								<div class="span2">
 									<div class="control-group">
 										<label><strong>Afternoon In</strong></label>
 										<div class="controls">
-											<input type="time" class="span2" name="afternoon_in" ng-model="detail.afternoon_in" ng-disabled="detail.dayoff == 1 || controls.schedule.afternoon_in" required>
+											<input type="time" class="span2" name="afternoon_in" ng-model="detail.afternoon_in" ng-disabled="controls.schedule.afternoon_in">
 										</div>
 									</div>
 								</div>
+								<div class="span2">
+									<div class="control-group">
+										<label><strong>Afternoon Cutoff</strong></label>
+										<div class="controls">
+											<input type="time" class="span2" name="afternoon_cutoff" ng-model="detail.afternoon_cutoff" ng-disabled="controls.schedule.afternoon_cutoff">
+										</div>
+									</div>
+								</div>									
 								<div class="span2">
 									<div class="control-group">
 										<label><strong>Afternoon Out</strong></label>
 										<div class="controls">
-											<input type="time" class="span2" name="afternoon_out" ng-model="detail.afternoon_out" ng-disabled="detail.dayoff == 1 || controls.schedule.afternoon_out" required>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="span2">
-									<div class="control-group">
-										<label><strong>Transcending</strong></label>
-										<div class="controls">
-											<label class="radio inline">
-											  <input type="radio" name="{{detail.day+'_transcending'}}" value="0" ng-model="detail.transcending" ng-disabled="detail.dayoff == 1 || controls.schedule.transcending"> No
-											</label>
-											
-											<label class="radio inline">
-											  <input type="radio" name="{{detail.day+'_transcending'}}" value="1" ng-model="detail.transcending" ng-disabled="detail.dayoff == 1 || controls.schedule.transcending"> Yes
-											</label>
-										</div>
-									</div>
-								</div>
-								<div class="span2">					
-									<div class="control-group">
-										<label><strong>No of day(s)</strong></label>
-										<div class="controls">
-											<input type="number" class="span2" name="transcending_days_no" ng-model="detail.transcending_days_no" ng-disabled="detail.transcending == 0 || controls.schedule.transcending_days_no">
+											<input type="time" class="span2" name="afternoon_out" ng-model="detail.afternoon_out" ng-disabled="controls.schedule.afternoon_out">
 										</div>
 									</div>
 								</div>
