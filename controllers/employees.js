@@ -346,9 +346,6 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 		
 		self.dtr = function(scope,regen) {
 			
-			console.log(scope);
-			// if (scope.$id > 2) scope = scope.$parent;
-			
 			if (scope.generate.month == null) {
 				scope.dtr = [];
 				return;
@@ -366,13 +363,9 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			  data: scope.generate
 			}).then(function mySucces(response) {
 								
-				$timeout(function() {
-					// scope.$apply(function() {
-						scope.dtr = response.data;
-						scope.generate.regen = false;
-						blockUI.hide();
-					// });
-				}, 2000);
+				scope.dtr = response.data;
+				scope.generate.regen = false;
+				blockUI.hide();
 				
 			}, function myError(response) {
 				 
@@ -393,10 +386,12 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 		};
 		
 		self.manageDTR = function() {
-		
+
 			return new function() {
-				
+
 				this.show = function (scope,dtr_row) {
+					
+					if (scope.$id > 2) scope = scope.$parent;
 					
 					var d = new Date(dtr_row.ddate);
 					var df = d.toUTCString();
@@ -404,11 +399,11 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 					scope.views.assignLog.alert = false;
 
 					bootstrapModal.show(scope,'Manage DTR - '+df.substring(0,16),'views/dtr.html',null,function() { self.dtr(scope,false); });
-					
+
 					dtr(scope,dtr_row);
-				
+
 				};
-				
+
 				function dtr(scope,dtr_row) {
 					
 					$http({
