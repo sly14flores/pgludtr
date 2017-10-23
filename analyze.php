@@ -16,7 +16,7 @@ class log_order {
 			unset($schedules[$key]['day']);
 			$this->schedules[$schedule['day']] = $schedules[$key];
 			
-		}
+		}		
 
 	}
 	

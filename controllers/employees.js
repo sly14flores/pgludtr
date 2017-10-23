@@ -453,7 +453,9 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 				};
 				
 				this.assignLog = function(scope,blog) {
-
+					console.log(scope);
+					if (scope.$id > 2) scope = scope.$parent;
+				
 					scope.views.assignLog.alert = false;
 					scope.views.assignLog.alertDanger = false;						
 					scope.views.assignLog.alertMsg = '';				
@@ -470,7 +472,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 					$http({
 					  method: 'POST',
 					  url: 'controllers/employees.php?r=assignLog',
-					  data: {id: scope.dtr_row.id, log: blog}
+					  data: {id: scope.dtr_specific.id, log: blog}
 					}).then(function mySucces(response) {
 						
 						scope.views.assignLog.alert = true;
@@ -478,7 +480,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 						scope.views.assignLog.alertMsg = blog.log+' was assigned as '+blog.assignment.split("_")[0]+' '+blog.assignment.split("_")[1];
 						$timeout(function() {
 							scope.$apply(function() {
-								dtr(scope,scope.dtr_row);
+								dtr(scope,scope.dtr_specific);
 							});
 						},500);
 						
