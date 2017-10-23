@@ -43,13 +43,13 @@ switch ($_GET['r']) {
 			foreach ($_POST['details'] as $key => $value) {
 
 				$_POST['details'][$key]['schedule_id'] = $_POST['id'];
-				$_POST['details'][$key]['morning_in'] = date("H:i:s",strtotime($_POST['details'][$key]['morning_in']));
-				$_POST['details'][$key]['morning_cutoff'] = date("H:i:s",strtotime($_POST['details'][$key]['morning_cutoff']));
-				$_POST['details'][$key]['morning_out'] = date("H:i:s",strtotime($_POST['details'][$key]['morning_out']));
-				$_POST['details'][$key]['lunch_break_cutoff'] = date("H:i:s",strtotime($_POST['details'][$key]['lunch_break_cutoff']));
-				$_POST['details'][$key]['afternoon_in'] = date("H:i:s",strtotime($_POST['details'][$key]['afternoon_in']));
-				$_POST['details'][$key]['afternoon_cutoff'] = date("H:i:s",strtotime($_POST['details'][$key]['afternoon_cutoff']));
-				$_POST['details'][$key]['afternoon_out'] = date("H:i:s",strtotime($_POST['details'][$key]['afternoon_out']));
+				$_POST['details'][$key]['morning_in'] = ($_POST['details'][$key]['morning_in']==null)?"00:00:00":date("H:i:s",strtotime($_POST['details'][$key]['morning_in']));
+				$_POST['details'][$key]['morning_cutoff'] = ($_POST['details'][$key]['morning_cutoff']==null)?"00:00:00":date("H:i:s",strtotime($_POST['details'][$key]['morning_cutoff']));
+				$_POST['details'][$key]['morning_out'] = ($_POST['details'][$key]['morning_out']==null)?"00:00:00":date("H:i:s",strtotime($_POST['details'][$key]['morning_out']));
+				$_POST['details'][$key]['lunch_break_cutoff'] = ($_POST['details'][$key]['lunch_break_cutoff']==null)?"00:00:00":date("H:i:s",strtotime($_POST['details'][$key]['lunch_break_cutoff']));
+				$_POST['details'][$key]['afternoon_in'] = ($_POST['details'][$key]['afternoon_in']==null)?"00:00:00":date("H:i:s",strtotime($_POST['details'][$key]['afternoon_in']));
+				$_POST['details'][$key]['afternoon_cutoff'] = ($_POST['details'][$key]['afternoon_cutoff']==null)?"00:00:00":date("H:i:s",strtotime($_POST['details'][$key]['afternoon_cutoff']));
+				$_POST['details'][$key]['afternoon_out'] = ($_POST['details'][$key]['afternoon_out']==null)?"00:00:00":date("H:i:s",strtotime($_POST['details'][$key]['afternoon_out']));
 				
 			}		
 		

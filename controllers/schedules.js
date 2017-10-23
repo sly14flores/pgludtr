@@ -247,7 +247,19 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 				
 			});
 			
-		};		
+		};
+
+		this.clone = function(scope) {
+			console.log(scope);
+			scope.detail.morning_in = scope.schedule.details[0]['morning_in'];
+			scope.detail.morning_cutoff = scope.schedule.details[0]['morning_cutoff']; 
+			scope.detail.morning_out = scope.schedule.details[0]['morning_out']; 
+			scope.detail.lunch_break_cutoff = scope.schedule.details[0]['lunch_break_cutoff']; 
+			scope.detail.afternoon_in = scope.schedule.details[0]['afternoon_in']; 
+			scope.detail.afternoon_cutoff = scope.schedule.details[0]['afternoon_cutoff']; 
+			scope.detail.afternoon_out = scope.schedule.details[0]['afternoon_out']; 
+			
+		};
 		
 	};
 	

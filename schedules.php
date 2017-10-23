@@ -13,8 +13,8 @@ require_once 'authentication.php';
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
-<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
-        rel="stylesheet">
+<!-- <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
+        rel="stylesheet"> -->
 <link href="css/font-awesome.css" rel="stylesheet">
 <link href="css/style.css" rel="stylesheet">
 <link href="css/pages/dashboard.css" rel="stylesheet">
@@ -157,6 +157,7 @@ require_once 'authentication.php';
 							<div ng-repeat="detail in schedule.details">
 							<h3 style="margin-bottom: 5px;">{{detail.day}}</h3>
 							<hr>
+							<a href="javascript:;" class="btn btn-small btn-default pull-right" ng-click="appService.clone(this)" ng-show="$index>0"><i class="btn-icon-only icon-copy"> </i></a>
 							<div class="row">
 								<div class="span2">
 									<div class="control-group">
