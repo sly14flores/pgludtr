@@ -118,3 +118,9 @@ Stack trace:
 [13-Oct-2017 14:45:09 Asia/Manila] PHP Parse error:  syntax error, unexpected ',' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php on line 156
 [13-Oct-2017 14:45:10 Asia/Manila] PHP Parse error:  syntax error, unexpected ',' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php on line 156
 [13-Oct-2017 14:49:00 Asia/Manila] PHP Parse error:  syntax error, unexpected '$analyzed' (T_VARIABLE) in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php on line 143
+[20-Jan-2018 06:51:52 Asia/Manila] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES) in D:\UwAmp310\www\pgludtr\db.php:31
+Stack trace:
+#0 D:\UwAmp310\www\pgludtr\db.php(31): PDO->__construct('mysql:host=loca...', 'root', 'sly', Array)
+#1 D:\UwAmp310\www\pgludtr\controllers\account.php(10): pdo_db->__construct()
+#2 {main}
+  thrown in D:\UwAmp310\www\pgludtr\db.php on line 31
