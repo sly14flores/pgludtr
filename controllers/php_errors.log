@@ -124,3 +124,9 @@ Stack trace:
 #1 D:\UwAmp310\www\pgludtr\controllers\account.php(10): pdo_db->__construct()
 #2 {main}
   thrown in D:\UwAmp310\www\pgludtr\db.php on line 31
+[24-Jan-2018 15:51:15 Asia/Manila] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000]: General error: 1364 Field 'cutoff' doesn't have a default value in D:\UwAmp310\www\pgludtr\db.php:82
+Stack trace:
+#0 D:\UwAmp310\www\pgludtr\db.php(82): PDOStatement->execute(Array)
+#1 D:\UwAmp310\www\pgludtr\controllers\schedules.php(24): pdo_db->insertData(Array)
+#2 {main}
+  thrown in D:\UwAmp310\www\pgludtr\db.php on line 82

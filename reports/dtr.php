@@ -7,7 +7,7 @@ $con = new pdo_db();
 
 $datef = "$_POST[year]-$_POST[month]";
 $date = "$_POST[year]-$_POST[month]-01";
-$department = "BDH";
+$department = "CABA DISTRICT HOSPITAL";
 $employee = $con->getData("SELECT empid, UPPER(CONCAT(last_name, ', ', first_name, ' ', SUBSTRING(middle_name,1,1), '.')) employee, appointment_status FROM employees WHERE id = $_POST[id]");
 
 class PDF extends FPDF

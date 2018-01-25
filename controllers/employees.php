@@ -172,10 +172,10 @@ switch ($_GET['r']) {
 			
 			$dtr[$key]['sdate'] = date("j",strtotime($value['ddate']));
 			$dtr[$key]['day'] = date("l",strtotime($value['ddate']));
-			$dtr[$key]['morning_in'] = date("H:i:s",strtotime($value['morning_in']));
-			$dtr[$key]['morning_out'] = date("H:i:s",strtotime($value['morning_out']));
-			$dtr[$key]['afternoon_in'] = date("H:i:s",strtotime($value['afternoon_in']));
-			$dtr[$key]['afternoon_out'] = date("H:i:s",strtotime($value['afternoon_out']));
+			$dtr[$key]['morning_in'] = date("h:i:s A",strtotime($value['morning_in']));
+			$dtr[$key]['morning_out'] = date("h:i:s A",strtotime($value['morning_out']));
+			$dtr[$key]['afternoon_in'] = date("h:i:s A",strtotime($value['afternoon_in']));
+			$dtr[$key]['afternoon_out'] = date("h:i:s A",strtotime($value['afternoon_out']));
 			unset($dtr[$key]['eid']);
 		};
 		
