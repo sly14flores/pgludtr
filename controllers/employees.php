@@ -107,7 +107,7 @@ switch ($_GET['r']) {
 				);
 
 				foreach ($logs as $log) {
-					$allotment = $analyze->allot($start,$log['log']);
+					$allotment = $analyze->allot($start,$log['log'],$log['allotment']);
 					$prop = array_keys($allotment);
 					$analyzed[$prop[0]] = $allotment[$prop[0]];
 				};

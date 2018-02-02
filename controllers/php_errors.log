@@ -24812,3 +24812,151 @@ Stack trace:
 #1 C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\dashboard.php(180): pdo_db->insertData(Array)
 #2 {main}
   thrown in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\db.php on line 82
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Notice:  Undefined offset: 0 in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 24
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   2. log_order->__construct() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:94
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:55:41 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:55:41 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Notice:  Undefined offset: 0 in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 24
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   2. log_order->__construct() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:137
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:151
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:151
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:151
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:151
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:151
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:151
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:151
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:151
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:151
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:151
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:151
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:151
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:151
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:151
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:151
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:57:30 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:57:30 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:151
+[02-Feb-2018 13:58:50 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:58:50 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:58:50 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:58:50 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:58:50 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:58:50 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:58:50 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:58:50 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
+[02-Feb-2018 13:58:50 Asia/Manila] PHP Warning:  Illegal string offset 'allotment' in C:\Users\sly\Desktop\UwAmp310\www\pgludtr\analyze.php on line 36
+[02-Feb-2018 13:58:50 Asia/Manila] PHP Stack trace:
+[02-Feb-2018 13:58:50 Asia/Manila] PHP   1. {main}() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:0
+[02-Feb-2018 13:58:50 Asia/Manila] PHP   2. log_order->allot() C:\Users\sly\Desktop\UwAmp310\www\pgludtr\controllers\employees.php:110
