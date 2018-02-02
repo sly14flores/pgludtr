@@ -164,19 +164,15 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 		self.collectLogs = function(scope) {
 			
 			blockUI.hide();
-			
-			$timeout(function() {
 
-				consoleMsg.show(300,'Collecting employees logs...','a');
-				
-			},500);
-			
+			consoleMsg.show(300,'Collecting employees logs...','a');				
+
 			$http({
 			  method: 'POST',
 			  url: 'controllers/dashboard.php?r=collect_logs',
 			  data: {how: scope.views.howToImport, opt: scope.views.opt, filter: scope.filter}
 			}).then(function mySucces(response) { 
-
+				
 				if (response.data[0][0] == 400) {
 					consoleMsg.show(response.data[0][0],response.data[0][1],response.data[0][2]);
 				} else {
@@ -211,7 +207,8 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 				  data: log
 				}).then(function mySucces(response) {
 					
-					if ((response.data[0] == 200) || (response.data[0] == 300)) {
+					if (typeof response.data === 'object') {
+
 						consoleMsg.show(response.data[0],response.data[1],response.data[2]);
 						
 						var logsLeft = logsCount - i;
@@ -229,8 +226,11 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 							i++;
 							putLog(logs[i]);
 						}
+						
 					} else {
+
 						consoleMsg.show(400,'Something went wrong, importing halted','a');
+
 					}
 				
 				}, function myError(response) {

@@ -79,8 +79,21 @@ class pdo_db {
 		$this->prepare .= $prepare;
 		
 		$stmt = $this->db->prepare($this->prepare);
-		$e = $stmt->execute($insert);
-		$this->insertId = $this->db->lastInsertId();
+		
+		try {
+		
+			$e = $stmt->execute($insert);
+			$this->insertId = $this->db->lastInsertId();
+		
+		} catch(PDOException $ex) {
+
+			if ($ex->getCode() == '23000') {
+				return 'constraint';
+			} else {
+				return $ex->getMessage();
+			}
+	
+		}
 
 		return $e;
 		

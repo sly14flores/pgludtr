@@ -177,9 +177,15 @@ switch ($_GET['r']) {
 		$con = new pdo_db("backlogs");
 		$_POST['system_log'] = "CURRENT_TIMESTAMP";
 		$exists = $con->getData("SELECT * FROM backlogs WHERE pers_id = '$_POST[pers_id]' AND log = '$_POST[log]'");
-		if ($con->rows == 0) $backlog = $con->insertData($_POST);
 		
-		echo json_encode(array(200,"Imported ".date("h:i:s A m/d/Y",strtotime($_POST['log']))." for ".$_POST['pers_id'],'a'));
+		$msg = array(200,"Imported ".date("h:i:s A m/d/Y",strtotime($_POST['log']))." for ".$_POST['pers_id'],'a');
+		
+		if ($con->rows == 0) {
+			$backlog = $con->insertData($_POST);
+			if ($backlog === 'constraint') $msg = array(400,$_POST['pers_id']." is not registered",'a');
+		}
+		
+		echo json_encode($msg);
 	
 	break;
 	
