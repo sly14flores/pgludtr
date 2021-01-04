@@ -8,6 +8,41 @@ require_once '../analyze.php';
 
 // header("Content-type: application/json");
 
+function folder_exist($folder) {
+
+    // Get canonicalized absolute pathname
+    $path = realpath($folder);
+
+    // If it exist, check if it's a directory
+    if($path !== false AND is_dir($path))
+    {
+        // Return canonicalized absolute pathname
+        return $path;
+    }
+
+    // Path/folder does not exist
+    return false;
+	
+}
+
+function files_only($files,$empid) {
+
+	$ignored = array('.', '..');
+
+	$files_only = [];
+
+	foreach ($files as $file) {
+		if (in_array($file, $ignored)) continue;		
+        $files_only[$file] = filemtime("../pictures/$empid/".$file);
+	}
+
+    arsort($files_only);
+    $files_only = array_keys($files_only);
+
+	return $files_only;
+
+}
+
 switch ($_GET['r']) {
 	
 	case "start":
@@ -43,9 +78,17 @@ switch ($_GET['r']) {
 	
 	case "upload_profile_picture":
 		
-		$dir = "../pictures/";
+		$dir = "../pictures/";		
+		if (!folder_exist($dir)) {
+			mkdir($dir);
+		}
+
+		$profile_dir = $dir.$_GET['empid']."/";
+		if (!folder_exist($profile_dir)) {
+			mkdir($profile_dir);
+		}
 		
-		move_uploaded_file($_FILES['file']['tmp_name'],$dir."$_GET[empid]$_GET[en]");
+		move_uploaded_file($_FILES['file']['tmp_name'],$profile_dir."$_GET[empid]$_GET[en]");
 
 	break;
 	
@@ -66,11 +109,23 @@ switch ($_GET['r']) {
 		$con = new pdo_db();
 		
 		$employee = $con->getData("SELECT *, (SELECT description FROM schedules WHERE id = schedule_id) description FROM employees WHERE id = $_POST[id]");
-		$picture = "../pictures/".$employee[0]['empid'].".jpg";
+
 		$employee[0]['schedule_id'] = array("id"=>$employee[0]['schedule_id'],"description"=>$employee[0]['description']);
 		unset($employee[0]['description']);
-		$employee[0]['has_profile_pic'] = file_exists($picture);
-		
+
+		$photos = files_only(scandir("../pictures/".$employee[0]['empid']."/"),$employee[0]['empid']);
+
+		$employee[0]['has_profile_pic'] = false;
+		$employee[0]['photo_type'] = null;
+
+		if (count($photos)) {
+			$picture = $photos[0];
+			$ext_picture = explode(".",$picture);
+			$has_profile_pic = file_exists("../pictures/".$employee[0]['empid']."/".$picture);
+			$employee[0]['has_profile_pic'] = $has_profile_pic;
+			$employee[0]['photo_type'] = ".".$ext_picture[1];
+		}
+
 		echo json_encode($employee[0]);
 	
 	break;

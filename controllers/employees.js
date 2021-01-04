@@ -48,13 +48,18 @@ app.service('fileUpload', ['$http', function ($http) {
 		}
 
 		function uploadComplete(evt) {
+
+			const pp = file['name'];
+			const en = pp.substring(pp.indexOf("."),pp.length);
+
 			/* This event is raised when the server send back a response */
 			scope.$apply(function() {
 
-				scope.views.profilePicture = 'pictures/'+scope.personalInfo.empid+'.jpg';
+				scope.views.profilePicture = null;
+				scope.views.profilePicture = 'pictures/'+scope.personalInfo.empid+'/'+scope.personalInfo.empid+en+'?id='+Math.random();
 				scope.views.showProPicUploadProgress = false;
 
-			});			
+			});
 
 			$('#proPic').val(null);
 		}
@@ -286,7 +291,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 				scope.views.empid = response.data.empid;
 				scope.views.position = response.data.appointment_status;
 				scope.personalInfo.birthday = new Date(response.data.birthday);
-				if (response.data['has_profile_pic']) scope.views.profilePicture = 'pictures/'+response.data['empid']+'.jpg';
+				if (response.data['has_profile_pic']) scope.views.profilePicture = 'pictures/'+response.data['empid']+'/'+response.data['empid']+response.data['photo_type'];
 				else scope.views.profilePicture = "img/avatar.png";
 				
 			}, function myError(response) {
@@ -453,7 +458,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 				};
 				
 				this.assignLog = function(scope,blog) {
-					console.log(scope);
+
 					if (scope.$id > 2) scope = scope.$parent;
 				
 					scope.views.assignLog.alert = false;
@@ -612,7 +617,6 @@ $scope.uploadProfilePicture = function() {
    var file = $scope.views.proPic;
    
    if (file == undefined) return;
-   console.log(file);
    
    var pp = file['name'];
    var en = pp.substring(pp.indexOf("."),pp.length);
