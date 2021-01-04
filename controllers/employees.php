@@ -49,6 +49,11 @@ switch ($_GET['r']) {
 	
 		$con = new pdo_db();
 		
+		/**
+		 * Delete items with null empid
+		 */
+		$con->query("DELETE FROM employees WHERE ISNULL(empid)");
+
 		$sql = "SELECT id, empid, CONCAT(first_name, ' ', last_name) full_name FROM employees WHERE is_built_in != 1";
 		$employees = $con->getData($sql);
 		
@@ -108,10 +113,25 @@ switch ($_GET['r']) {
 	
 		$con = new pdo_db();
 		
+		/**
+		 * Delete items with null empid
+		 */
+		$con->query("DELETE FROM employees WHERE ISNULL(empid)");		
+
 		$employee = $con->getData("SELECT *, (SELECT description FROM schedules WHERE id = schedule_id) description FROM employees WHERE id = $_POST[id]");
 
 		$employee[0]['schedule_id'] = array("id"=>$employee[0]['schedule_id'],"description"=>$employee[0]['description']);
 		unset($employee[0]['description']);
+
+		$dir = "../pictures/";		
+		if (!folder_exist($dir)) {
+			mkdir($dir);
+		}
+
+		$profile_dir = $dir.$employee[0]['empid']."/";
+		if (!folder_exist($profile_dir)) {
+			mkdir($profile_dir);
+		}
 
 		$photos = files_only(scandir("../pictures/".$employee[0]['empid']."/"),$employee[0]['empid']);
 
