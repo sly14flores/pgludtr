@@ -8,16 +8,17 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 		
 		self.howToImport = function(scope) {
 
-			scope.views.showPreUploadedOpt = false;
+			scope.views.showNetworkOpt = false;
 			scope.views.showUploadOpt = false;
+			scope.views.showPreUploadedOpt = false;			
 		
 			scope.views.importProgressDetail = '';
 		
-			if (scope.views.howToImport == 'preuploaded') {
+			if (scope.views.howToImport == 'network') {
 			
-				scope.views.showPreUploadedOpt = true;
-				consoleMsg.show(300,'Import logs from pre-uploaded file selected','r');
-				consoleMsg.show(300,'Please make sure that the latest log file(s) has been pre-uploaded','a');
+				scope.views.showNetworkOpt = true;
+				consoleMsg.show(300,'Download logs via network','r');
+				consoleMsg.show(300,'Please make sure that the device is connected to the local network','a');
 
 			} else {
 
@@ -82,12 +83,21 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 					
 				break;
 				
+				case "network":
+
+					
+
+
+				break;
+
 				case "upload":
 
 					if (scope.views.usePreviousFile) { // use latest uploaded file						
 						
 						if ((scope.views.pf == undefined) || (scope.views.pf == '')) {
 							consoleMsg.show(400,'No previously added file exists','a');
+							scope.views.started = false;
+							blockUI.hide();
 							return;
 						}
 						
@@ -104,6 +114,10 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 						}).then(function mySucces(response) {
 							
 							consoleMsg.show(response.data[0],response.data[1],response.data[2]);
+							if (response.data[0] == 400) {
+								scope.views.started = false;
+								blockUI.hide();
+							}
 							if (response.data[0] == 300) {
 								self.collectLogs(scope);
 							}
@@ -120,9 +134,21 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 						var file = scope.views.logFile;				
 						if (file == undefined) {
 							consoleMsg.show(400,'No file selected','a');
+							scope.views.started = false;
+							blockUI.hide();
 							return;
 						}						
 						
+						var fn = file['name'];
+						var en = fn.substring(fn.indexOf("."),fn.length);
+						
+						if (en!='.dat') {
+							consoleMsg.show(400,'Invalid file, please upload file with dat extension name','a');							
+							scope.views.started = false;
+							blockUI.hide();							
+							return;
+						}						
+
 						if (scope.views.recursiveUpload) {
 							consoleMsg.show(300,'Upload log file selected','r');
 						}
@@ -130,9 +156,6 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 						consoleMsg.show(300,'Uploading {{views.logFilename}} ({{views.progress}}%)','a');
 						$compile($('.console')[0])(scope);
 
-						var fn = file['name'];
-						var en = fn.substring(fn.indexOf("."),fn.length);
-						
 						scope.views.logFilename = fn;
 						
 						scope.views.opt = fn;
@@ -147,6 +170,9 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 				default:
 				
 					consoleMsg.show(300,"Please select in 'Select how to import'",'r');
+					scope.views.started = false;
+					blockUI.hide();
+
 				
 				break;
 				
@@ -165,11 +191,11 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 			
 			blockUI.hide();
 			
-			$timeout(function() {
+			// $timeout(function() {
 
 				consoleMsg.show(300,'Collecting employees logs...','a');
 				
-			},500);
+			// },500);
 			
 			$http({
 			  method: 'POST',
@@ -199,6 +225,7 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 			var logsCount = logs.length - 1;
 			if (logsCount < 0) {
 				consoleMsg.show(300,'No logs found','a');
+				scope.views.started = false;
 				return;
 			}
 			putLog(logs[i]);
