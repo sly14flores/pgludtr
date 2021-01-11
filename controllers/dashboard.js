@@ -1,3 +1,11 @@
+Object.size = function(obj) {
+	var size = 0, key;
+	for (key in obj) {
+		if (obj.hasOwnProperty(key)) size++;
+	}
+	return size;
+};
+
 var app = angular.module('dashboard', ['block-ui','bootstrap-modal','bootstrap-notify','account']);
 
 app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload,blockUI) {
@@ -85,8 +93,50 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 				
 				case "network":
 
-					
 
+					if (Object.size(scope.views.device)==0) {
+						consoleMsg.show(400,'No device selected','a');
+						scope.views.started = false;
+						blockUI.hide();						
+						return;
+					}
+
+					const ip = scope.views.device.ip;
+					const machine = scope.views.device.machine;
+					if (ip=="") {
+						consoleMsg.show(300,'No specified IP address for the selected device','a');
+						scope.views.started = false;
+						blockUI.hide();						
+						return;						
+					}
+
+					consoleMsg.show(300,`Connecting to ${ip}...`,'r');
+
+					$http({
+						method: 'POST',
+						url: 'tad/download.php',
+						data: {ip, start: scope.filter.dateFrom, end: scope.filter.dateTo, machine }
+					}).then(function mySucces(response) {
+						
+						if (typeof response.data=="string") {
+							if (response.data=="no_logs") {
+								consoleMsg.show(400,'No Logs found for the specified dates','a');
+							} else {
+								consoleMsg.show(400,'Something went wrong, plase try again','a');
+							}
+						} else {
+
+						}
+						consoleMsg.show(300,'Logs downloaded','a');
+						self.putLogs(scope,response.data);
+						blockUI.hide();
+						  
+					 }, function myError(response) {
+						  
+						  consoleMsg.show(400,'Something went wrong, importing halted','a');
+						  blockUI.hide();
+						  
+					  });					
 
 				break;
 
@@ -190,12 +240,8 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 		self.collectLogs = function(scope) {
 			
 			blockUI.hide();
-			
-			// $timeout(function() {
 
-				consoleMsg.show(300,'Collecting employees logs...','a');
-				
-			// },500);
+			consoleMsg.show(300,'Collecting employees logs...','a');
 			
 			$http({
 			  method: 'POST',
@@ -362,7 +408,7 @@ app.service('consoleMsg', function($timeout) {
 	
 });
 
-app.controller('dashboardCtrl', function($scope,blockUI,bootstrapModal,bootstrapNotify,fileUpload,consoleMsg,appService) {
+app.controller('dashboardCtrl', function($scope,$http,blockUI,bootstrapModal,bootstrapNotify,fileUpload,consoleMsg,appService) {
 
 $scope.views = {};
 $scope.frmHolder = {};
@@ -390,5 +436,16 @@ if (localStorage.pf !== undefined) $scope.views.pf = localStorage.pf;
 // consoleMsg.show(200,'Lorem Ipsum...','a'); // success
 // consoleMsg.show(300,'Lorem Ipsum...','a'); // info
 // consoleMsg.show(400,'Lorem Ipsum...','a'); // error
+
+/**
+ * Load network devices
+ */
+$scope.devices = [];
+$scope.views.device = {};
+$http.get('devices.php').then(response => {
+
+	$scope.devices = response.data;
+
+}).catch(e => console.log(e));
 	
 });

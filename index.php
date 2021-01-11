@@ -169,10 +169,7 @@ require_once 'authentication.php';
 					</div>
 					<div class="control-group" ng-show="views.showNetworkOpt">
 						<h3 style="margin-bottom: 5px;">Select network device</h3>					
-						<select ng-model="views.prefile" class="span2" ng-disabled="views.usePreviousFile && views.howToImport == 'upload'">
-							<option value="dat">Text Files</option>
-							<option value="mdb">Network File</option>
-						</select>
+						<select ng-model="views.device" class="span2" ng-options="d.location for d in devices track by d.machine"></select>
 					</div>										
 					<div class="control-group" ng-show="views.showPreUploadedOpt">
 						<h3 style="margin-bottom: 5px;">Import logs from pre-uploaded file</h3>					
