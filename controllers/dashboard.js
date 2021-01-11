@@ -124,11 +124,11 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 							} else {
 								consoleMsg.show(400,'Something went wrong, plase try again','a');
 							}
+							scope.views.started = false;
 						} else {
-
+							consoleMsg.show(300,'Logs downloaded','a');
+							self.putLogs(scope,response.data);
 						}
-						consoleMsg.show(300,'Logs downloaded','a');
-						self.putLogs(scope,response.data);
 						blockUI.hide();
 						  
 					 }, function myError(response) {

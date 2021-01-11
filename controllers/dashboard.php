@@ -37,12 +37,12 @@ switch ($_GET['r']) {
 				}
 				
 			}
-			
+		
 			if ($found) {
 				$response = array(300,"Text files found...","a");
 			} else {
 				$response = array(400,"No text files found...","a");
-			}			
+			}
 		
 		break;
 		
