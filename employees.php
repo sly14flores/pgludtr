@@ -443,8 +443,11 @@ require_once 'authentication.php';
   <form id="print-dtr" method="post" action="reports/dtr.php" target="_blank">
 	<input type="hidden" name="id" value="{{generate.id}}">
 	<input type="hidden" name="month" value="{{generate.month}}">
-	<input type="hidden" name="year" value="{{generate.year}}">	
+	<input type="hidden" name="year" value="{{generate.year}}">
   </form>
+  <form id="print-dtr-batch" method="post" action="reports/dtr-batch.php" target="_blank">
+	<input type="hidden" name="staffs" value="{{batchPrinting}}">
+  </form>  
   </div>
   <!-- /main-inner --> 
 </div>

@@ -528,7 +528,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			const check = scope.batchPrinting.filter(bp => {
 				return bp.empid == scope.ep.empid
 			});
-			
+
 			if (check.length == 0) scope.batchPrinting.push(scope.ep);
 
 		}
@@ -563,7 +563,10 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 
 			if (scope.batchPrinting.length==0) {
 				scope.noStaffs = true;
+				return;
 			}
+
+			$('#print-dtr-batch').submit();
 
 		}
 		
