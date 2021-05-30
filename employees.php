@@ -109,11 +109,17 @@ require_once 'authentication.php';
 <div class="main">
   <div class="main-inner">
     <div class="container">
+	  <div class="row">
+	  	<div class="col-lg-12">
+		  <button class="btn btn-success btn-xs pull-right" type="button" style="margin-bottom: 10px;" ng-click="appService.batchPrinting(this)">Batch Printing</button>
+		</div>
+	  </div>
       <div class="row">
 		<div class="span4">
           <div class="widget widget-table action-table">
             <div class="widget-header"> <i class="icon-group"></i>
-              <h3>Employees</h3><button class="btn btn-primary btn-xs pull-right" type="button" style="margin-top: 6px; margin-right: 10px;" ng-click="appService.add(this)" ng-disabled="controls.personalInfo.addBtn">Add</button>
+              <h3>Employees</h3>
+			  <button class="btn btn-primary btn-xs pull-right" type="button" style="margin-top: 6px; margin-right: 10px;" ng-click="appService.add(this)" ng-disabled="controls.personalInfo.addBtn">Add</button>
             </div>
             <!-- /widget-header -->
             <div class="widget-content">

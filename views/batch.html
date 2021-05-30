@@ -1,0 +1,56 @@
+<div style="overflow: hidden;">
+    <div class="alert alert-danger" role="alert" ng-show="noStaffs">No staff(s) added for printing</div>
+    <div style="float: left; width: 45%; margin-right: 10px;">
+        <p>Click on plus icon to add for batch printing</p>
+        <div class="controls" style="margin: 10px 0 10px 10px;">
+            <strong>Search:&nbsp;</strong><input type="text" class="span3" ng-model="qb">
+        </div>    
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>EmpID</th>
+                    <th>Name</th>
+                    <th style="text-align: center;" ng-click="appService.queueForPrintingAll(this)"><span style="cursor: pointer"><i class="icon-plus-sign"></i></span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr dir-paginate="ep in employeesPrinting | filter: qb | itemsPerPage: pageSizePrinting" current-page="currentPagePrinting" style="cursor: pointer;">
+                    <td> {{ep.empid}} </td>
+                    <td> {{ep.full_name}} </td>
+                    <td style="text-align: center;" ng-click="appService.queueForPrinting(this)"><span style="cursor: pointer"><i class="icon-plus-sign"></i></span></td>                    
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2">
+                        <dir-pagination-controls template-url="angularjs/utils/pagination/dirPagination.tpl.html"></dir-pagination-controls>                    
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div style="float: left; width: 50%">
+        <p>For batch printing {{(batchPrinting.length>0)?'('+batchPrinting.length+' staffs)':''}}</p>
+        <div class="controls" style="margin: 10px 0 10px 10px;">
+            <strong>Search:&nbsp;</strong><input type="text" class="span3" ng-model="qbp">
+        </div>
+        <div style="height: 600px; overflow: scroll"> 
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>EmpID</th>
+                        <th>Name</th>
+                        <th style="text-align: center;" ng-click="appService.unqueueForPrintingAll(this)"><span style="cursor: pointer"><i class="icon-minus-sign"></i></span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="bp in batchPrinting | filter: qbp">
+                        <td> {{bp.empid}} </td>
+                        <td> {{bp.full_name}} </td>
+                        <td style="text-align: center;" ng-click="appService.unqueueForPrinting(this)"><span style="cursor: pointer"><i class="icon-minus-sign"></i></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

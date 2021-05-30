@@ -152,7 +152,8 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			  url: 'controllers/employees.php?r=start'
 			}).then(function mySucces(response) {
 			
-				scope.employees = response.data;
+				scope.employees = [...response.data];
+				scope.employeesPrinting = [...response.data];
 				
 			}, function myError(response) {
 				 
@@ -506,6 +507,65 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			$('#print-dtr').submit();
 			
 		};
+
+		self.batchPrinting = function(scope) {
+
+			scope.noStaffs = false;
+
+			scope.batchPrinting = [];
+
+			bootstrapModal.show2(scope,'Batch Printing','views/batch.html',null,function() {
+				scope.$apply(function() {
+					scope.currentPage = 1;
+					scope.currentPagePrinting = 1;
+				})
+			});
+
+		}
+
+		self.queueForPrinting = function(scope) {
+
+			const check = scope.batchPrinting.filter(bp => {
+				return bp.empid == scope.ep.empid
+			});
+			
+			if (check.length == 0) scope.batchPrinting.push(scope.ep);
+
+		}
+
+		self.queueForPrintingAll = function(scope) {
+
+			scope.employees.forEach(em => {
+				const check = scope.batchPrinting.filter(bp => {
+					return bp.empid == em.empid
+				})
+				if (check.length == 0) scope.batchPrinting.push(em);					
+			});		
+
+		}
+
+		self.unqueueForPrinting = function(scope) {
+
+			const index = scope.batchPrinting.indexOf(scope.bp);
+			scope.batchPrinting.splice(index,1);
+
+		}
+
+		self.unqueueForPrintingAll = function(scope) {
+
+			scope.batchPrinting = [];
+
+		}
+
+		self.printBatch = function(scope) {
+
+			scope.noStaffs = false;
+
+			if (scope.batchPrinting.length==0) {
+				scope.noStaffs = true;
+			}
+
+		}
 		
 	};
 	
@@ -517,6 +577,9 @@ app.controller('employeesCtrl', function($scope,$http,blockUI,bootstrapModal,boo
 
 $scope.currentPage = 1;
 $scope.pageSize = 15;
+
+$scope.currentPagePrinting = 1;
+$scope.pageSizePrinting = 15;
 
 $scope.views = {};
 $scope.frmHolder = {};
@@ -566,6 +629,8 @@ $scope.views.months = {
 // $scope.pop_employees_list();
 
 $scope.dtr = [];
+
+$scope.batchPrinting = [];
 
 $scope.generate = {};
 $scope.generate.id = 0;

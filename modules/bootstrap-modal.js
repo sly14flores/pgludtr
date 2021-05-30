@@ -62,4 +62,27 @@ angular.module('bootstrap-modal',[]).service('bootstrapModal', function($compile
 
 	}
 
+	this.show2 = function(scope,title,body,shown = null,hidden = null) {
+		
+		$('#modal-show').modal('show');
+		$('#modal-show').on('shown.bs.modal', function (e) {
+		  // do something...
+		});
+		$('#modal-show').on('hidden.bs.modal', function (e) {
+			if (hidden != null) hidden();
+		});
+		$('#label-modal-show').html(title);
+		$('#modal-show .modal-body').load(body);
+
+		let buttons = '<button type="button" class="btn btn-primary" ng-click="appService.printBatch(this)">Print</button>';
+		buttons += '<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>';
+		$('#modal-show .modal-footer').html(buttons);
+		
+		$timeout(function() {
+			$compile($('#modal-show .modal-body')[0])(scope);
+			$compile($('#modal-show .modal-footer')[0])(scope);
+		},500);
+
+	}	
+
 });
