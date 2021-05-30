@@ -369,7 +369,7 @@ require_once 'authentication.php';
 								
 							</div>
 							<div class="tab-pane" id="dtr">
-								<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-primary" ng-click="appService.printDTR()" ng-disabled="generate.month == null"><i class="btn-icon-only icon-print"></i></a></div>
+								<div class="pull-right"><button class="btn btn-small btn-primary" ng-click="appService.printDTR()" ng-disabled="generate.month == null"><i class="btn-icon-only icon-print"></i></button></div>
 								<div style="clear: both;"></div>
 								<form style="margin-top: 20px;"name="frmHolder.dtr" autocomplete="off">
 									<fieldset>
