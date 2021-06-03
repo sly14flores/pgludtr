@@ -324,6 +324,8 @@ switch ($_GET['r']) {
 		$_POST['afternoon_out'] = date("H:i:s",strtotime($_POST['afternoon_out']));
 		unset($_POST['edit']);
 		unset($_POST['pers_id']);
+
+		$_POST['updated'] = 1;
 		
 		$dtr = $con->updateData($_POST,'id');
 	

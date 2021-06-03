@@ -445,8 +445,10 @@ require_once 'authentication.php';
 	<input type="hidden" name="month" value="{{generate.month}}">
 	<input type="hidden" name="year" value="{{generate.year}}">
   </form>
-  <form id="print-dtr-batch" method="post" action="reports/dtr-batch.php" target="_blank">
+  <form id="print-dtr-batch" method="post" action="reports/dtr.php" target="_blank">
 	<input type="hidden" name="staffs" value="{{batchPrinting}}">
+	<input type="hidden" name="month" value="{{batch.month}}">
+	<input type="hidden" name="year" value="{{batch.year}}">
   </form>  
   </div>
   <!-- /main-inner --> 

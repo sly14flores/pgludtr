@@ -511,6 +511,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 		self.batchPrinting = function(scope) {
 
 			scope.noStaffs = false;
+			scope.batchNoMonth = false;
 
 			scope.batchPrinting = [];
 
@@ -560,6 +561,12 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 		self.printBatch = function(scope) {
 
 			scope.noStaffs = false;
+			scope.batchNoMonth = false;
+
+			if (scope.batch.month == null) {
+				scope.batchNoMonth = true;
+				return;
+			}
 
 			if (scope.batchPrinting.length==0) {
 				scope.noStaffs = true;
@@ -634,6 +641,9 @@ $scope.views.months = {
 $scope.dtr = [];
 
 $scope.batchPrinting = [];
+$scope.batch = {};
+$scope.batch.year = (new Date()).getFullYear();
+$scope.batch.month = null;
 
 $scope.generate = {};
 $scope.generate.id = 0;
