@@ -2,7 +2,8 @@
 
 $dat_files = array(
 	array("machine"=>1,"location"=>"X-Ray","file"=>"BRMC204160015_attlog"),
-	array("machine"=>2,"location"=>"Admin","file"=>"BRMC204160026_attlog")
+	array("machine"=>2,"location"=>"Admin","file"=>"BRMC204160026_attlog"),
+	array("machine"=>3,"location"=>"Security Guard","file"=>"6422150200171_attlog")
 );
 
 function getDeviceNo($dev) {
