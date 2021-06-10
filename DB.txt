@@ -1,1 +1,2 @@
 ALTER TABLE `dtr`  ADD `updated` TINYINT NOT NULL DEFAULT '0'  AFTER `undertime`;
+ALTER TABLE `employees`  ADD `photo_type` VARCHAR(100) NULL  AFTER `philhealth`;
