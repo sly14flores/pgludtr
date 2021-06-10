@@ -400,6 +400,18 @@ require_once 'authentication.php';
 													</div>
 												</div>
 											</div>
+											<div class="span2">
+												<div class="control-group">
+													<label><strong>Coverage:</strong></label>
+													<div class="controls">
+														<select class="span2" ng-model="generate.coverage" ng-disabled="generate.id == 0">
+															<option value="whole">Whole Month</option>
+															<option value="first">First Half</option>
+															<option value="second">Second Half</option>
+														</select>
+													</div>
+												</div>
+											</div>											
 											<div class="span1">
 												<div class="control-group">											
 													<button class="btn btn-primary btn-xs" type="button" style="margin-top: 23px;" ng-click="appService.dtr(this,false)" ng-disabled="generate.month == null">Refresh</button>
@@ -444,11 +456,13 @@ require_once 'authentication.php';
 	<input type="hidden" name="id" value="{{generate.id}}">
 	<input type="hidden" name="month" value="{{generate.month}}">
 	<input type="hidden" name="year" value="{{generate.year}}">
+	<input type="hidden" name="coverage" value="{{generate.coverage}}">
   </form>
   <form id="print-dtr-batch" method="post" action="reports/dtr.php" target="_blank">
 	<input type="hidden" name="staffs" value="{{batchPrinting}}">
 	<input type="hidden" name="month" value="{{batch.month}}">
 	<input type="hidden" name="year" value="{{batch.year}}">
+	<input type="hidden" name="coverage" value="{{batch.coverage}}">
   </form>  
   </div>
   <!-- /main-inner --> 

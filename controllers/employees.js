@@ -273,6 +273,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			scope.views.cancelCloseTxt = 'Close';		
 			
 			scope.generate.id = scope.employee_row.id;
+			scope.generate.coverage = "whole";
 			
 			$timeout(function() {			
 				scope.$apply(function() {
@@ -510,6 +511,9 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 
 		self.batchPrinting = function(scope) {
 
+			scope.batch.coverage = "whole";
+			scope.batch.appointment_status = { id: "All", name: "All" };
+
 			scope.noStaffs = false;
 			scope.batchNoMonth = false;
 
@@ -536,7 +540,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 
 		self.queueForPrintingAll = function(scope) {
 
-			scope.employees.forEach(em => {
+			scope.employeesPrinting.forEach(em => {
 				const check = scope.batchPrinting.filter(bp => {
 					return bp.empid == em.empid
 				})
@@ -555,6 +559,25 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 		self.unqueueForPrintingAll = function(scope) {
 
 			scope.batchPrinting = [];
+
+		}
+
+		self.batchStatusChange = function(scope) {
+
+			const employees = [...scope.employees];
+
+			if (scope.batch.appointment_status.id == "All") {
+
+				scope.employeesPrinting = [...employees];
+
+			} else {
+
+				const employeesPrinting = employees.filter(emp => {
+					return emp.appointment_status == scope.batch.appointment_status.id;
+				})
+				scope.employeesPrinting = [...employeesPrinting];				
+
+			}
 
 		}
 
@@ -644,6 +667,15 @@ $scope.batchPrinting = [];
 $scope.batch = {};
 $scope.batch.year = (new Date()).getFullYear();
 $scope.batch.month = null;
+$scope.batch.coverage = "whole";
+$scope.batch.appointmentStatus = [
+	{ id: "All", name: "All" },
+	{ id: "Permanent", name: "Permanent" },
+	{ id: "Casual", name: "Casual" },
+	{ id: "JO", name: "Job Order" },
+	{ id: "Volunteer", name: "Volunteer"},
+];
+$scope.batch.appointment_status = { id: "All", name: "All" };
 
 $scope.generate = {};
 $scope.generate.id = 0;

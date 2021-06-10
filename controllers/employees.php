@@ -54,7 +54,7 @@ switch ($_GET['r']) {
 		 */
 		$con->query("DELETE FROM employees WHERE ISNULL(empid)");
 
-		$sql = "SELECT id, empid, CONCAT(first_name, ' ', last_name) full_name FROM employees WHERE is_built_in != 1";
+		$sql = "SELECT id, empid, CONCAT(first_name, ' ', last_name) full_name, appointment_status FROM employees WHERE is_built_in != 1";
 		$employees = $con->getData($sql);
 		
 		echo json_encode($employees);
