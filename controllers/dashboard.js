@@ -93,6 +93,14 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 				
 				case "network":
 
+					const zk = scope.views.device.type
+
+					if ((!zk) || (zk=="")) {
+						consoleMsg.show(300,'Model is not specified for this device','a');
+						scope.views.started = false;						
+						blockUI.hide();						
+						return;				
+					}
 
 					if (Object.size(scope.views.device)==0) {
 						consoleMsg.show(400,'No device selected','a');
@@ -114,7 +122,7 @@ app.factory('appService', function(consoleMsg,$http,$compile,$timeout,fileUpload
 
 					$http({
 						method: 'POST',
-						url: 'tad/download.php',
+						url: `${zk}/download.php`,
 						data: {ip, start: scope.filter.dateFrom, end: scope.filter.dateTo, machine }
 					}).then(function mySucces(response) {
 						
