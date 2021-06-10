@@ -4,11 +4,13 @@ $_POST = json_decode(file_get_contents('php://input'), true);
 
 include("zklib/ZKLib.php");
 
+$attendances = [];
 $enableGetData = true;
 
-$zk = new ZKLib($_POST['ip']);
+$zk = new ZKLib($_POST['ip'], 4370);
 
 $ret = $zk->connect();
+
 sleep(1);
 if ($ret) {
 	
@@ -18,16 +20,20 @@ if ($ret) {
 	$zk->enableDevice();
 	sleep(1);
 	
+	// $user = $zk->getUser();
+	
 	if($enableGetData === true) {
 		
 		$attendances = $zk->getAttendance();
-		// $attendances = array_reverse($attendances, true);		
+		// $attendances = array_reverse($attendances, true;
 		
-	};
+	};	
 	
 	$zk->disconnect();
 	
 };
+
+// var_dump($attendances); exit();
 
 $r_logs = [];
 foreach ($attendances as $attendance) {
