@@ -22,17 +22,18 @@ $supervisor = "Supervisor Head";
 
 $rows = "";
 for ($i=1; $i<=31; $i++) {
-    $tr = "<tr>";
-    $tr .= "<td>&nbsp;</td>";
-    $tr .= "<td>&nbsp;</td>";
-    $tr .= "<td>&nbsp;</td>";
-    $tr .= "<td>&nbsp;</td>";
-    $tr .= "<td>&nbsp;</td>";
-    $tr .= "<td>&nbsp;</td>";
-    $tr .= "<td>&nbsp;</td>";
-    $tr .= "<td>&nbsp;</td>";
-    $tr .= "</tr>";
-    
+    $tr = <<<EOT
+        <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        </tr>
+    EOT;
     $rows .= $tr;
 }
 
@@ -84,8 +85,7 @@ EOT;
 
 $contents = "";
 $contents.='<div class="wrapper">'.$content.'</div>';
-$contents.='<div class="wrapper page-break">'.$content.'</div>';
-$contents.='<div class="wrapper page-break">'.$content.'</div>';
+// $contents.='<div class="wrapper page-break">'.$content.'</div>';
 
 $html = <<<EOT
 <!DOCTYPE html>
@@ -109,7 +109,7 @@ $html = <<<EOT
             }
 
             .wrapper {
-                width: 600px;
+                width: 620px;
                 margin-left: auto;
                 margin-right: auto;
                 font-family: Verdana, Geneva, Tahoma, sans-serif;
