@@ -37,7 +37,6 @@ for ($i=1; $i<=31; $i++) {
 }
 
 $content = <<<EOT
-<div class="wrapper">
     <h1 class="header">$header</h1>
     <p class="sub-header">$sub_header</p>
     <h3 class="title">$title</h3>
@@ -81,12 +80,12 @@ $content = <<<EOT
             </tfoot>
         </table>
     </div>
-</div>
 EOT;
 
 $contents = "";
-$contents.=$content;
-$contents.=$content;
+$contents.='<div class="wrapper">'.$content.'</div>';
+$contents.='<div class="wrapper page-break">'.$content.'</div>';
+$contents.='<div class="wrapper page-break">'.$content.'</div>';
 
 $html = <<<EOT
 <!DOCTYPE html>
@@ -114,7 +113,8 @@ $html = <<<EOT
                 margin-left: auto;
                 margin-right: auto;
                 font-family: Verdana, Geneva, Tahoma, sans-serif;
-                font-size: 16px;                
+                font-size: 16px;
+                margin-top: 30px;            
             }
 
             .header {
@@ -213,7 +213,11 @@ $html = <<<EOT
                 text-align: center;
                 margin-left: auto;
                 margin-right: auto;
-            }      
+            }
+            
+            .page-break {
+                page-break-before: always;
+            }        
 
         </style>
     </head>
