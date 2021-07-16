@@ -1,7 +1,29 @@
 <?php
 
-// somewhere early in your project's loading, require the Composer autoloader
-// see: http://getcomposer.org/doc/00-intro.md
+$appointment_status = $_POST['appointment_status'] ?? null;
+$month = $_POST['month'] ?? null;
+$year = $_POST['year'] ?? null;
+$coverage = $_POST['coverage'] ?? null;
+
+$_staffs = $_POST['staffs'] ?? [["id"=>intval($_POST['id'])]];
+
+$staffs = (gettype($_staffs)==="string")?json_decode($_staffs,true):$_staffs;
+
+$ids = [];
+foreach ($staffs as $staff) {
+    $ids[] = $staff['id'];
+}
+
+require('../db.php');
+
+$con = new pdo_db();
+
+$sql = "SELECT id, empid, UPPER(CONCAT(last_name, ', ', first_name, ' ', SUBSTRING(middle_name,1,1), '.')) employee, appointment_status FROM employees WHERE id IN (".implode(",",$ids).")";
+if ($appointment_status!==null) {
+    $sql.=" AND appointment_status = '".$appointment_status."'";
+}
+$employees = $con->getData($sql);
+
 require '../vendor/autoload.php';
 
 // reference the Dompdf namespace
@@ -10,82 +32,111 @@ use Dompdf\Dompdf;
 // instantiate and use the dompdf class
 $dompdf = new Dompdf();
 
-$header = "La Union Medical Center";
-$sub_header = "Agoo, La Union";
-$title = "Daily Time Record";
+$header = "La Union Medical Center"; //
+$sub_header = "Agoo, La Union"; //
+$supervisor = "Supervisor Head"; //
+$title = "Daily Time Record"; //
 
-$name = "IPSUM LOREM H";
-$coverage = "May 2021";
-$status = "CASUAL";
+$date = "$year-$month-01";
+$period = date("F Y",strtotime($date));
 
-$supervisor = "Supervisor Head";
-
-$rows = "";
-for ($i=1; $i<=31; $i++) {
-    $tr = <<<EOT
-        <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        </tr>
-    EOT;
-    $rows .= $tr;
+$firstDay = date("Y-m-d",strtotime($date));
+$lastDay = date("Y-m-t",strtotime($date));
+switch ($coverage) {
+    case "first":
+        $lastDay = date("Y-m-15",strtotime($date));
+        break;
+    case "second":
+        $firstDay = date("Y-m-16",strtotime($date));
+        break;
 }
 
-$content = <<<EOT
-    <h1 class="header">$header</h1>
-    <p class="sub-header">$sub_header</p>
-    <h3 class="title">$title</h3>
-    <h1 class="name">$name</h1>
-    <div class="coverage-status-wrapper">
-        <p class="coverage">May 2021</p>
-        <p class="status">CASUAL</p>
-    </div>
-    <div class="table-wrapper">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Day</th>
-                    <th>Time In</th>
-                    <th>Time Out</th>
-                    <th>Time In</th>
-                    <th>Time Out</th>
-                    <th>Hours Work</th>
-                    <th>Tardiness</th>
-                </tr>
-            </thead>
-            <tbody>
-                $rows                                                 
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="5">Total Absences</td>
-                    <td>0</td>
-                    <td>98.02</td>
-                    <td>0</td>
-                </tr>
-                <tr>
-                    <td class="footer-name" colspan="4">
-                        <p>$name</p>
-                    </td>
-                    <td class="footer-head" colspan="4">
-                        <p>$supervisor</p>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-EOT;
-
 $contents = "";
-$contents.='<div class="wrapper">'.$content.'</div>';
-// $contents.='<div class="wrapper page-break">'.$content.'</div>';
+foreach ($employees as $i => $emp) {
+    $content = dtrContent($emp['id'],$emp['employee'],$emp['appointment_status'],$period,$firstDay,$lastDay);
+    $classes = ($i>0)?"wrapper page-break":"wrapper";
+    $contents.='<div class="'.$classes.'">'.$content.'</div>';
+}
+
+function dtrContent($id,$name,$status,$period,$first,$last)
+{
+    global $con, $header, $sub_header, $supervisor, $title;
+
+    $sql = "SELECT * FROM dtr WHERE eid = $id AND ddate BETWEEN '$first' AND '$last'";
+    $dtr = $con->getData($sql);    
+
+    $rows = "";
+    foreach ($dtr as $d) {
+        $date = date("j",strtotime($d['ddate']));
+        $day = date("D",strtotime($d['ddate']));
+        $morning_in = (($d['morning_in'] == "00:00:00")&&($d['updated']==0))?"":date("h:i A",strtotime($d['morning_in']));
+        $morning_out = (($d['morning_out'] == "00:00:00")&&($d['updated']==0))?"":date("h:i A",strtotime($d['morning_out']));
+        $afternoon_in = (($d['afternoon_in'] == "00:00:00")&&($d['updated']==0))?"":date("h:i A",strtotime($d['afternoon_in']));
+        $afternoon_out = (($d['afternoon_out'] == "00:00:00")&&($d['updated']==0))?"":date("h:i A",strtotime($d['afternoon_out']));        
+        $tr = <<<EOT
+            <tr>
+            <td>$date</td>
+            <td>$day</td>
+            <td>$morning_in</td>
+            <td>$morning_out</td>
+            <td>$afternoon_in</td>
+            <td>$afternoon_out</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            </tr>
+        EOT;
+        $rows .= $tr;
+    }
+    
+    $content = <<<EOT
+        <h1 class="header">$header</h1>
+        <p class="sub-header">$sub_header</p>
+        <h3 class="title">$title</h3>
+        <h1 class="name">$name</h1>
+        <div class="coverage-status-wrapper">
+            <p class="coverage">$period</p>
+            <p class="status">$status</p>
+        </div>
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Day</th>
+                        <th>Time In</th>
+                        <th>Time Out</th>
+                        <th>Time In</th>
+                        <th>Time Out</th>
+                        <th>Hours Work</th>
+                        <th>Tardiness</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    $rows                                                 
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5">Total Absences</td>
+                        <td>0</td>
+                        <td>98.02</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td class="footer-name" colspan="4">
+                            <p>$name</p>
+                        </td>
+                        <td class="footer-head" colspan="4">
+                            <p>$supervisor</p>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    EOT;
+    
+    return $content;
+
+}
 
 $html = <<<EOT
 <!DOCTYPE html>
@@ -182,7 +233,8 @@ $html = <<<EOT
             .table tbody td {
                 border: 1px solid rgb(77, 77, 77);
                 padding-top: 3px;
-                padding-bottom: 3px;            
+                padding-bottom: 3px; 
+                text-align: center;           
             }
 
             .table tfoot td {

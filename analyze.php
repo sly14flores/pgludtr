@@ -30,11 +30,11 @@ class log_order {
 
 		$tlog = strtotime($log);
 		
-		if ($tlog < $morning_cutoff) $allotment = array("morning_in"=>date("H:i:s",$tlog));
-		if ( ($tlog >= $morning_cutoff) && ($tlog < $lunch_cutoff) ) $allotment = array("morning_out"=>date("H:i:s",$tlog));
+		if ($tlog < $morning_cutoff) $allotment = array("morning_in"=>date("H:i:s",$tlog),"morning_in_updated"=>1);
+		if ( ($tlog >= $morning_cutoff) && ($tlog < $lunch_cutoff) ) $allotment = array("morning_out"=>date("H:i:s",$tlog),"morning_out_updated"=>1);
 
-		if ( ($tlog < $afternoon_cutoff) && ($tlog >= $lunch_cutoff) ) $allotment = array("afternoon_in"=>date("H:i:s",$tlog));
-		if ($tlog >= $afternoon_cutoff) $allotment = array("afternoon_out"=>date("H:i:s",$tlog));
+		if ( ($tlog < $afternoon_cutoff) && ($tlog >= $lunch_cutoff) ) $allotment = array("afternoon_in"=>date("H:i:s",$tlog),"afternoon_in_updated"=>1);
+		if ($tlog >= $afternoon_cutoff) $allotment = array("afternoon_out"=>date("H:i:s",$tlog),"afternoon_out_updated"=>1);
 		
 		return $allotment;
 

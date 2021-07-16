@@ -181,20 +181,33 @@ switch ($_GET['r']) {
 					"afternoon_out"=>"00:00:00"
 				);
 
+				$updated = array(
+					"morning_in_updated"=>0,
+					"morning_out_updated"=>0,
+					"afternoon_in_updated"=>0,
+					"afternoon_out_updated"=>0
+				);				
+
 				foreach ($logs as $log) {
 					$allotment = $analyze->allot($start,$log['log']);
 					$prop = array_keys($allotment);
 					$analyzed[$prop[0]] = $allotment[$prop[0]];
+					$updated[$prop[1]] = $allotment[$prop[1]];
 				};
 				
-				$dtr[] = array("ddate"=>date("Y-m-d",strtotime($start)),
-						"eid"=>$_POST['id'],
-						"morning_in"=>$analyzed['morning_in'],
-						"morning_out"=>$analyzed['morning_out'],
-						"afternoon_in"=>$analyzed['afternoon_in'],
-						"afternoon_out"=>$analyzed['afternoon_out'],
-						"tardiness"=>0
-						);
+				$dtr[] = array(
+					"ddate"=>date("Y-m-d",strtotime($start)),
+					"eid"=>$_POST['id'],
+					"morning_in"=>$analyzed['morning_in'],
+					"morning_out"=>$analyzed['morning_out'],
+					"afternoon_in"=>$analyzed['afternoon_in'],
+					"afternoon_out"=>$analyzed['afternoon_out'],
+					"morning_in_updated"=>$updated['morning_in_updated'],
+					"morning_out_updated"=>$updated['morning_out_updated'],
+					"afternoon_in_updated"=>$updated['afternoon_in_updated'],
+					"afternoon_out_updated"=>$updated['afternoon_out_updated'],
+					"tardiness"=>0
+				);
 				
 				$start = date("Y-m-d", strtotime("+1 day", strtotime($start)));	
 				

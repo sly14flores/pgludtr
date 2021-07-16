@@ -143,7 +143,8 @@ foreach ($dtr as $row) {
 	$row['afternoon_in'] = ($row['afternoon_in'] == "00:00:00")?"":date("H:i:s",strtotime($row['afternoon_in']));
 	$row['afternoon_out'] = ($row['afternoon_out'] == "00:00:00")?"":date("H:i:s",strtotime($row['afternoon_out']));
 	
-	$data[] = array(date("j",strtotime($row['ddate'])),
+	$data[] = array(
+			date("j",strtotime($row['ddate'])),
 			date("D",strtotime($row['ddate'])),
 			$row['morning_in'],
 			$row['morning_out'],

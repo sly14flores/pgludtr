@@ -1,2 +1,7 @@
 ALTER TABLE `dtr`  ADD `updated` TINYINT NOT NULL DEFAULT '0'  AFTER `undertime`;
 ALTER TABLE `employees`  ADD `photo_type` VARCHAR(100) NULL  AFTER `philhealth`;
+
+ALTER TABLE `dtr`  ADD `morning_in_updated` TINYINT NOT NULL DEFAULT '0'  AFTER `morning_in`;
+ALTER TABLE `dtr`  ADD `morning_out_updated` TINYINT NOT NULL DEFAULT '0'  AFTER `morning_out`
+ALTER TABLE `dtr`  ADD `afternoon_in_updated` TINYINT NOT NULL DEFAULT '0'  AFTER `afternoon_in`
+ALTER TABLE `dtr`  ADD `afternoon_out_updated` TINYINT NOT NULL DEFAULT '0'  AFTER `afternoon_out`
