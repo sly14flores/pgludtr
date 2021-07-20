@@ -338,7 +338,7 @@ switch ($_GET['r']) {
 		unset($_POST['edit']);
 		unset($_POST['pers_id']);
 
-		$_POST['updated'] = 1;
+		// $_POST['updated'] = 1;
 		
 		$dtr = $con->updateData($_POST,'id');
 	

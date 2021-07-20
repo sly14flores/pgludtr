@@ -35,6 +35,7 @@ $dompdf = new Dompdf();
 $header = "La Union Medical Center"; //
 $sub_header = "Agoo, La Union"; //
 $supervisor = "Supervisor Head"; //
+
 $title = "Daily Time Record"; //
 
 $date = "$year-$month-01";
@@ -69,10 +70,10 @@ function dtrContent($id,$name,$status,$period,$first,$last)
     foreach ($dtr as $d) {
         $date = date("j",strtotime($d['ddate']));
         $day = date("D",strtotime($d['ddate']));
-        $morning_in = (($d['morning_in'] == "00:00:00")&&($d['updated']==0))?"":date("h:i A",strtotime($d['morning_in']));
-        $morning_out = (($d['morning_out'] == "00:00:00")&&($d['updated']==0))?"":date("h:i A",strtotime($d['morning_out']));
-        $afternoon_in = (($d['afternoon_in'] == "00:00:00")&&($d['updated']==0))?"":date("h:i A",strtotime($d['afternoon_in']));
-        $afternoon_out = (($d['afternoon_out'] == "00:00:00")&&($d['updated']==0))?"":date("h:i A",strtotime($d['afternoon_out']));        
+        $morning_in = ($d['morning_in'] == "00:00:00")?"":date("h:i A",strtotime($d['morning_in']));
+        $morning_out = ($d['morning_out'] == "00:00:00")?"":date("h:i A",strtotime($d['morning_out']));
+        $afternoon_in = ($d['afternoon_in'] == "00:00:00")?"":date("h:i A",strtotime($d['afternoon_in']));
+        $afternoon_out = ($d['afternoon_out'] == "00:00:00")?"":date("h:i A",strtotime($d['afternoon_out']));        
         $tr = <<<EOT
             <tr>
             <td>$date</td>
