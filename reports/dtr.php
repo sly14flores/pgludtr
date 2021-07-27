@@ -64,16 +64,22 @@ function dtrContent($id,$name,$status,$period,$first,$last)
     global $con, $header, $sub_header, $supervisor, $title;
 
     $sql = "SELECT * FROM dtr WHERE eid = $id AND ddate BETWEEN '$first' AND '$last'";
-    $dtr = $con->getData($sql);    
+    $dtr = $con->getData($sql);
+
+    $hours_work = 0;
+    $total_absences = 0;
 
     $rows = "";
-    foreach ($dtr as $d) {
+    foreach ($dtr as $d) {        
         $date = date("j",strtotime($d['ddate']));
         $day = date("D",strtotime($d['ddate']));
         $morning_in = ($d['morning_in'] == "00:00:00")?"":date("h:i A",strtotime($d['morning_in']));
         $morning_out = ($d['morning_out'] == "00:00:00")?"":date("h:i A",strtotime($d['morning_out']));
         $afternoon_in = ($d['afternoon_in'] == "00:00:00")?"":date("h:i A",strtotime($d['afternoon_in']));
         $afternoon_out = ($d['afternoon_out'] == "00:00:00")?"":date("h:i A",strtotime($d['afternoon_out']));        
+
+        $hour_work = 0;
+
         $tr = <<<EOT
             <tr>
             <td>$date</td>
@@ -82,7 +88,7 @@ function dtrContent($id,$name,$status,$period,$first,$last)
             <td>$morning_out</td>
             <td>$afternoon_in</td>
             <td>$afternoon_out</td>
-            <td>&nbsp;</td>
+            <td>$hour_work</td>
             <td>&nbsp;</td>
             </tr>
         EOT;
@@ -118,9 +124,9 @@ function dtrContent($id,$name,$status,$period,$first,$last)
                 <tfoot>
                     <tr>
                         <td colspan="5">Total Absences</td>
-                        <td>0</td>
-                        <td>98.02</td>
-                        <td>0</td>
+                        <td>$total_absences</td>
+                        <td>$hours_work</td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td class="footer-name" colspan="4">
