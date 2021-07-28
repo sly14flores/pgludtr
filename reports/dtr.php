@@ -32,10 +32,18 @@ use Dompdf\Dompdf;
 // instantiate and use the dompdf class
 $dompdf = new Dompdf();
 
-$header = "La Union Medical Center"; //
-$sub_header = "Agoo, La Union"; //
-$supervisor = "Supervisor Head"; //
+$header = null; //
+$sub_header = null; //
 
+$sql = "SELECT * FROM settings WHERE id = 1";
+$settings = $con->getData($sql);
+
+if (count($settings)) {
+    $header = $settings[0]['dtr_header']; //
+    $sub_header = $settings[0]['dtr_sub_header']; //
+}
+
+$supervisor = "Head/Supervisor"; //
 $title = "Daily Time Record"; //
 
 $date = "$year-$month-01";

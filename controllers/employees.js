@@ -519,7 +519,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 
 			scope.batchPrinting = [];
 
-			bootstrapModal.show2(scope,'Batch Printing','views/batch.html',null,function() {
+			bootstrapModal.batchPrinting(scope,'Batch Printing','views/batch.html',null,function() {
 				scope.$apply(function() {
 					scope.currentPage = 1;
 					scope.currentPagePrinting = 1;
