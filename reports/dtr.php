@@ -88,6 +88,8 @@ function dtrContent($id,$name,$status,$period,$first,$last)
 
         $hour_work = 0;
 
+        $hour_work = ($hour_work == 0) ? "" : $hour_work;
+
         $tr = <<<EOT
             <tr>
             <td>$date</td>
@@ -102,6 +104,9 @@ function dtrContent($id,$name,$status,$period,$first,$last)
         EOT;
         $rows .= $tr;
     }
+
+    $total_absences = ($total_absences == 0) ? "" : $total_absences;
+    $hours_work = ($hours_work == 0) ? "" : $hours_work;
     
     $content = <<<EOT
         <h1 class="header">$header</h1>
