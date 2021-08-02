@@ -369,7 +369,10 @@ require_once 'authentication.php';
 								
 							</div>
 							<div class="tab-pane" id="dtr">
-								<div class="pull-right"><button class="btn btn-small btn-primary" ng-click="appService.printDTR()" ng-disabled="generate.month == null"><i class="btn-icon-only icon-print"></i></button></div>
+								<div class="pull-right">
+									<input type="checkbox" id="dtr-wh" ng-model="generate.wwh" ng-disabled="generate.month == null" /> w/ Work Hours
+									<button class="btn btn-small btn-primary" ng-click="appService.printDTR()" ng-disabled="generate.month == null"><i class="btn-icon-only icon-print"></i></button>
+								</div>
 								<div style="clear: both;"></div>
 								<form style="margin-top: 20px;"name="frmHolder.dtr" autocomplete="off">
 									<fieldset>
@@ -457,12 +460,14 @@ require_once 'authentication.php';
 	<input type="hidden" name="month" value="{{generate.month}}">
 	<input type="hidden" name="year" value="{{generate.year}}">
 	<input type="hidden" name="coverage" value="{{generate.coverage}}">
+	<input type="hidden" name="wwh" value="{{generate.wwh}}">
   </form>
   <form id="print-dtr-batch" method="post" action="reports/dtr.php" target="_blank">
 	<input type="hidden" name="staffs" value="{{batchPrinting}}">
 	<input type="hidden" name="month" value="{{batch.month}}">
 	<input type="hidden" name="year" value="{{batch.year}}">
 	<input type="hidden" name="coverage" value="{{batch.coverage}}">
+	<input type="hidden" name="wwh" value="{{batch.wwh}}">
   </form>  
   </div>
   <!-- /main-inner --> 
