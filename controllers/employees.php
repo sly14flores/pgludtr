@@ -5,6 +5,7 @@ $_POST = json_decode(file_get_contents('php://input'), true);
 require_once '../db.php';
 require_once '../dat_files.php';
 require_once '../analyze.php';
+require_once '../work_hour.php';
 
 // header("Content-type: application/json");
 
@@ -206,7 +207,7 @@ switch ($_GET['r']) {
 					"morning_out_updated"=>$updated['morning_out_updated'],
 					"afternoon_in_updated"=>$updated['afternoon_in_updated'],
 					"afternoon_out_updated"=>$updated['afternoon_out_updated'],
-					"tardiness"=>0
+					"work_hour"=>computeWorkHour(date("Y-m-d",strtotime($start)),$analyzed['morning_in'],$analyzed['morning_out'],$analyzed['afternoon_in'],$analyzed['afternoon_out'])
 				);
 				
 				$start = date("Y-m-d", strtotime("+1 day", strtotime($start)));	
@@ -245,6 +246,8 @@ switch ($_GET['r']) {
 				$_dtr[$key]['morning_out'] = $analyzed['morning_out'];
 				$_dtr[$key]['afternoon_in'] = $analyzed['afternoon_in'];
 				$_dtr[$key]['afternoon_out'] = $analyzed['afternoon_out'];
+				$_dtr[$key]['work_hour'] = computeWorkHour($d['ddate'],$analyzed['morning_in'],$analyzed['morning_out'],$analyzed['afternoon_in'],$analyzed['afternoon_out']);
+				
 				unset($_dtr[$key]['eid']);
 				unset($_dtr[$key]['ddate']);
 				
