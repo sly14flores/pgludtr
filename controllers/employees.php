@@ -8,13 +8,53 @@ require_once '../analyze.php';
 
 // header("Content-type: application/json");
 
+function folder_exist($folder) {
+
+    // Get canonicalized absolute pathname
+    $path = realpath($folder);
+
+    // If it exist, check if it's a directory
+    if($path !== false AND is_dir($path))
+    {
+        // Return canonicalized absolute pathname
+        return $path;
+    }
+
+    // Path/folder does not exist
+    return false;
+	
+}
+
+function files_only($files,$empid) {
+
+	$ignored = array('.', '..');
+
+	$files_only = [];
+
+	foreach ($files as $file) {
+		if (in_array($file, $ignored)) continue;		
+        $files_only[$file] = filemtime("../pictures/$empid/".$file);
+	}
+
+    arsort($files_only);
+    $files_only = array_keys($files_only);
+
+	return $files_only;
+
+}
+
 switch ($_GET['r']) {
 	
 	case "start":
 	
 		$con = new pdo_db();
 		
-		$sql = "SELECT id, empid, CONCAT(first_name, ' ', last_name) full_name FROM employees WHERE is_built_in != 1";
+		/**
+		 * Delete items with null empid
+		 */
+		$con->query("DELETE FROM employees WHERE ISNULL(empid)");
+
+		$sql = "SELECT id, empid, CONCAT(first_name, ' ', last_name) full_name, appointment_status FROM employees WHERE is_built_in != 1";
 		$employees = $con->getData($sql);
 		
 		echo json_encode($employees);
@@ -43,9 +83,17 @@ switch ($_GET['r']) {
 	
 	case "upload_profile_picture":
 		
-		$dir = "../pictures/";
+		$dir = "../pictures/";		
+		if (!folder_exist($dir)) {
+			mkdir($dir);
+		}
+
+		$profile_dir = $dir.$_GET['empid']."/";
+		if (!folder_exist($profile_dir)) {
+			mkdir($profile_dir);
+		}
 		
-		move_uploaded_file($_FILES['file']['tmp_name'],$dir."$_GET[empid]$_GET[en]");
+		move_uploaded_file($_FILES['file']['tmp_name'],$profile_dir."$_GET[empid]$_GET[en]");
 
 	break;
 	
@@ -65,12 +113,39 @@ switch ($_GET['r']) {
 	
 		$con = new pdo_db();
 		
+		/**
+		 * Delete items with null empid
+		 */
+		$con->query("DELETE FROM employees WHERE ISNULL(empid)");		
+
 		$employee = $con->getData("SELECT *, (SELECT description FROM schedules WHERE id = schedule_id) description FROM employees WHERE id = $_POST[id]");
-		$picture = "../pictures/".$employee[0]['empid'].".jpg";
+
 		$employee[0]['schedule_id'] = array("id"=>$employee[0]['schedule_id'],"description"=>$employee[0]['description']);
 		unset($employee[0]['description']);
-		$employee[0]['has_profile_pic'] = file_exists($picture);
-		
+
+		$dir = "../pictures/";		
+		if (!folder_exist($dir)) {
+			mkdir($dir);
+		}
+
+		$profile_dir = $dir.$employee[0]['empid']."/";
+		if (!folder_exist($profile_dir)) {
+			mkdir($profile_dir);
+		}
+
+		$photos = files_only(scandir("../pictures/".$employee[0]['empid']."/"),$employee[0]['empid']);
+
+		$employee[0]['has_profile_pic'] = false;
+		$employee[0]['photo_type'] = null;
+
+		if (count($photos)) {
+			$picture = $photos[0];
+			$ext_picture = explode(".",$picture);
+			$has_profile_pic = file_exists("../pictures/".$employee[0]['empid']."/".$picture);
+			$employee[0]['has_profile_pic'] = $has_profile_pic;
+			$employee[0]['photo_type'] = ".".$ext_picture[1];
+		}
+
 		echo json_encode($employee[0]);
 	
 	break;
@@ -106,20 +181,33 @@ switch ($_GET['r']) {
 					"afternoon_out"=>"00:00:00"
 				);
 
+				$updated = array(
+					"morning_in_updated"=>0,
+					"morning_out_updated"=>0,
+					"afternoon_in_updated"=>0,
+					"afternoon_out_updated"=>0
+				);				
+
 				foreach ($logs as $log) {
 					$allotment = $analyze->allot($start,$log['log']);
 					$prop = array_keys($allotment);
 					$analyzed[$prop[0]] = $allotment[$prop[0]];
+					$updated[$prop[1]] = $allotment[$prop[1]];
 				};
 				
-				$dtr[] = array("ddate"=>date("Y-m-d",strtotime($start)),
-						"eid"=>$_POST['id'],
-						"morning_in"=>$analyzed['morning_in'],
-						"morning_out"=>$analyzed['morning_out'],
-						"afternoon_in"=>$analyzed['afternoon_in'],
-						"afternoon_out"=>$analyzed['afternoon_out'],
-						"tardiness"=>0
-						);
+				$dtr[] = array(
+					"ddate"=>date("Y-m-d",strtotime($start)),
+					"eid"=>$_POST['id'],
+					"morning_in"=>$analyzed['morning_in'],
+					"morning_out"=>$analyzed['morning_out'],
+					"afternoon_in"=>$analyzed['afternoon_in'],
+					"afternoon_out"=>$analyzed['afternoon_out'],
+					"morning_in_updated"=>$updated['morning_in_updated'],
+					"morning_out_updated"=>$updated['morning_out_updated'],
+					"afternoon_in_updated"=>$updated['afternoon_in_updated'],
+					"afternoon_out_updated"=>$updated['afternoon_out_updated'],
+					"tardiness"=>0
+				);
 				
 				$start = date("Y-m-d", strtotime("+1 day", strtotime($start)));	
 				
@@ -249,6 +337,8 @@ switch ($_GET['r']) {
 		$_POST['afternoon_out'] = date("H:i:s",strtotime($_POST['afternoon_out']));
 		unset($_POST['edit']);
 		unset($_POST['pers_id']);
+
+		// $_POST['updated'] = 1;
 		
 		$dtr = $con->updateData($_POST,'id');
 	

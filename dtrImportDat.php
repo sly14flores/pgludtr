@@ -20,12 +20,16 @@ function logsFiltered($logFile,$from,$to,$idFrom,$idTo) {
 	}		
 
 	// trim ID
+	$logsUnfiltered = [];
 	foreach ($line_txt as $i => $row) {
-		$logsUnfiltered[$i][0] = trim($line_txt[$i][0]);
-		$logsUnfiltered[$i][1] = trim($line_txt[$i][1]);
-		$logsUnfiltered[$i][2] = trim($line_txt[$i][2]);
+		if ($row===false) continue;
+		$logsUnfiltered[] = [
+			trim($row[0]),
+			trim($row[1]),
+			trim($row[2]),
+		];
 	}
-	
+
 	// filter ID(s)
 	if ( ($idFrom != 0) && ($idTo != 0) ) {
 		

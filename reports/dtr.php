@@ -1,160 +1,312 @@
 <?php
 
-require('fpdf181/fpdf.php');
+$appointment_status = $_POST['appointment_status'] ?? null;
+$month = $_POST['month'] ?? null;
+$year = $_POST['year'] ?? null;
+$coverage = $_POST['coverage'] ?? null;
+
+$_staffs = $_POST['staffs'] ?? [["id"=>intval($_POST['id'])]];
+
+$staffs = (gettype($_staffs)==="string")?json_decode($_staffs,true):$_staffs;
+
+$ids = [];
+foreach ($staffs as $staff) {
+    $ids[] = $staff['id'];
+}
+
 require('../db.php');
 
 $con = new pdo_db();
 
-$datef = "$_POST[year]-$_POST[month]";
-$date = "$_POST[year]-$_POST[month]-01";
-$department = "BDH";
-$employee = $con->getData("SELECT empid, UPPER(CONCAT(last_name, ', ', first_name, ' ', SUBSTRING(middle_name,1,1), '.')) employee, appointment_status FROM employees WHERE id = $_POST[id]");
+$sql = "SELECT id, empid, UPPER(CONCAT(last_name, ', ', first_name, ' ', SUBSTRING(middle_name,1,1), '.')) employee, appointment_status FROM employees WHERE id IN (".implode(",",$ids).")";
+if ($appointment_status!==null) {
+    $sql.=" AND appointment_status = '".$appointment_status."'";
+}
+$employees = $con->getData($sql);
 
-class PDF extends FPDF
-{
-// Page header
-function Header()
-{
+require '../vendor/autoload.php';
 
-	// $this->Ln(25);	
-    $this->SetFont('Arial','B',12);
-    $this->SetTextColor(66,66,66);
-    $this->Cell(0,5,"Provincial Government of La Union",0,1,'C');
-    $this->SetFont('Arial','',10);
-	$this->SetFontSize(10);
-    $this->Cell(0,5,"San Fernando City, La Union",0,1,'C');
-	$this->Ln(2);	
-    $this->SetFont('Arial','B',14);
-    $this->Cell(0,7,"Daily Time Record",0,1,'C');
-	$this->SetDrawColor(92,92,92);	
-	$this->Line(20,36,195,36);
+// reference the Dompdf namespace
+use Dompdf\Dompdf;
 
+// instantiate and use the dompdf class
+$dompdf = new Dompdf();
+
+$header = null; //
+$sub_header = null; //
+
+$sql = "SELECT * FROM settings WHERE id = 1";
+$settings = $con->getData($sql);
+
+if (count($settings)) {
+    $header = $settings[0]['dtr_header']; //
+    $sub_header = $settings[0]['dtr_sub_header']; //
 }
 
-// Page footer
-function Footer()
-{	
-    // Position at 1.5 cm from bottom	
-    $this->SetY(-10);
-    // Arial italic 8
-    $this->SetFont('Arial','I',8);
-    // Page number
-    $this->SetTextColor(66,66,66);	
-    $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
+$supervisor = "Head/Supervisor"; //
+$title = "Daily Time Record"; //
+
+$date = "$year-$month-01";
+$period = date("F Y",strtotime($date));
+
+$firstDay = date("Y-m-d",strtotime($date));
+$lastDay = date("Y-m-t",strtotime($date));
+switch ($coverage) {
+    case "first":
+        $lastDay = date("Y-m-15",strtotime($date));
+        break;
+    case "second":
+        $firstDay = date("Y-m-16",strtotime($date));
+        break;
 }
 
-function table($header, $data)
+$contents = "";
+foreach ($employees as $i => $emp) {
+    $content = dtrContent($emp['id'],$emp['employee'],$emp['appointment_status'],$period,$firstDay,$lastDay);
+    $classes = ($i>0)?"wrapper page-break":"wrapper";
+    $contents.='<div class="'.$classes.'">'.$content.'</div>';
+}
+
+function dtrContent($id,$name,$status,$period,$first,$last)
 {
-	
-	global $date, $department, $employee;
-	
-	$this->SetMargins(20,0);
-    $this->Ln(2);
-    $this->SetTextColor(66,66,66);
-	$this->SetFont('Arial','B',10);
-    $this->Cell(0,5,$employee[0]['employee'],0,1,'L');
-    $this->Ln(1);	
-	$this->SetFont('Arial','',9);
-    $this->Cell(87.5,4,date("F Y",strtotime($date)),0,0,'L');
-    $this->Cell(87.5,4,"$department ".$employee[0]['appointment_status'],0,0,'R');
+    global $con, $header, $sub_header, $supervisor, $title;
+
+    $sql = "SELECT * FROM dtr WHERE eid = $id AND ddate BETWEEN '$first' AND '$last'";
+    $dtr = $con->getData($sql);
+
+    $hours_work = 0;
+    $total_absences = 0;
+
+    $rows = "";
+    foreach ($dtr as $d) {        
+        $date = date("j",strtotime($d['ddate']));
+        $day = date("D",strtotime($d['ddate']));
+        $morning_in = ($d['morning_in'] == "00:00:00")?"":date("h:i A",strtotime($d['morning_in']));
+        $morning_out = ($d['morning_out'] == "00:00:00")?"":date("h:i A",strtotime($d['morning_out']));
+        $afternoon_in = ($d['afternoon_in'] == "00:00:00")?"":date("h:i A",strtotime($d['afternoon_in']));
+        $afternoon_out = ($d['afternoon_out'] == "00:00:00")?"":date("h:i A",strtotime($d['afternoon_out']));        
+
+        $hour_work = 0;
+
+        $hour_work = ($hour_work == 0) ? "" : $hour_work;
+
+        $tr = <<<EOT
+            <tr>
+            <td>$date</td>
+            <td>$day</td>
+            <td>$morning_in</td>
+            <td>$morning_out</td>
+            <td>$afternoon_in</td>
+            <td>$afternoon_out</td>
+            <td>$hour_work</td>
+            <td>&nbsp;</td>
+            </tr>
+        EOT;
+        $rows .= $tr;
+    }
+
+    $total_absences = ($total_absences == 0) ? "" : $total_absences;
+    $hours_work = ($hours_work == 0) ? "" : $hours_work;
     
-	$this->Ln(7);
-	
-    // Colors, line width and bold font
-    $this->SetFillColor(60,159,223);
-    $this->SetTextColor(66,66,66);
-	$this->SetDrawColor(92,92,92);
-    $this->SetLineWidth(.1);
-    $this->SetFont('Arial','B',8);
-
-    // Header
-	$closingLine = 0;
-	foreach ($header as $i => $h) {
-		$this->Cell(array_keys($header[$i])[0],7,$header[$i][array_keys($header[$i])[0]],1,0,'C',true);
-		$closingLine += array_keys($header[$i])[0];
-	}
-    $this->Ln();
-	
-    // Color and font restoration
-    $this->SetFillColor(224,235,255);
-    $this->SetTextColor(66,66,66);
-	$this->SetFont('Arial','',8);
-    // Data	
-	
-    $fill = false;
-    foreach($data as $key => $row) {
-		foreach ($header as $i => $h) {
-			$this->Cell(array_keys($header[$i])[0],5,$row[array_keys($row)[$i]],1,0,'C',$fill);
-		}
-        $this->Ln();
-        // $fill = !$fill;		
-    }	
-    $this->Cell($closingLine,0,'','T');
-	
-	$this->Ln(2);
-	$this->SetFont('Arial','B',8);
-	$this->SetX(-86);
-    $this->Cell(10,4,"Total:",0,0,'R');
-	$this->Ln();
-	$this->SetX(-96);	
-    $this->Cell(20,4,"Days Absent:",0,0,'R');
-
-	$this->Ln(8);
-	$this->SetFont('Arial','I',8);	
-    $this->Cell(0,4,"I hereby CERTIFY on my honor that the above is true and correct report of the hours of work performed, record of which was made daily",0,1,'L');	
-    $this->Cell(0,4,"at the time of arrival and departure from Office.",0,1,'L');
-	$this->Ln(5);
-	$this->SetFont('Arial','B',8);	
-    $this->Cell(0,4,"Verified as to the prescribed office hours",0,1,'R');
-	$this->Ln(10);	
-    $this->Cell(87.5,5,$employee[0]['employee'],0,0,'C');
-    $this->Cell(87.5,5,"Head/Supervisor",0,0,'C');
-	$this->SetDrawColor(92,92,92);	
-	$this->Line(30,246,97,246);
-	$this->Line(118,246,185,246);
+    $content = <<<EOT
+        <h1 class="header">$header</h1>
+        <p class="sub-header">$sub_header</p>
+        <h3 class="title">$title</h3>
+        <h1 class="name">$name</h1>
+        <div class="coverage-status-wrapper">
+            <p class="coverage">$period</p>
+            <p class="status">$status</p>
+        </div>
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Day</th>
+                        <th>Time In</th>
+                        <th>Time Out</th>
+                        <th>Time In</th>
+                        <th>Time Out</th>
+                        <th>Hours Work</th>
+                        <th>Tardiness</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    $rows                                                 
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5">Total Absences</td>
+                        <td>$total_absences</td>
+                        <td>$hours_work</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="footer-name" colspan="4">
+                            <p>$name</p>
+                        </td>
+                        <td class="footer-head" colspan="4">
+                            <p>$supervisor</p>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    EOT;
+    
+    return $content;
 
 }
 
-}
+$html = <<<EOT
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>DTR</title>	
+		<style>
 
-$pdf = new PDF('P','mm','Letter');
-$pdf->AliasNbPages();
-$pdf->AddPage();
-$pdf->SetFont('Arial','',14);
+            .h {
+                border: 1px solid black;
+            }
 
-$header = array(
-	array(25=>"Date"),
-	array(20=>"Day"),
-	array(25=>"Time In"),
-	array(25=>"Time Out"),
-	array(25=>"Time In"),
-	array(25=>"Time Out"),
-	array(30=>"Tardiness")
-);
+            *, html {
+                margin: 0;
+            }
 
-$sql = "SELECT * FROM dtr WHERE eid = $_POST[id] AND ddate LIKE '$datef%'";
-$dtr = $con->getData($sql);
+            .clearfix {
+                overflow: auto;
+            }
 
-$data = [];
-foreach ($dtr as $row) {
-	
-	$row['morning_in'] = ($row['morning_in'] == "00:00:00")?"":date("H:i:s",strtotime($row['morning_in']));
-	$row['morning_out'] = ($row['morning_out'] == "00:00:00")?"":date("H:i:s",strtotime($row['morning_out']));
-	$row['afternoon_in'] = ($row['afternoon_in'] == "00:00:00")?"":date("H:i:s",strtotime($row['afternoon_in']));
-	$row['afternoon_out'] = ($row['afternoon_out'] == "00:00:00")?"":date("H:i:s",strtotime($row['afternoon_out']));
-	
-	$data[] = array(date("j",strtotime($row['ddate'])),
-			date("D",strtotime($row['ddate'])),
-			$row['morning_in'],
-			$row['morning_out'],
-			$row['afternoon_in'],
-			$row['afternoon_out'],
-			""
-	);
-	
-};
+            .wrapper {
+                width: 620px;
+                margin-left: auto;
+                margin-right: auto;
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: 16px;
+                margin-top: 30px;            
+            }
 
-$pdf->table($header,$data);
-$pdf->Output();
+            .header {
+                text-align: center;
+                font-size: 1rem;
+            }
+
+            .sub-header {
+                text-align: center;
+                font-size: 1rem;
+                margin-top: 3px;
+            }
+
+            .title {
+                text-align: center;
+                font-size: 1.3rem;
+                margin-top: 16px;
+            }
+
+            .name {
+                font-size: 1rem;
+                margin-top: 20px;
+                border-bottom: 2px solid rgb(136, 136, 136);
+                padding-bottom: 3px;
+                color: rgb(49, 49, 49);
+            }
+
+            .coverage-status-wrapper {
+                margin-top: 5px;
+                display: flex;
+                align-items: stretch;
+            }
+
+            .coverage {
+                font-size: 1rem;
+                flex-grow: 1;
+            }
+
+            .status {
+                font-size: 1rem;
+                flex-grow: 1;
+                text-align: right;      
+            }
+
+            .table-wrapper {
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                margin-top: 25px;
+            }
+
+            .table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: .7rem;                
+            }
+
+            .table thead th {
+                border: 1px solid rgb(77, 77, 77);
+                padding-top: 3px;
+                padding-bottom: 3px;
+                background-color: rgb(121, 173, 216);
+            }
+
+            .table tbody td {
+                border: 1px solid rgb(77, 77, 77);
+                padding-top: 3px;
+                padding-bottom: 3px; 
+                text-align: center;           
+            }
+
+            .table tfoot td {
+                padding-top: 10px;
+            }
+
+            .table tfoot tr:first-child td {
+                font-size: .8rem;
+            }            
+
+            .table tfoot tr td:first-child {
+                text-align: right;
+            }
+
+            .table tfoot tr:first-child td {
+                text-align: center;
+            }            
+
+            .footer-name, .footer-head {
+                text-align: center;
+            }         
+
+            .footer-name p, .footer-head p {
+                width: 90%;
+                border-top: 1px solid rgb(80, 80, 80);             
+                margin-top: 60px;
+                font-size: 1rem;
+                text-align: center;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            .page-break {
+                page-break-before: always;
+            }        
+
+        </style>
+    </head>
+    <body>$contents</body>
+</html>
+EOT;
+
+$dompdf->loadHtml($html);
+
+// (Optional) Setup the paper size and orientation
+$dompdf->setPaper('letter', 'portrait');
+
+// Render the HTML as PDF
+$dompdf->render();
+
+// Output the generated PDF to Browser
+$filename = "dtr-".mt_rand().".pdf";
+$dompdf->stream($filename);
 
 ?>

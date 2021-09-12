@@ -1,0 +1,20 @@
+<form style="margin-top: 20px;" name="frmHolder.setting" autocomplete="off">
+    <div class="row">
+        <div class="span3">
+            <div class="control-group" ng-class="{'error': frmHolder.setting.dtr_header.$invalid && frmHolder.setting.dtr_header.$touched}">
+                <label><strong>Header</strong></label>
+                <div class="controls">
+                    <input type="text" class="span3" name="dtr_header" ng-model="setting.dtr_header" ng-disabled="controls.setting.dtr_header" required>
+                </div>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="control-group" ng-class="{'error': frmHolder.setting.dtr_sub_header.$invalid && frmHolder.setting.dtr_sub_header.$touched}">
+                <label><strong>Sub Header</strong></label>
+                <div class="controls">
+                    <input type="text" class="span3" name="dtr_sub_header" ng-model="setting.dtr_sub_header" ng-disabled="controls.setting.dtr_sub_header" required>
+                </div>
+            </div>
+        </div>        
+    </div>
+</form>

@@ -1,9 +1,67 @@
-ALTER TABLE `schedules` DROP `cutoff`;
+ALTER TABLE `dtr`  ADD `updated` TINYINT NOT NULL DEFAULT '0'  AFTER `undertime`;
+ALTER TABLE `employees`  ADD `photo_type` VARCHAR(100) NULL  AFTER `philhealth`;
 
-DROP cutoff
+ALTER TABLE `dtr`  ADD `morning_in_updated` TINYINT NOT NULL DEFAULT '0'  AFTER `morning_in`;
+ALTER TABLE `dtr`  ADD `morning_out_updated` TINYINT NOT NULL DEFAULT '0'  AFTER `morning_out`;
+ALTER TABLE `dtr`  ADD `afternoon_in_updated` TINYINT NOT NULL DEFAULT '0'  AFTER `afternoon_in`;
+ALTER TABLE `dtr`  ADD `afternoon_out_updated` TINYINT NOT NULL DEFAULT '0'  AFTER `afternoon_out`;
 
-ALTER TABLE `schedule_details` DROP `dayoff`, DROP `transcending`, DROP `transcending_days_no`;
+// Settings
 
-ALTER TABLE `schedule_details`  ADD `morning_cutoff` TIME NULL  AFTER `morning_in`;
-ALTER TABLE `schedule_details`  ADD `afternoon_cutoff` TIME NULL  AFTER `afternoon_in`;
-ALTER TABLE `schedule_details`  ADD `lunch_break_cutoff` TIME NULL  AFTER `morning_out`;
+-- phpMyAdmin SQL Dump
+-- version 5.0.2
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Jul 28, 2021 at 11:46 AM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.4.5
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+--
+-- Database: `pgludtr`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `settings`
+--
+
+CREATE TABLE `settings` (
+  `id` int(11) NOT NULL,
+  `dtr_header` varchar(255) DEFAULT NULL,
+  `dtr_sub_header` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `settings`
+--
+
+INSERT INTO `settings` (`id`, `dtr_header`, `dtr_sub_header`) VALUES
+(1, 'La Union Medical Center', 'Agoo, La Unions');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `settings`
+--
+ALTER TABLE `settings`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `settings`
+--
+ALTER TABLE `settings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+COMMIT;
+

@@ -109,7 +109,7 @@ require_once 'authentication.php';
         <ul class="nav pull-right">
           <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i><b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li><a href="javascript:;">Settings</a></li>
+              <li><a href="javascript:;" setting>Settings</a></li>
               <li><a href="javascript:;" logout>Logout</a></li>
             </ul>
           </li>
@@ -162,10 +162,15 @@ require_once 'authentication.php';
 					<div class="control-group">
 						<h3 style="margin-bottom: 5px;">Select how to import</h3>					
 						<select class="span4" ng-model="views.howToImport" ng-change="appService.howToImport(this)">
-							<option value="preuploaded">Import logs from pre-uploaded file</option>
+							<!-- <option value="preuploaded">Import logs from pre-uploaded file</option> -->
+							<option value="network">Download via network</option>
 							<option value="upload">Upload log file</option>
 						</select>
-					</div>					
+					</div>
+					<div class="control-group" ng-show="views.showNetworkOpt">
+						<h3 style="margin-bottom: 5px;">Select network device</h3>					
+						<select ng-model="views.device" class="span2" ng-options="d.location for d in devices track by d.machine"></select>
+					</div>										
 					<div class="control-group" ng-show="views.showPreUploadedOpt">
 						<h3 style="margin-bottom: 5px;">Import logs from pre-uploaded file</h3>					
 						<select ng-model="views.prefile" class="span2" ng-disabled="views.usePreviousFile && views.howToImport == 'upload'">

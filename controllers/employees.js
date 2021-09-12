@@ -48,13 +48,18 @@ app.service('fileUpload', ['$http', function ($http) {
 		}
 
 		function uploadComplete(evt) {
+
+			const pp = file['name'];
+			const en = pp.substring(pp.indexOf("."),pp.length);
+
 			/* This event is raised when the server send back a response */
 			scope.$apply(function() {
 
-				scope.views.profilePicture = 'pictures/'+scope.personalInfo.empid+'.jpg';
+				scope.views.profilePicture = null;
+				scope.views.profilePicture = 'pictures/'+scope.personalInfo.empid+'/'+scope.personalInfo.empid+en+'?id='+Math.random();
 				scope.views.showProPicUploadProgress = false;
 
-			});			
+			});
 
 			$('#proPic').val(null);
 		}
@@ -147,7 +152,8 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			  url: 'controllers/employees.php?r=start'
 			}).then(function mySucces(response) {
 			
-				scope.employees = response.data;
+				scope.employees = [...response.data];
+				scope.employeesPrinting = [...response.data];
 				
 			}, function myError(response) {
 				 
@@ -267,6 +273,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			scope.views.cancelCloseTxt = 'Close';		
 			
 			scope.generate.id = scope.employee_row.id;
+			scope.generate.coverage = "whole";
 			
 			$timeout(function() {			
 				scope.$apply(function() {
@@ -286,7 +293,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 				scope.views.empid = response.data.empid;
 				scope.views.position = response.data.appointment_status;
 				scope.personalInfo.birthday = new Date(response.data.birthday);
-				if (response.data['has_profile_pic']) scope.views.profilePicture = 'pictures/'+response.data['empid']+'.jpg';
+				if (response.data['has_profile_pic']) scope.views.profilePicture = 'pictures/'+response.data['empid']+'/'+response.data['empid']+response.data['photo_type'];
 				else scope.views.profilePicture = "img/avatar.png";
 				
 			}, function myError(response) {
@@ -453,7 +460,7 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 				};
 				
 				this.assignLog = function(scope,blog) {
-					console.log(scope);
+
 					if (scope.$id > 2) scope = scope.$parent;
 				
 					scope.views.assignLog.alert = false;
@@ -501,6 +508,97 @@ app.factory('appService',function($http,$timeout,bootstrapNotify,bootstrapModal,
 			$('#print-dtr').submit();
 			
 		};
+
+		self.batchPrinting = function(scope) {
+
+			scope.batch.coverage = "whole";
+			scope.batch.appointment_status = { id: "All", name: "All" };
+
+			scope.noStaffs = false;
+			scope.batchNoMonth = false;
+
+			scope.batchPrinting = [];
+
+			bootstrapModal.batchPrinting(scope,'Batch Printing','views/batch.html',null,function() {
+				scope.$apply(function() {
+					scope.currentPage = 1;
+					scope.currentPagePrinting = 1;
+				})
+			});
+
+		}
+
+		self.queueForPrinting = function(scope) {
+
+			const check = scope.batchPrinting.filter(bp => {
+				return bp.empid == scope.ep.empid
+			});
+
+			if (check.length == 0) scope.batchPrinting.push(scope.ep);
+
+		}
+
+		self.queueForPrintingAll = function(scope) {
+
+			scope.employeesPrinting.forEach(em => {
+				const check = scope.batchPrinting.filter(bp => {
+					return bp.empid == em.empid
+				})
+				if (check.length == 0) scope.batchPrinting.push(em);					
+			});		
+
+		}
+
+		self.unqueueForPrinting = function(scope) {
+
+			const index = scope.batchPrinting.indexOf(scope.bp);
+			scope.batchPrinting.splice(index,1);
+
+		}
+
+		self.unqueueForPrintingAll = function(scope) {
+
+			scope.batchPrinting = [];
+
+		}
+
+		self.batchStatusChange = function(scope) {
+
+			const employees = [...scope.employees];
+
+			if (scope.batch.appointment_status.id == "All") {
+
+				scope.employeesPrinting = [...employees];
+
+			} else {
+
+				const employeesPrinting = employees.filter(emp => {
+					return emp.appointment_status == scope.batch.appointment_status.id;
+				})
+				scope.employeesPrinting = [...employeesPrinting];				
+
+			}
+
+		}
+
+		self.printBatch = function(scope) {
+
+			scope.noStaffs = false;
+			scope.batchNoMonth = false;
+
+			if (scope.batch.month == null) {
+				scope.batchNoMonth = true;
+				return;
+			}
+
+			if (scope.batchPrinting.length==0) {
+				scope.noStaffs = true;
+				return;
+			}
+
+			$('#print-dtr-batch').submit();
+
+		}
 		
 	};
 	
@@ -512,6 +610,9 @@ app.controller('employeesCtrl', function($scope,$http,blockUI,bootstrapModal,boo
 
 $scope.currentPage = 1;
 $scope.pageSize = 15;
+
+$scope.currentPagePrinting = 1;
+$scope.pageSizePrinting = 15;
 
 $scope.views = {};
 $scope.frmHolder = {};
@@ -561,6 +662,20 @@ $scope.views.months = {
 // $scope.pop_employees_list();
 
 $scope.dtr = [];
+
+$scope.batchPrinting = [];
+$scope.batch = {};
+$scope.batch.year = (new Date()).getFullYear();
+$scope.batch.month = null;
+$scope.batch.coverage = "whole";
+$scope.batch.appointmentStatus = [
+	{ id: "All", name: "All" },
+	{ id: "Permanent", name: "Permanent" },
+	{ id: "Casual", name: "Casual" },
+	{ id: "JO", name: "Job Order" },
+	{ id: "Volunteer", name: "Volunteer"},
+];
+$scope.batch.appointment_status = { id: "All", name: "All" };
 
 $scope.generate = {};
 $scope.generate.id = 0;
@@ -612,7 +727,6 @@ $scope.uploadProfilePicture = function() {
    var file = $scope.views.proPic;
    
    if (file == undefined) return;
-   console.log(file);
    
    var pp = file['name'];
    var en = pp.substring(pp.indexOf("."),pp.length);

@@ -5,7 +5,9 @@ angular.module('bootstrap-notify',[]).service('bootstrapNotify', function() {
 		$.notify({
 			message: msg
 		},{
-			type: type
+			type: type,
+			offset: 50,
+			z_index: 5000,
 		});
 		
 	}

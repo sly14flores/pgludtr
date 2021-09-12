@@ -76,7 +76,7 @@ require_once 'authentication.php';
           <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
                             class="icon-user"></i><b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li><a href="javascript:;">Settings</a></li>
+              <li><a href="javascript:;" setting>Settings</a></li>
               <li><a href="javascript:;" logout>Logout</a></li>
             </ul>
           </li>
@@ -109,11 +109,17 @@ require_once 'authentication.php';
 <div class="main">
   <div class="main-inner">
     <div class="container">
+	  <div class="row">
+	  	<div class="col-lg-12">
+		  <button class="btn btn-success btn-xs pull-right" type="button" style="margin-bottom: 10px;" ng-click="appService.batchPrinting(this)">Batch Printing</button>
+		</div>
+	  </div>
       <div class="row">
 		<div class="span4">
           <div class="widget widget-table action-table">
             <div class="widget-header"> <i class="icon-group"></i>
-              <h3>Employees</h3><button class="btn btn-primary btn-xs pull-right" type="button" style="margin-top: 6px; margin-right: 10px;" ng-click="appService.add(this)" ng-disabled="controls.personalInfo.addBtn">Add</button>
+              <h3>Employees</h3>
+			  <button class="btn btn-primary btn-xs pull-right" type="button" style="margin-top: 6px; margin-right: 10px;" ng-click="appService.add(this)" ng-disabled="controls.personalInfo.addBtn">Add</button>
             </div>
             <!-- /widget-header -->
             <div class="widget-content">
@@ -363,7 +369,10 @@ require_once 'authentication.php';
 								
 							</div>
 							<div class="tab-pane" id="dtr">
-								<div class="pull-right"><a href="javascript:;" class="btn btn-small btn-primary" ng-click="appService.printDTR()" ng-disabled="generate.month == null"><i class="btn-icon-only icon-print"></i></a></div>
+								<div class="pull-right">
+									<input type="checkbox" id="dtr-wh" ng-model="generate.wwh" ng-disabled="generate.month == null" /> w/ Work Hours
+									<button class="btn btn-small btn-primary" ng-click="appService.printDTR()" ng-disabled="generate.month == null"><i class="btn-icon-only icon-print"></i></button>
+								</div>
 								<div style="clear: both;"></div>
 								<form style="margin-top: 20px;"name="frmHolder.dtr" autocomplete="off">
 									<fieldset>
@@ -394,6 +403,18 @@ require_once 'authentication.php';
 													</div>
 												</div>
 											</div>
+											<div class="span2">
+												<div class="control-group">
+													<label><strong>Coverage:</strong></label>
+													<div class="controls">
+														<select class="span2" ng-model="generate.coverage" ng-disabled="generate.id == 0">
+															<option value="whole">Whole Month</option>
+															<option value="first">First Half</option>
+															<option value="second">Second Half</option>
+														</select>
+													</div>
+												</div>
+											</div>											
 											<div class="span1">
 												<div class="control-group">											
 													<button class="btn btn-primary btn-xs" type="button" style="margin-top: 23px;" ng-click="appService.dtr(this,false)" ng-disabled="generate.month == null">Refresh</button>
@@ -437,8 +458,17 @@ require_once 'authentication.php';
   <form id="print-dtr" method="post" action="reports/dtr.php" target="_blank">
 	<input type="hidden" name="id" value="{{generate.id}}">
 	<input type="hidden" name="month" value="{{generate.month}}">
-	<input type="hidden" name="year" value="{{generate.year}}">	
+	<input type="hidden" name="year" value="{{generate.year}}">
+	<input type="hidden" name="coverage" value="{{generate.coverage}}">
+	<input type="hidden" name="wwh" value="{{generate.wwh}}">
   </form>
+  <form id="print-dtr-batch" method="post" action="reports/dtr.php" target="_blank">
+	<input type="hidden" name="staffs" value="{{batchPrinting}}">
+	<input type="hidden" name="month" value="{{batch.month}}">
+	<input type="hidden" name="year" value="{{batch.year}}">
+	<input type="hidden" name="coverage" value="{{batch.coverage}}">
+	<input type="hidden" name="wwh" value="{{batch.wwh}}">
+  </form>  
   </div>
   <!-- /main-inner --> 
 </div>
