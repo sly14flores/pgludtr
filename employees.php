@@ -428,12 +428,13 @@ require_once 'authentication.php';
 										</div>
 									</fieldset>
 								</form>
+								Total Work Hours: <strong>{{dtr.total_work_hours}}</strong>
 								<table id="tab-dtr" class="table table-bordered">
 									<thead>
 										<tr><th>Date</th><th>Day</th><th>Time In</th><th>Time Out</th><th>Time In</th><th>Time Out</th><th>Work Hour</th><th></th></tr>
 									</thead>
 									<tbody>
-										<tr ng-repeat="dtr_row in dtr">
+										<tr ng-repeat="dtr_row in dtr.data">
 											<td style="text-align: center;">{{dtr_row.sdate}}</td><td>{{dtr_row.day}}</td><td>{{dtr_row.morning_in}}</td><td>{{dtr_row.morning_out}}</td><td>{{dtr_row.afternoon_in}}</td><td>{{dtr_row.afternoon_out}}</td><td>{{dtr_row.work_hour}}</td>
 											<td style="text-align: center;">
 												<i class="btn-icon-only icon-list-alt" ng-click="manageDTR.show(this,dtr_row)" style="cursor: pointer;"></i>										

@@ -259,6 +259,9 @@ switch ($_GET['r']) {
 			
 		};
 		
+		$total_work_hours = "";
+		$work_hour_start = date("Y-m-d 00:00:00");
+		$work_hour_end = "";
 		foreach ($dtr as $key => $value) {
 			
 			$dtr[$key]['sdate'] = date("j",strtotime($value['ddate']));
@@ -268,9 +271,24 @@ switch ($_GET['r']) {
 			$dtr[$key]['afternoon_in'] = date("H:i:s",strtotime($value['afternoon_in']));
 			$dtr[$key]['afternoon_out'] = date("H:i:s",strtotime($value['afternoon_out']));
 			unset($dtr[$key]['eid']);
+
+			if ($value['work_hour']!=="") {
+				if ($work_hour_end === "" ) {
+					$work_hour_end = addWorkHours($work_hour_start,$value['work_hour']);
+				} else {
+					$work_hour_end = addWorkHours($work_hour_end,$value['work_hour']);
+				}
+			}
+
 		};
-		
-		echo json_encode($dtr);
+
+		$totalWorkHours = totalWorkHours($work_hour_start,$work_hour_end);
+		$response = [
+			"data" => $dtr,
+			"total_work_hours" => $totalWorkHours,
+		];
+
+		echo json_encode($response);
 	
 	break;
 	
@@ -313,7 +331,7 @@ switch ($_GET['r']) {
 			$dtr[$key]['afternoon_in'] = date("h:i:s A",strtotime($value['afternoon_in']));
 			$dtr[$key]['afternoon_out'] = date("h:i:s A",strtotime($value['afternoon_out']));
 			unset($dtr[$key]['eid']);
-			unset($dtr[$key]['ddate']);
+			// unset($dtr[$key]['ddate']);
 			unset($dtr[$key]['tardiness']);
 			unset($dtr[$key]['pers_id']);
 		}
@@ -337,11 +355,12 @@ switch ($_GET['r']) {
 		$_POST['morning_in'] = date("H:i:s",strtotime($_POST['morning_in']));
 		$_POST['morning_out'] = date("H:i:s",strtotime($_POST['morning_out']));
 		$_POST['afternoon_in'] = date("H:i:s",strtotime($_POST['afternoon_in']));
-		$_POST['afternoon_out'] = date("H:i:s",strtotime($_POST['afternoon_out']));
+		$_POST['afternoon_out'] = date("H:i:s",strtotime($_POST['afternoon_out']));		
 		unset($_POST['edit']);
 		unset($_POST['pers_id']);
 
 		// $_POST['updated'] = 1;
+		$_POST['work_hour'] = computeWorkHour($_POST['ddate'],$_POST['morning_in'],$_POST['morning_out'],$_POST['afternoon_in'],$_POST['afternoon_out']);
 		
 		$dtr = $con->updateData($_POST,'id');
 	
