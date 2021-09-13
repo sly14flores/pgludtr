@@ -4,6 +4,7 @@ $appointment_status = $_POST['appointment_status'] ?? null;
 $month = $_POST['month'] ?? null;
 $year = $_POST['year'] ?? null;
 $coverage = $_POST['coverage'] ?? null;
+$wwh = $_POST['wwh'] ?? null;
 
 $_staffs = $_POST['staffs'] ?? [["id"=>intval($_POST['id'])]];
 
@@ -15,6 +16,7 @@ foreach ($staffs as $staff) {
 }
 
 require('../db.php');
+require('../work_hour.php');
 
 $con = new pdo_db();
 
@@ -69,12 +71,14 @@ foreach ($employees as $i => $emp) {
 
 function dtrContent($id,$name,$status,$period,$first,$last)
 {
-    global $con, $header, $sub_header, $supervisor, $title;
+    global $con, $header, $sub_header, $supervisor, $title, $wwh;
 
     $sql = "SELECT * FROM dtr WHERE eid = $id AND ddate BETWEEN '$first' AND '$last'";
     $dtr = $con->getData($sql);
 
-    $hours_work = 0;
+    $hours_work = "";
+    $work_hour_start = date("Y-m-d 00:00:00");
+    $work_hour_end = "";
     $total_absences = 0;
 
     $rows = "";
@@ -86,9 +90,19 @@ function dtrContent($id,$name,$status,$period,$first,$last)
         $afternoon_in = ($d['afternoon_in'] == "00:00:00")?"":date("h:i A",strtotime($d['afternoon_in']));
         $afternoon_out = ($d['afternoon_out'] == "00:00:00")?"":date("h:i A",strtotime($d['afternoon_out']));        
 
-        $hour_work = 0;
+        $hour_work = $d['work_hour'];
 
-        $hour_work = ($hour_work == 0) ? "" : $hour_work;
+        $hour_work = ($wwh == "true") ? $hour_work : "";
+
+        if ($wwh=="true") {
+            if ($d['work_hour']!=="") {
+                if ($work_hour_end === "" ) {
+                    $work_hour_end = addWorkHours($work_hour_start,$d['work_hour']);
+                } else {
+                    $work_hour_end = addWorkHours($work_hour_end,$d['work_hour']);
+                }
+            }
+        }
 
         $tr = <<<EOT
             <tr>
@@ -106,7 +120,8 @@ function dtrContent($id,$name,$status,$period,$first,$last)
     }
 
     $total_absences = ($total_absences == 0) ? "" : $total_absences;
-    $hours_work = ($hours_work == 0) ? "" : $hours_work;
+
+    $hours_work = totalWorkHours($work_hour_start,$work_hour_end);
     
     $content = <<<EOT
         <h1 class="header">$header</h1>

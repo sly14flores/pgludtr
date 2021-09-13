@@ -5,6 +5,7 @@ $_POST = json_decode(file_get_contents('php://input'), true);
 require_once '../db.php';
 require_once '../dat_files.php';
 require_once '../analyze.php';
+require_once '../work_hour.php';
 
 // header("Content-type: application/json");
 
@@ -206,7 +207,7 @@ switch ($_GET['r']) {
 					"morning_out_updated"=>$updated['morning_out_updated'],
 					"afternoon_in_updated"=>$updated['afternoon_in_updated'],
 					"afternoon_out_updated"=>$updated['afternoon_out_updated'],
-					"tardiness"=>0
+					"work_hour"=>computeWorkHour(date("Y-m-d",strtotime($start)),$analyzed['morning_in'],$analyzed['morning_out'],$analyzed['afternoon_in'],$analyzed['afternoon_out'])
 				);
 				
 				$start = date("Y-m-d", strtotime("+1 day", strtotime($start)));	
@@ -245,6 +246,8 @@ switch ($_GET['r']) {
 				$_dtr[$key]['morning_out'] = $analyzed['morning_out'];
 				$_dtr[$key]['afternoon_in'] = $analyzed['afternoon_in'];
 				$_dtr[$key]['afternoon_out'] = $analyzed['afternoon_out'];
+				$_dtr[$key]['work_hour'] = computeWorkHour($d['ddate'],$analyzed['morning_in'],$analyzed['morning_out'],$analyzed['afternoon_in'],$analyzed['afternoon_out']);
+				
 				unset($_dtr[$key]['eid']);
 				unset($_dtr[$key]['ddate']);
 				
@@ -256,6 +259,9 @@ switch ($_GET['r']) {
 			
 		};
 		
+		$total_work_hours = "";
+		$work_hour_start = date("Y-m-d 00:00:00");
+		$work_hour_end = "";
 		foreach ($dtr as $key => $value) {
 			
 			$dtr[$key]['sdate'] = date("j",strtotime($value['ddate']));
@@ -265,9 +271,24 @@ switch ($_GET['r']) {
 			$dtr[$key]['afternoon_in'] = date("H:i:s",strtotime($value['afternoon_in']));
 			$dtr[$key]['afternoon_out'] = date("H:i:s",strtotime($value['afternoon_out']));
 			unset($dtr[$key]['eid']);
+
+			if ($value['work_hour']!=="") {
+				if ($work_hour_end === "" ) {
+					$work_hour_end = addWorkHours($work_hour_start,$value['work_hour']);
+				} else {
+					$work_hour_end = addWorkHours($work_hour_end,$value['work_hour']);
+				}
+			}
+
 		};
-		
-		echo json_encode($dtr);
+
+		$totalWorkHours = totalWorkHours($work_hour_start,$work_hour_end);
+		$response = [
+			"data" => $dtr,
+			"total_work_hours" => $totalWorkHours,
+		];
+
+		echo json_encode($response);
 	
 	break;
 	
@@ -310,7 +331,7 @@ switch ($_GET['r']) {
 			$dtr[$key]['afternoon_in'] = date("h:i:s A",strtotime($value['afternoon_in']));
 			$dtr[$key]['afternoon_out'] = date("h:i:s A",strtotime($value['afternoon_out']));
 			unset($dtr[$key]['eid']);
-			unset($dtr[$key]['ddate']);
+			// unset($dtr[$key]['ddate']);
 			unset($dtr[$key]['tardiness']);
 			unset($dtr[$key]['pers_id']);
 		}
@@ -334,11 +355,12 @@ switch ($_GET['r']) {
 		$_POST['morning_in'] = date("H:i:s",strtotime($_POST['morning_in']));
 		$_POST['morning_out'] = date("H:i:s",strtotime($_POST['morning_out']));
 		$_POST['afternoon_in'] = date("H:i:s",strtotime($_POST['afternoon_in']));
-		$_POST['afternoon_out'] = date("H:i:s",strtotime($_POST['afternoon_out']));
+		$_POST['afternoon_out'] = date("H:i:s",strtotime($_POST['afternoon_out']));		
 		unset($_POST['edit']);
 		unset($_POST['pers_id']);
 
 		// $_POST['updated'] = 1;
+		$_POST['work_hour'] = computeWorkHour($_POST['ddate'],$_POST['morning_in'],$_POST['morning_out'],$_POST['afternoon_in'],$_POST['afternoon_out']);
 		
 		$dtr = $con->updateData($_POST,'id');
 	

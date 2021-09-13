@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'ab3487a21abad87709b993c523ce4bad6b94592d',
+    'reference' => 'b9466d5bb20e4377fe2f93f8237976b7e9da03e8',
     'name' => '__root__',
   ),
   'versions' => 
@@ -31,7 +31,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'ab3487a21abad87709b993c523ce4bad6b94592d',
+      'reference' => 'b9466d5bb20e4377fe2f93f8237976b7e9da03e8',
     ),
     'dompdf/dompdf' => 
     array (
@@ -44,12 +44,12 @@ private static $installed = array (
     ),
     'nesbot/carbon' => 
     array (
-      'pretty_version' => '2.51.1',
-      'version' => '2.51.1.0',
+      'pretty_version' => '2.53.1',
+      'version' => '2.53.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922',
+      'reference' => 'f4655858a784988f880c1b8c7feabbf02dfdf045',
     ),
     'phenx/php-font-lib' => 
     array (
