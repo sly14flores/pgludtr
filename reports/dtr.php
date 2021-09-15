@@ -95,7 +95,7 @@ function dtrContent($id,$name,$status,$period,$first,$last)
         $hour_work = ($wwh == "true") ? $hour_work : "";
 
         if ($wwh=="true") {
-            if ($d['work_hour']!=="") {
+            if (($d['work_hour']!=="") && ($d['work_hour']!==null)) {
                 if ($work_hour_end === "" ) {
                     $work_hour_end = addWorkHours($work_hour_start,$d['work_hour']);
                 } else {
@@ -121,7 +121,9 @@ function dtrContent($id,$name,$status,$period,$first,$last)
 
     $total_absences = ($total_absences == 0) ? "" : $total_absences;
 
-    $hours_work = totalWorkHours($work_hour_start,$work_hour_end);
+    if (($wwh=="true") && ($work_hour_end !== "")) {
+        $hours_work = totalWorkHours($work_hour_start,$work_hour_end);
+    }
     
     $content = <<<EOT
         <h1 class="header">$header</h1>
